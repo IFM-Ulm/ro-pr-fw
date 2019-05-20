@@ -7,17 +7,17 @@
 #include "xil_types.h"
 #include "xstatus.h"
 
-#include "ah_tcpip.h"
+#include "ah_uart.h"
 #include "ah_sd.h"
 
 #include "fw_datatypes.h"
 #include "fw_hw.h"
 #include "fw_meas.h"
-#include "tcpip_custom.h"
+#include "uart_custom.h"
 
 s32 com_init(void){
 
-	if(ah_tcpip_init() != XST_SUCCESS){
+	if(ah_uart_init() != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -26,111 +26,19 @@ s32 com_init(void){
 
 s32 com_setup(void){
 
-	u8 id_ip_csv;
-	char buff[40];
-	u32 temp;
-
-	unsigned int mac_address[6];
-	int ip_address[4];
-	int ip_netmask[4];
-	int ip_gateway[4];
-	int ip_port;
-
-	if(ah_sd_openFile("ip.csv", AH_SD_FLAG_READ, &id_ip_csv) != XST_SUCCESS){
+	if(ah_uart_setup_baudrate(115200) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%X,%X,%X,%X,%X,%X", &(mac_address[0]), &(mac_address[1]), &(mac_address[2]),
-			&(mac_address[3]), &(mac_address[4]), &(mac_address[5])) != 6){
+	if(ah_uart_setup_callbackConnect_rx(uart_custom_callback_rx) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_address[0]), &(ip_address[1]), &(ip_address[2]), &(ip_address[3])) != 4){
+	if(ah_uart_setup_callbackConnect_tx(uart_custom_callback_tx) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_netmask[0]), &(ip_netmask[1]), &(ip_netmask[2]), &(ip_netmask[3])) != 4){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_gateway[0]), &(ip_gateway[1]), &(ip_gateway[2]), &(ip_gateway[3])) != 4){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d", &ip_port) != 1){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_closeFile(id_ip_csv) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_mac((u8)mac_address[0], (u8)mac_address[1], (u8)mac_address[2],
-			(u8)mac_address[3], (u8)mac_address[4], (u8)mac_address[5]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_ip((u8)ip_address[0], (u8)ip_address[1], (u8)ip_address[2], (u8)ip_address[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_netmask((u8)ip_netmask[0], (u8)ip_netmask[1], (u8)ip_netmask[2], (u8)ip_netmask[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_gateway((u8)ip_gateway[0], (u8)ip_gateway[1], (u8)ip_gateway[2], (u8)ip_gateway[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_timerIntervalMS(10) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_pollingmode(0) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackReceived(tcpip_custom_receive) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackError(tcpip_custom_error) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackSent(tcpip_custom_sent) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_port(ip_port) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	/*if(ah_tcpip_setup_max_send_size(49164) != XST_SUCCESS){
-		return XST_FAILURE;
-	}*/
-
-	ah_tcpip_setup_max_send_size(0);
-
-	//tcpip_custom_setThresholds(2048000, 1024000);
-	tcpip_custom_setThresholds(20480, 10240);
-
-	if(ah_tcpip_setup() != XST_SUCCESS){
+	if(ah_uart_setup() != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -139,11 +47,11 @@ s32 com_setup(void){
 
 s32 com_enable(void){
 
-	if(ah_tcpip_enable() != XST_SUCCESS){
+	if(ah_uart_enable() != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
-	if(ah_tcpip_open() != XST_SUCCESS){
+	if(uart_custom_enable() != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -153,21 +61,22 @@ s32 com_enable(void){
 
 s32 com_disable(void){
 
-	if(ah_tcpip_close(1) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
+	return XST_SUCCESS;
+}
+
+s32 com_isConnected(u8* returnVal){
+
+	*returnVal = 1;
 
 	return XST_SUCCESS;
 }
 
 s32 com_pull(u8* retVal){
 
-	return ah_tcpip_pull(retVal);
+	if(retVal != NULL){
+		*retVal = 0;
+	}
 
-}
-
-s32 com_isConnected(u8* returnVal){
-	*returnVal = ah_tcpip_checkConnection();
 	return XST_SUCCESS;
 }
 
@@ -175,10 +84,8 @@ s32 com_handleErrors(u8* returnVal){
 
 	u8 retVal = 0;
 
-	tcpip_custom_dataflow_getStatus(&retVal);
-
 	if(returnVal != NULL){
-		*returnVal  = retVal;
+		*returnVal = retVal;
 	}
 
 	return XST_SUCCESS;
@@ -187,13 +94,6 @@ s32 com_handleErrors(u8* returnVal){
 s32 com_handleDisconnect(u8* returnVal){
 
 	u8 retVal = 0;
-
-	if(tcpip_custom_flushpackets_ip() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(tcpip_custom_flushpackets_data() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
 
 	if(returnVal != NULL){
 		*returnVal  = retVal;
@@ -205,32 +105,6 @@ s32 com_handleDisconnect(u8* returnVal){
 s32 com_handleInactivity(u8* returnVal){
 
 	u8 retVal = 0;
-
-	u8 checkVal;
-
-	if(tcpip_custom_getDataAvailable() > 0){
-
-		if(tcpip_custom_dataflow_control(1) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(tcpip_custom_dataflow_request_refuse(1) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(tcpip_custom_dataflow_getActive(&checkVal) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(!checkVal){
-			tcpip_custom_update_list(1);
-		}
-
-		if(tcpip_custom_dataflow_control(0) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-	}
 
 	if(returnVal != NULL){
 		*returnVal  = retVal;
@@ -258,7 +132,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 	u8 answer[3];
 
-	readCommand = tcpip_custom_pop();
+	readCommand = uart_custom_pop();
 	if(readCommand == NULL){
 
 		*returnVal = 0;
@@ -435,7 +309,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		answer[2] = 0x15; // NACK
 	}
 
-	if(tcpip_custom_push(answer, 3) != XST_SUCCESS){
+	if(uart_custom_push(answer, 3) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
@@ -445,7 +319,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		filename = NULL;
 	}
 
-	if(tcpip_custom_free(readCommand) != XST_SUCCESS){
+	if(uart_custom_free(readCommand) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
