@@ -1,0 +1,33 @@
+
+OPTION psf_version = 2.1;
+
+BEGIN LIBRARY ah_lib
+	OPTION drc = ah_drc;
+	OPTION copyfiles = all;
+	OPTION REQUIRES_OS = (standalone);
+	OPTION desc = "AH libraries";
+	OPTION VERSION = 1.1;
+	OPTION NAME = ah_lib;
+
+	PARAM name = scugic, desc = "Includes custom driver for the General Interrupt Controller", type = bool, default = true;
+
+	BEGIN CATEGORY scugic_dependent
+		PARAM name = scugic_dependent, desc = "Settings dependent on scugic", type = bool, default = true, permit = none;
+		PARAM name = timer, desc = "Includes custom driver for the private timer, depends on scugic", type = bool, default = false;
+		PARAM name = uart, desc = "Includes custom driver for UART (USB COM connection), depends on scugic", type = bool, default = false;
+		PARAM name = gpio, desc = "Includes custom driver for GPIO control, depends on scugic and connected GPIO IPs", type = bool, default = false;
+		PARAM name = tcpip, desc = "Includes custom driver for TCPIP, depends on scugic and timer", type = bool, default = false;
+	END CATEGORY
+	
+	BEGIN CATEGORY tcpip_options
+		PARAM name = tcpip_options, desc = "Specific settings for TCPIP", type = bool, default = true, permit = none;
+		PARAM name = tcpip_memory_manual, desc = "Switches to manual memory managment, potential for faster data handling, but pbuf structure has to be freed manually", type = bool, default = false;
+		PARAM name = tcpip_mac_i2c, desc = "Switches to automatic MAC address, needs I2C 0 to be activated activated (e.g. assigned to MIO 50 and 51)", type = bool, default = false, permit = none;
+	END CATEGORY
+
+	PARAM name = pcap, desc = "Includes custom driver for PCAP control", type = bool, default = false;
+	PARAM name = sd, desc = "Includes custom driver for SD-Card control", type = bool, default = false;
+	PARAM name = xadc, desc = "Includes custom driver for XADC SysMon control", type = bool, default = false;
+	PARAM name = pmod, desc = "Includes custom driver for PMOD control", type = bool, default = false;
+  
+END LIBRARY
