@@ -1,0 +1,11 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER AH_PL2DDR
+	OPTION supported_peripherals = (AH_PL2DDR);
+	OPTION driver_state = ACTIVE;
+	OPTION copyfiles = all;
+	OPTION VERSION = 2.1;
+	OPTION NAME = AH_PL2DDR;
+END DRIVER

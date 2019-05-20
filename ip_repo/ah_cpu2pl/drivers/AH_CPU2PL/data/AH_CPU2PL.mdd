@@ -1,0 +1,14 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER AH_CPU2PL
+	OPTION supported_peripherals = (AH_CPU2PL);
+	OPTION driver_state = ACTIVE;
+	OPTION copyfiles = all;
+	OPTION VERSION = 2.2;
+	OPTION NAME = AH_CPU2PL;
+	
+	PARAM name = testpar, desc = "test", type = string, default = "testbla", permit = all_users;
+	
+END DRIVER
