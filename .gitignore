@@ -1,0 +1,11 @@
+# temp stuff, always exclude
+.Xil/*
+.Xiltemp/*
+*.jou
+*.debug
+*.str
+*.log
+*.zip
+
+*.a
+*.o
