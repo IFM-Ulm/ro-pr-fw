@@ -49,7 +49,8 @@ configbsp -bsp test_project_bsp lwip_udp false
 regenbsp -bsp test_project_bsp
 
 projects -clean
-projects -build
+projects -build -type bsp
+projects -build -type app
 
 # //arch = zynq; split = false; format = BIN
 # the_ROM_image:

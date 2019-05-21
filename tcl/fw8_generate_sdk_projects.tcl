@@ -34,24 +34,25 @@ close $bifId
 set helperId [open [format "%s/%s" $project_sources_tcl "help_generate_sdk_projects.tcl"] "w+"]
 puts $helperId [format "cd %s/%s.sdk" $project_path $project_name]
 puts $helperId [format "setws %s/%s.sdk" $project_path $project_name]
-puts $helperId "createhw -name toplevel_hw_platform_0 -hwspec toplevel.hdf"
+puts $helperId [format "createhw -name %s_hw_platform -hwspec toplevel.hdf" $project_sdk_name_project]
 puts $helperId ""
-puts $helperId "createapp -name zybo_fsbl -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject toplevel_hw_platform_0 -os standalone"
+puts $helperId [format "createapp -name zybo_fsbl -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject %s_hw_platform -os standalone"  $project_sdk_name_project]
 puts $helperId "configapp -app zybo_fsbl build-config release"
-puts $helperId ""
-puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_cortexa9_0 -hwproject toplevel_hw_platform_0 -os standalone" $project_sdk_name_project]
-puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_project]
-puts $helperId ""
-puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
-puts $helperId ""
+# puts $helperId ""
+# puts $helperId [format "createapp -name %s_project -app {Empty Application} -proc ps7_cortexa9_0 -hwproject toplevel_hw_platform_0 -os standalone" $project_sdk_name_project]
+# puts $helperId [format "configapp -app %s_project -app " $project_sdk_name_project]
+# puts $helperId [format "configapp -app %s_project build-config release" $project_sdk_name_project]
+# puts $helperId [format "configapp -app %s -add compiler-misc {-std=c11}" $project_sdk_name_project]
+# puts $helperId ""
+# puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
+# puts $helperId ""
 puts $helperId [format "repo -set %s" $project_sources_sw_repo]
 puts $helperId "repo -scan"
 puts $helperId ""
-puts $helperId [format "setlib -bsp %s_bsp -lib ah_lib" $project_sdk_name_project]
+puts $helperId [format "createbsp -name %s_bsp -proc ps7_cortexa9_0 -hwproject %s_hw_platform -os standalone" $project_sdk_name_project $project_sdk_name_project]
 puts $helperId [format "setlib -bsp %s_bsp -lib lwip202" $project_sdk_name_project]
 puts $helperId [format "setlib -bsp %s_bsp -lib xilffs" $project_sdk_name_project]
-puts $helperId ""
-puts $helperId [format "regenbsp -bsp %s_bsp" $project_sdk_name_project]
+puts $helperId [format "setlib -bsp %s_bsp -lib ah_lib" $project_sdk_name_project]
 puts $helperId ""
 puts $helperId [format "configbsp -bsp %s_bsp pcap true" $project_sdk_name_project]
 puts $helperId [format "configbsp -bsp %s_bsp scugic true" $project_sdk_name_project]
@@ -74,9 +75,32 @@ puts $helperId [format "configbsp -bsp %s_bsp phy_link_speed CONFIG_LINKSPEED100
 puts $helperId [format "configbsp -bsp %s_bsp lwip_udp false" $project_sdk_name_project]
 puts $helperId ""
 # puts $helperId [format "configapp -app %s -set linker-misc -Wl,--start-group,-lxil,-llwip4,-lgcc,-lc,--end-group -Wl,--start-group,-lxilffs,-lxil,-lgcc,-lc,--end-group" $project_sdk_name_project]
-puts $helperId [format "configapp -app %s -add {-std=c11}" $project_sdk_name_project]
+# updatemss -mss D:/FPGA_PUFs/RO/RO_PR/RO_PR.sdk/ro_pr_bsp/system.mss
+puts $helperId [format "updatemss -mss %s_bsp/system.mss" $project_sdk_name_project]
+puts $helperId ""
+puts $helperId "after 5000"
 puts $helperId [format "regenbsp -bsp %s_bsp" $project_sdk_name_project]
 puts $helperId ""
+puts $helperId "projects -build"
+puts $helperId ""
+puts $helperId ""
+puts $helperId ""
+puts $helperId ""
+puts $helperId "puts \"The following command will fail thanks to an error with a non helpful message, of which neither Xilinx nor Google ever heard of -.-\""
+puts $helperId "puts \"From here on, just open the SDK, go to Xilinx->XSCT Console and type in the rest of the commands, which will miraculously work\""
+puts $helperId ""
+puts $helperId ""
+puts $helperId ""
+puts $helperId ""
+puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_cortexa9_0 -bsp %s_bsp -hwproject %s_hw_platform -os standalone" $project_sdk_name_project $project_sdk_name_project $project_sdk_name_project]
+# puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_cortexa9_0 -hwproject %s_hw_platform -os standalone" $project_sdk_name_project $project_sdk_name_project]
+puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_project]
+puts $helperId [format "configapp -app %s -add compiler-misc {-std=c11}" $project_sdk_name_project]
+# puts $helperId [format "changebsp -app %s -newbsp %s_bsp" $project_sdk_name_project $project_sdk_name_project]
+puts $helperId ""
+puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
+puts $helperId ""
+
 puts $helperId "projects -clean"
 puts $helperId "projects -build"
 puts $helperId ""

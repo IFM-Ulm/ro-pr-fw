@@ -13,6 +13,7 @@ struct meas {
 	u32 readouts; // number of measurement points
 	u32 time;
 	u32 heatup;
+	u32 cooldown;
 	
 };
 
@@ -26,7 +27,7 @@ s32 measurement_check_data(u8* returnVal);
 s32 measurement_check_finished(u8* returnVal);
 s32 measurement_check_missing(u8* returnVal);
 
-s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup);
+s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown);
 s32 measurement_delete(u16 id);
 s32 measurement_delete_all(void);
 

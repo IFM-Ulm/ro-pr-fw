@@ -102,8 +102,8 @@ current_bd_design $design_name
   set sys_inputs_serial [ create_bd_port -dir I -from 95 -to 0 -type data sys_inputs_serial ]
   set sys_intr_ack [ create_bd_port -dir O -from 4 -to 0 sys_intr_ack ]
   set sys_intr_input [ create_bd_port -dir I -from 2 -to 0 -type data sys_intr_input ]
-  set sys_intr_output [ create_bd_port -dir O -from 5 -to 0 sys_intr_output ]
-  set sys_outputs_serial [ create_bd_port -dir O -from 191 -to 0 -type data sys_outputs_serial ]
+  set sys_intr_output [ create_bd_port -dir O -from 6 -to 0 sys_intr_output ]
+  set sys_outputs_serial [ create_bd_port -dir O -from 223 -to 0 -type data sys_outputs_serial ]
   set sys_reset [ create_bd_port -dir O -from 0 -to 0 -type rst sys_reset ]
   set sys_resetn [ create_bd_port -dir O -from 0 -to 0 -type rst sys_resetn ]
 
@@ -281,7 +281,8 @@ endgroup
    CONFIG.IN3_WIDTH {32} \
    CONFIG.IN4_WIDTH {32} \
    CONFIG.IN5_WIDTH {32} \
-   CONFIG.NUM_PORTS {6} \
+   CONFIG.IN6_WIDTH {32} \
+   CONFIG.NUM_PORTS {7} \
  ] $xlconcat_1
 
   # Create instance: xlconcat_2, and set properties
@@ -347,9 +348,9 @@ endgroup
   set xlslice_6 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_6 ]
   set_property -dict [ list \
    CONFIG.DIN_FROM {10} \
-   CONFIG.DIN_TO {6} \
+   CONFIG.DIN_TO {5} \
    CONFIG.DIN_WIDTH {11} \
-   CONFIG.DOUT_WIDTH {5} \
+   CONFIG.DOUT_WIDTH {6} \
  ] $xlslice_6
 
   # Create instance: xlslice_7, and set properties
@@ -396,11 +397,12 @@ endgroup
   connect_bd_net -net AH_CPU2PL_0_output_2 [get_bd_pins AH_CPU2PL_0/output_2] [get_bd_pins AH_PL2DDR_0/number_samples]
   connect_bd_net -net AH_CPU2PL_0_output_3 [get_bd_pins AH_CPU2PL_0/output_3] [get_bd_pins AH_PL2DDR_0/ddr_addr_low]
   connect_bd_net -net AH_CPU2PL_0_output_4 [get_bd_pins AH_CPU2PL_0/output_4] [get_bd_pins AH_PL2DDR_0/ddr_addr_high]
-  connect_bd_net -net AH_CPU2PL_0_output_6 [get_bd_pins AH_CPU2PL_0/output_6] [get_bd_pins xlconcat_1/In0]
-  connect_bd_net -net AH_CPU2PL_0_output_7 [get_bd_pins AH_CPU2PL_0/output_7] [get_bd_pins xlconcat_1/In1]
-  connect_bd_net -net AH_CPU2PL_0_output_8 [get_bd_pins AH_CPU2PL_0/output_8] [get_bd_pins xlconcat_1/In2]
-  connect_bd_net -net AH_CPU2PL_0_output_9 [get_bd_pins AH_CPU2PL_0/output_9] [get_bd_pins xlconcat_1/In3]
-  connect_bd_net -net AH_CPU2PL_0_output_10 [get_bd_pins AH_CPU2PL_0/output_10] [get_bd_pins xlconcat_1/In4]
+  connect_bd_net -net AH_CPU2PL_0_output_6 [get_bd_pins AH_CPU2PL_0/output_5] [get_bd_pins xlconcat_1/In0]
+  connect_bd_net -net AH_CPU2PL_0_output_7 [get_bd_pins AH_CPU2PL_0/output_6] [get_bd_pins xlconcat_1/In1]
+  connect_bd_net -net AH_CPU2PL_0_output_8 [get_bd_pins AH_CPU2PL_0/output_7] [get_bd_pins xlconcat_1/In2]
+  connect_bd_net -net AH_CPU2PL_0_output_9 [get_bd_pins AH_CPU2PL_0/output_8] [get_bd_pins xlconcat_1/In3]
+  connect_bd_net -net AH_CPU2PL_0_output_10 [get_bd_pins AH_CPU2PL_0/output_9] [get_bd_pins xlconcat_1/In4]
+  connect_bd_net -net AH_CPU2PL_0_output_10 [get_bd_pins AH_CPU2PL_0/output_10] [get_bd_pins xlconcat_1/In5]
   connect_bd_net -net AH_PL2DDR_0_intr_done [get_bd_pins AH_PL2DDR_0/intr_done] [get_bd_pins xlconcat_0/In2]
   connect_bd_net -net AH_PL2DDR_0_intr_sent [get_bd_pins AH_PL2DDR_0/intr_sent] [get_bd_pins xlconcat_0/In1]
   connect_bd_net -net AH_PL2DDR_0_transfer_active [get_bd_pins AH_PL2DDR_0/transfer_active] [get_bd_pins xlconcat_2/In0]
@@ -413,7 +415,7 @@ endgroup
   connect_bd_net -net sys_intr_input_1 [get_bd_ports sys_intr_input] [get_bd_pins xlslice_8/Din]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlconcat_1_dout [get_bd_ports sys_outputs_serial] [get_bd_pins xlconcat_1/dout]
-  connect_bd_net -net xlconcat_2_dout [get_bd_pins xlconcat_1/In5] [get_bd_pins xlconcat_2/dout]
+  connect_bd_net -net xlconcat_2_dout [get_bd_pins xlconcat_1/In6] [get_bd_pins xlconcat_2/dout]
   connect_bd_net -net xlconcat_3_dout [get_bd_ports sys_intr_output] [get_bd_pins xlconcat_3/dout]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins xlconcat_2/In1] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconstant_1_dout [get_bd_pins xlconcat_3/In1] [get_bd_pins xlconstant_1/dout]

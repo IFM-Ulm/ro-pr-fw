@@ -255,6 +255,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 	u32 readouts;
 	u32 time;
 	u32 heatup;
+	u32 cooldown;
 
 	u8 answer[3];
 
@@ -383,8 +384,9 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 						readouts = ((u32)datap[5]) | (((u32)datap[6]) << 8) | (((u32)datap[7]) << 16) | (((u32)datap[8]) << 24);
 						time = ((u32)datap[9]) | (((u32)datap[10]) << 8) | (((u32)datap[11]) << 16) | (((u32)datap[12]) << 24);
 						heatup = ((u32)datap[13]) | (((u32)datap[14]) << 8) | (((u32)datap[15]) << 16) | (((u32)datap[16]) << 24);
+						cooldown = ((u32)datap[17]) | (((u32)datap[18]) << 8) | (((u32)datap[19]) << 16) | (((u32)datap[20]) << 24);
 
-						if(measurement_insert(id, mode, readouts, time, heatup) != XST_SUCCESS){
+						if(measurement_insert(id, mode, readouts, time, heatup, cooldown) != XST_SUCCESS){
 							returnValue = XST_FAILURE;
 						}
 
