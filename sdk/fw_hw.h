@@ -21,7 +21,7 @@ struct binfile {
 s32 hardware_init(void);
 s32 hardware_reset(void);
 s32 hardware_setup(void);
-s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u32 meas_heatup, , u32 meas_cooldown);
+s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u32 meas_heatup, u32 meas_cooldown);
 
 s32 hardware_start(void);
 s32 hardware_check_finished(u8* returnVal);
