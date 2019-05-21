@@ -19,10 +19,12 @@
 #define INTERRUPT_CNT (2)
 
 #define PORT_CPU2PL_INTR_MEAS (0)
-#define PORT_CPU2PL_CMD (7)
-#define PORT_CPU2PL_TIME (8)
-#define PORT_CPU2PL_READOUTS (9)
-#define PORT_CPU2PL_MODE (10)
+#define PORT_CPU2PL_CMD (5)
+#define PORT_CPU2PL_MODE (6)
+#define PORT_CPU2PL_TIME (7)
+#define PORT_CPU2PL_READOUTS (8)
+#define PORT_CPU2PL_HEATUP (9)
+#define PORT_CPU2PL_COOLDOWN (10)
 
 #define CPU2PL_CMD_START (1)
 #define CPU2PL_CMD_STOP (0)
@@ -137,7 +139,7 @@ s32 hardware_reset(void){
 }
 
 
-s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u32 meas_heatup){
+s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u32 meas_heatup, u32 meas_cooldown){
 	
 	u32 ddr_addr_low = (u32)data_buffer;
 	u32 ddr_addr_high = (u32)data_buffer + (u32)MAX_BUFFER_BYTES;
@@ -165,6 +167,15 @@ s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u
 		return XST_FAILURE;
 	}
 	
+	// program heatup count
+	if(ah_cpu2pl_write(XPAR_AH_CPU2PL_0_DEVICE_ID, PORT_CPU2PL_HEATUP, meas_heatup) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	// program cooldown count
+	if(ah_cpu2pl_write(XPAR_AH_CPU2PL_0_DEVICE_ID, PORT_CPU2PL_COOLDOWN, meas_cooldown) != XST_SUCCESS){
+		return XST_FAILURE;
+	}	
 	// program measurement mode
 	if(meas_mode == READOUT_MASK_PAR){
 		number_samples = (IMPL_NUMBER_DUT + IMPL_NUMBER_REF) * meas_readouts;

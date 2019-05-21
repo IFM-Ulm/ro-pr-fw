@@ -66,8 +66,8 @@ module system_wrapper
   input [95:0]sys_inputs_serial;
   output [4:0]sys_intr_ack;
   input [2:0]sys_intr_input;
-  output [5:0]sys_intr_output;
-  output [191:0]sys_outputs_serial;
+  output [6:0]sys_intr_output;
+  output [223:0]sys_outputs_serial;
   output [0:0]sys_reset;
   output [0:0]sys_resetn;
 

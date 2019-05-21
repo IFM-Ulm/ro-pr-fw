@@ -1,7 +1,7 @@
 `include "portarray_pack_unpack.vh"
 
 module ro_toplevel #(
-		parameter number_inputs = 6,
+		parameter number_inputs = 7,
 		parameter number_outputs = 3
 	)(
 	input wire CLK,
@@ -27,11 +27,14 @@ module ro_toplevel #(
 	`UNPACK_PORTARRAY(32, number_inputs, w_inputs, data_in)
 
 	reg [31:0] rg_cmd = 0;
+	reg [31:0] rg_heatup = 0;
+	reg [31:0] rg_cooldown = 0;
 	reg [31:0] rg_addr = 0;
 	reg [31:0] rg_time = 0;
 	reg [31:0] rg_number_readouts = 0;
 	reg [31:0] rg_mode = 0;
 	reg [63:0] rg_selectROmask = 0;
+	reg [63:0] rg_heatupROmask = 0;
 
 	wire [number_RO-1:0] counting_in;
 	
@@ -78,6 +81,8 @@ module ro_toplevel #(
 	reg rg_reset_init = 0;
 	
 	reg [4:0] rg_reset_counter = 0;
+	reg [31:0] rg_heatup_counter = 0;
+	reg [31:0] rg_cooldown_counter = 0;
 		
     wire [31:0] w_counter_fixed_RO;
 
@@ -100,19 +105,20 @@ module ro_toplevel #(
 	reg [6:0] rg_ro_counter = 0;
 	reg rg_data_counter = 0;
 	reg rg_start = 0;
+	reg rg_first_meas = 1;
 	reg rg_data_en = 0;
 	
 	reg rg_transfer_en = 0;
 	reg [3:0] rg_transfer_timer = 0;
-	wire [31:0] w_data_in_5;
+	wire [31:0] w_data_in_6;
 	
 	wire w_transfer_active;
 		
 	wire w_start_requested;
 	reg rg_start_accepted = 0;
 	
-	assign w_data_in_5 = w_inputs[5];
-	assign w_transfer_active = w_data_in_5[0];
+	assign w_data_in_6 = w_inputs[6];
+	assign w_transfer_active = w_data_in_6[0];
 	
 	assign w_reset_long = rg_reset_long || RESET;
 	assign w_reset_short = rg_reset_short || RESET;
@@ -124,14 +130,20 @@ module ro_toplevel #(
 	always @(posedge CLK) begin
 		if(RESET) begin
 			rg_cmd <= 0;
+			rg_mode <= 0;
 			rg_time <= 0;
 			rg_number_readouts <= 0;
-			rg_mode <= 0;
+			rg_heatup <= 0;
+			rg_cooldown <= 0;
 		end
 		else begin
 		
+			if(intr_in[0]) begin
+				rg_cmd <= w_inputs[0];
+			end
+			
 			if(intr_in[1]) begin
-				rg_cmd <= w_inputs[1];
+				rg_mode <= w_inputs[1];
 			end
 			
 			if(intr_in[2]) begin
@@ -143,7 +155,11 @@ module ro_toplevel #(
 			end
 			
 			if(intr_in[4]) begin
-				rg_mode <= w_inputs[4];
+				rg_heatup <= w_inputs[4];
+			end
+			
+			if(intr_in[5]) begin
+				rg_cooldown <= w_inputs[5];
 			end
 
 		end
@@ -232,6 +248,10 @@ module ro_toplevel #(
 			rg_transfer_en <= 0;
 			rg_transfer_timer <= 0;
 			rg_data_en <= 0;
+			rg_heatup_counter <= 0;
+			rg_heatupROmask <= 0;
+			rg_cooldown_counter <= 0;
+			rg_first_meas <= 1;
 		end
 		else begin
 			case (fsm_state)
@@ -252,6 +272,9 @@ module ro_toplevel #(
 						end
 						
 						// always allow transfer in IDLE
+						rg_heatup_counter <= 0;
+						rg_cooldown_counter <= 0;
+						rg_first_meas <= 1;
 						rg_transfer_en <= 1;
 						rg_readouts_counter <= 0;
 						rg_start <= 0;
@@ -309,16 +332,30 @@ module ro_toplevel #(
 						
 						rg_data_en <= 0;
 						rg_reset_init <= 1;
-
+						rg_cooldown_counter <= 0;
+						
+						if(rg_heatup_counter < rg_heatup) begin
+							rg_heatupROmask <= 64'h00000000FFFFFFFF;
+						end
+						else begin
+							rg_heatupROmask <= 0;
+						end
+						
 						fsm_state <= WAIT_RESET;
 						
 					end
 					
 				WAIT_RESET : begin
 
+						
 						if(rg_reset_init == 0 && rg_reset_long == 0) begin
-							rg_start <= 1;
-							fsm_state <= WAIT_MEAS;
+							if(rg_first_meas == 0 && rg_cooldown_counter < rg_cooldown) begin
+								rg_cooldown_counter <= rg_cooldown_counter + 1;
+							end
+							else begin
+								rg_start <= 1;
+								fsm_state <= WAIT_MEAS;
+							end
 						end
 						
 						rg_reset_init <= 0;
@@ -328,9 +365,16 @@ module ro_toplevel #(
 				 WAIT_MEAS : begin
 						
 						rg_start <= 0;
-						
+
 						if(w_done) begin
-							fsm_state <= SEND_READOUTS;
+							if(rg_heatup_counter < rg_heatup) begin
+								rg_heatup_counter <= rg_heatup_counter + 1;
+								fsm_state <= RESET_INIT;
+							end
+							else begin
+								rg_first_meas <= 0;
+								fsm_state <= SEND_READOUTS;
+							end
 						end
 						
 						
@@ -594,7 +638,7 @@ module ro_toplevel #(
 
     generate	
 	for (gv = 0; gv < number_RO; gv = gv + 1) begin : GEN_counting
-		assign counting_in[gv] = (w_counting & rg_selectROmask[gv]) | w_reset_short; 
+		assign counting_in[gv] = (w_counting & (rg_selectROmask[gv] | rg_heatupROmask[gv])) | w_reset_short; 
 	end
 	endgenerate
 

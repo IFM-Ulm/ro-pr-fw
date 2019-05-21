@@ -16,7 +16,7 @@ s32 measurement_setup_current(void){
 		return XST_FAILURE;
 	}
 
-	if(hardware_measurement_setup(meas_current->mode, meas_current->readouts, meas_current->time, meas_current->heatup) != XST_SUCCESS){
+	if(hardware_measurement_setup(meas_current->mode, meas_current->readouts, meas_current->time, meas_current->heatup, meas_current->cooldown) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -113,7 +113,7 @@ s32 measurement_check_finished(u8* returnVal){
 	return XST_SUCCESS;
 }
 
-s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup){
+s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown){
 
 	struct meas* meas_insert = (struct meas*)calloc(1,sizeof(struct meas));
 
@@ -127,6 +127,7 @@ s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup){
 	meas_insert->readouts = readouts;
 	meas_insert->time = time;
 	meas_insert->heatup = heatup;
+	meas_insert->cooldown = cooldown;
 
 	if(meas_list == NULL){
 		meas_list = meas_insert;

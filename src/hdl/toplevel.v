@@ -34,7 +34,7 @@ module toplevel (
 	
 );
 	
-	localparam lp_number_inputs = 6;
+	localparam lp_number_inputs = 7;
 	localparam lp_number_outputs = 3;
 	
 	// outputs from system
