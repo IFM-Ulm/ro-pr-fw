@@ -10,6 +10,9 @@
 *.a
 *.o
 
+# in this branch, ignore additional files from uart
+/sdk/uart_custom.c
+/sdk/uart_custom.h
 
 #/tcl/misc_fw_flow.tcl
 #/tcl/help_generate_sdk_projects.tcl
