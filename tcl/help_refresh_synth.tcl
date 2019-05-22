@@ -3,6 +3,9 @@ if { $call_by_script != 1 } {
 	error "this script file is not intended to be run independently"
 }
 
+source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/tcl/settings_jobs.tcl" $project_path]
+
 puts "checking run PR_module_synth_1 for REFRESH"
 if {[expr { [get_property NEEDS_REFRESH [get_runs PR_module_synth_1]] == 1 || [get_property PROGRESS [get_runs PR_module_synth_1]] != "100%"}]} {
 	puts "resetting run PR_module_synth_1"
@@ -77,7 +80,7 @@ if {[expr { [get_property NEEDS_REFRESH [get_runs synth_1]] == 1 || [get_propert
 	puts "resetting run synth_1"
 	reset_run [get_runs synth_1]
 	puts "launching run synth_1"
-	launch_runs [get_runs synth_1] -jobs 4
+	launch_runs [get_runs synth_1] -jobs $jobs_synth
 }
 
 puts "waiting on run synth_1"
