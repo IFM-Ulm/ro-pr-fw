@@ -10,6 +10,9 @@
 *.a
 *.o
 
+# in this branch, ignore additional files from tcpip
+sdk/tcpip_custom.c
+sdk/tcpip_custom.h
 
 #/tcl/misc_fw_flow.tcl
 #/tcl/help_generate_sdk_projects.tcl
