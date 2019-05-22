@@ -1,9 +1,7 @@
-error "not usuable yet"
-
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
 source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
 
-set fw_flow_current 8
+set fw_flow_current 7
 global call_by_script
 set call_by_script 1
 
