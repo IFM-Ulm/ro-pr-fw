@@ -6,6 +6,7 @@
 
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
 source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
+source -notrace [format "%s/tcl/settings_jobs.tcl" $project_path]
 
 set fw_flow_current 5
 global call_by_script
@@ -38,13 +39,13 @@ if { [get_property NEEDS_REFRESH [get_runs impl_2]] == 1 } {
 puts "checking run impl_1 for PROGRESS"
 if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
 	puts "launching run impl_1"
-	launch_runs [get_runs impl_1] -to_step write_bitstream -jobs 1 
+	launch_runs [get_runs impl_1] -to_step write_bitstream -jobs $jobs_impl_1
 }
 
 puts "checking run impl_2 for PROGRESS"
 if {[get_property PROGRESS [get_runs impl_2]] != "100%"} {
 	puts "launching run impl_2"
-	launch_runs [get_runs impl_2] -to_step write_bitstream -jobs 1
+	launch_runs [get_runs impl_2] -to_step write_bitstream -jobs $jobs_impl_2
 }
 
 puts "waiting on run impl_1"
@@ -67,10 +68,10 @@ set child_runs_1 [get_runs *child_impl_1_constr_*]
 set child_runs_2 [get_runs *child_impl_2_constr_*]
 
 puts "launching runs child_impl_1_constr_*"
-launch_runs $child_runs_1 -to_step write_bitstream -jobs 1
+launch_runs $child_runs_1 -to_step write_bitstream -jobs $jobs_impl_1
 
 puts "launching runs child_impl_2_constr_*"
-launch_runs $child_runs_2 -to_step write_bitstream -jobs 1
+launch_runs $child_runs_2 -to_step write_bitstream -jobs $jobs_impl_2
 
 puts "waiting on runs child_impl_1_constr_*"
 foreach run $child_runs_1 {
@@ -86,7 +87,7 @@ foreach run $child_runs_1 {
 		   # error "ERROR: run failed"  
 		   puts "run failed, resetting and restarting..."
 		   reset_runs [get_runs $run]
-		   launch_runs [get_runs $run] -to_step write_bitstream -jobs 1
+		   launch_runs [get_runs $run] -to_step write_bitstream -jobs $jobs_impl_1
 		} else {
 			puts "run successful"
 		}
@@ -107,7 +108,7 @@ foreach run $child_runs_2 {
 		   # error "ERROR: run failed"  
 		   puts "run failed, resetting and restarting..."
 		   reset_runs [get_runs $run]
-		   launch_runs [get_runs $run] -to_step write_bitstream -jobs 1
+		   launch_runs [get_runs $run] -to_step write_bitstream -jobs $jobs_impl_2
 		} else {
 			puts "run successful"
 		}
