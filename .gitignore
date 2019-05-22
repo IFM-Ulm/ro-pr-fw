@@ -9,3 +9,8 @@
 
 *.a
 *.o
+
+
+#/tcl/misc_fw_flow.tcl
+#/tcl/help_generate_sdk_projects.tcl
+#/sdk/fw_impl_generated.h
