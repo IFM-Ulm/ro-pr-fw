@@ -17,6 +17,8 @@ set project_sources_tcl [format "%s/tcl" $project_path]
 set project_sources_sdk [format "%s/sdk" $project_path]
 set project_sources_sw_repo [format "%s/sw_repo" $project_path]
 set project_bitstreams [format "%s/bitstreams" $project_path]
-set project_sdk_name_project "zynq_fw_project"
-set project_sdk_name_hw "zynq_fw_toplevel_hw"
-set project_sdk_name_fsbl "zynq_fw_fsbl"
+set project_sdk_name $project_name
+set project_sdk_name_project [format "%s_app" $project_sdk_name]
+set project_sdk_name_hw [format "%s_hw" $project_sdk_name]
+set project_sdk_name_bsp [format "%s_bsp" $project_sdk_name]
+set project_sdk_name_fsbl [format "%s_fsbl" $project_sdk_name]
