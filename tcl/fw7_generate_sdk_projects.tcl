@@ -22,12 +22,11 @@ set bifId [open [format "%s/%s.bif" $project_sources_sdk $project_sdk_name_proje
 puts $bifId "//arch = zynq; split = false; format = BIN"
 puts $bifId "the_ROM_image:"
 puts $bifId "{"
-puts $bifId [format "\t\[bootloader\]%s/%s.sdk/%s/Release/%s.elf" $project_path $project_name $project_sdk_name_fsbl $project_sdk_name_project]
+puts $bifId [format "\t\[bootloader\]%s/%s.sdk/%s/Release/%s.elf" $project_path $project_name $project_sdk_name_fsbl $project_sdk_name_fsbl]
 puts $bifId [format "\t%s/%s.sdk/%s/toplevel.bit" $project_path $project_name $project_sdk_name_hw]
-puts $bifId [format "\t%s/%s.sdk/%s/Release/%s.elf" $project_path $project_name $project_sdk_name_hw $project_sdk_name_project $project_sdk_name_project]
+puts $bifId [format "\t%s/%s.sdk/%s/Release/%s.elf" $project_path $project_name $project_sdk_name_project $project_sdk_name_project]
 puts $bifId "}"
 close $bifId
-
 
 set helperId [open [format "%s/%s" $project_sources_tcl "help_generate_sdk_projects.tcl"] "w+"]
 puts $helperId [format "cd %s/%s.sdk" $project_path $project_name]
@@ -35,8 +34,7 @@ puts $helperId ""
 puts $helperId [format "setws %s/%s.sdk" $project_path $project_name]
 puts $helperId [format "createhw -name %s -hwspec toplevel.hdf" $project_sdk_name_hw]
 puts $helperId ""
-puts $helperId [format "createapp -name %s -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject %s -os standalone" $project_sdk_name_fsbl $project_sdk_name_hw]
-puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_fsbl]
+
 # puts $helperId ""
 # puts $helperId [format "createapp -name %s_project -app {Empty Application} -proc ps7_cortexa9_0 -hwproject toplevel_hw_platform_0 -os standalone" $project_sdk_name_project]
 # puts $helperId [format "configapp -app %s_project -app " $project_sdk_name_project]
@@ -79,11 +77,8 @@ puts $helperId [format "updatemss -mss %s/system.mss" $project_sdk_name_bsp]
 puts $helperId ""
 puts $helperId "after 5000"
 puts $helperId [format "regenbsp -bsp %s" $project_sdk_name_bsp]
-puts $helperId ""
-puts $helperId "projects -build"
-puts $helperId ""
-puts $helperId ""
-puts $helperId ""
+puts $helperId ""	
+# puts $helperId "projects -build"
 puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_cortexa9_0 -bsp %s -hwproject %s -os standalone" $project_sdk_name_project $project_sdk_name_bsp $project_sdk_name_hw]
 # puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_cortexa9_0 -hwproject %s_hw_platform -os standalone" $project_sdk_name_project $project_sdk_name_project]
 puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_project]
@@ -93,7 +88,10 @@ puts $helperId ""
 puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
 puts $helperId ""
 
-puts $helperId "projects -clean"
+puts $helperId [format "createapp -name %s -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject %s -os standalone" $project_sdk_name_fsbl $project_sdk_name_hw]
+puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_fsbl]
+
+# puts $helperId "projects -clean"
 puts $helperId "projects -build"
 puts $helperId ""
 puts $helperId [format "exec bootgen -image %s/%s.bif -arch zynq -w -o %s/BOOT.bin" $project_sources_sdk $project_sdk_name_project $project_bitstreams]
