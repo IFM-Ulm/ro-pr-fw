@@ -54,6 +54,13 @@
 #define AH_GPIO_LED_NUM 8
 #endif
 
+#ifdef AH_BOARD_PYNQ
+#define AH_BOARD_KNOWN
+#define AH_GPIO_BTN_NUM 4
+#define AH_GPIO_SWS_NUM 2
+#define AH_GPIO_LED_NUM 4
+#endif
+
 // unknown boards, access will always fail
 #ifndef AH_BOARD_KNOWN
 #define AH_GPIO_BTN_NUM 0

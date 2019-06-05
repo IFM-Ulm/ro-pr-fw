@@ -96,6 +96,7 @@ proc xgen_opts_file {libhandle} {
 	# standalone
 	
 	if {$property_board == "digilentinc.com:zybo:part0:1.0"} {
+		# ZYBO
 		puts $file_handle "#define AH_BOARD_ZYBO"
 		set led_id1 "leds_4bits_tri_"
 		set led_id2 "leds_4bits"
@@ -104,6 +105,7 @@ proc xgen_opts_file {libhandle} {
 		set btn_id1 "btns_4bits_tri_"
 		set btn_id2 "btns_4bits"
 	} elseif {$property_board == "em.avnet.com:zed:part0:1.4"} {
+		# ZedBoard
 		puts $file_handle "#define AH_BOARD_ZEDBOARD"
 		set led_id1 "leds_8bits_tri_"
 		set led_id2 "leds_8bits"
@@ -111,6 +113,15 @@ proc xgen_opts_file {libhandle} {
 		set sws_id2 "sws_8bits"
 		set btn_id1 "btns_5bits_tri_"
 		set btn_id2 "btns_5bits"
+	} elseif {$property_board == "www.digilentinc.com:pynq-z1:part0:1.0"} {
+		# PYNQ
+		puts $file_handle "#define AH_BOARD_PYNQ"
+		set led_id1 "leds_4bits_tri_"
+		set led_id2 "leds_4bits"
+		set sws_id1 "sws_2bits_tri_"
+		set sws_id2 "sws_2bits"
+		set btn_id1 "btns_4bits_tri_"
+		set btn_id2 "btns_4bits"
 	} else {
 		puts $file_handle [format "/* unknown board: %s */" $property_board]
 		set led_id1 "leds_unknown"

@@ -3,7 +3,7 @@
 #ifndef AH_TCPIP_H
 #define AH_TCPIP_H
 
-/*	active usage of the Ethernet controller in the hardware:
+/*	activate usage of the Ethernet controller in the hardware:
 		- open "Block Properties" of the IP "ZYNQ7 Processing System"
 		- go to "MIO Configuration"
 		- open "I/O Peripherials"
@@ -11,15 +11,7 @@
 */
 
 /* recommended settings for lwip:
-	
-	use lwip141, lwip202 has some weird bugs with breaks functionality, most important if you use SDK > 2018, e.g. 2018.3
-		goto your SDK installation, e.g. "C:\Xilinx\SDK\2018.3\"
-		nagivate to "data\embeddedsw\ThirdParty\sw_services\lwip141_v2_0\data"
-		open the file "lwip141.mld"
-		remove the line "OPTION library_state = "deprecated";"
-		in the system.mss (BSP settings), select "lwip141"
-
-	
+		
 	lwip_memory_options
 		mem_size = 2097152 (default = 131072)
 		memp_n_pbuf = 128 (default = 16)

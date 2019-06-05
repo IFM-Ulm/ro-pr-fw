@@ -2,8 +2,9 @@
 COMPILER=
 ARCHIVER=
 CP=cp
-COMPILER_FLAGS =
-LIB=libxil.a
+COMPILER_FLAGS=
+EXTRA_COMPILER_FLAGS=
+LIB=libah.a
 
 ifeq ($(notdir $(COMPILER)) , iccarm)
 	EXTRA_ARCHIVE_FLAGS=--create
