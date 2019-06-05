@@ -229,6 +229,10 @@ s32 com_handleInactivity(u8* returnVal){
 		if(tcpip_custom_dataflow_control(0) != XST_SUCCESS){
 			return XST_FAILURE;
 		}
+		
+	if(tcpip_custom_dataflow_request_accept(0) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
 
 	}
 

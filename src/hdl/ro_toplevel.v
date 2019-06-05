@@ -40,15 +40,14 @@ module ro_toplevel #(
 	
 	wire [3:0] select_static;
 	wire [7:0] done_static;
-	wire done_static_0to3;
-	wire done_static_4to7;
-	wire done_static_all;
+	// wire done_static_0to3;
+	// wire done_static_4to7;
+	// wire done_static_all;
 	wire [7:0] counting_static;
-	wire counting_static_0to3;
-	wire counting_static_4to7;
-	wire counting_static_all;
+	// wire counting_static_0to3;
+	// wire counting_static_4to7;
+	// wire counting_static_all;
 	
-	wire w_started;
     wire w_done;
     
     reg system_reset = 0;
@@ -68,9 +67,6 @@ module ro_toplevel #(
     reg [31:0] pr_counter_fixed_RO;
 
 	reg [31:0] rg_LED = 0;
-			
-	reg decouple_deactivate = 0;
-	reg [4:0] decouple_counter = 0;
 	
     localparam reset_IDLE = 1'b0, reset_COUNT = 1'b1;
     reg reset_state = reset_IDLE;
@@ -92,10 +88,7 @@ module ro_toplevel #(
     wire [31:0] data_out_1;
     wire [31:0] data_out_2;
 
-	wire w_done_all;
-    wire w_counting_all;
     wire w_counting;
-	
 	
 	localparam IDLE = 4'd0, CHECK_NEXT_MEAS = 4'd1,  RESET_INIT = 4'd2, WAIT_RESET = 4'd3, WAIT_MEAS = 4'd4, SEND_READOUTS = 4'd5;
 	reg [3 : 0] fsm_state = IDLE;
@@ -252,6 +245,7 @@ module ro_toplevel #(
 			rg_heatupROmask <= 0;
 			rg_cooldown_counter <= 0;
 			rg_first_meas <= 1;
+			rg_start_accepted <= 0;
 		end
 		else begin
 			case (fsm_state)
@@ -280,6 +274,7 @@ module ro_toplevel #(
 						rg_start <= 0;
 						gen_intr_out[1] <= 0;
 						rg_data_en <= 0;
+						rg_send_counter <= 0;
 						
 					end
 				
@@ -291,19 +286,19 @@ module ro_toplevel #(
 						rg_data_counter <= 0;
 						
 						if(rg_readouts_counter < rg_number_readouts) begin
-							if(rg_send_counter >= 512 && rg_transfer_en == 0) begin
+							if(rg_send_counter >= 256 && rg_transfer_en == 0) begin
 								rg_send_counter <= rg_send_counter - 256;
-								rg_transfer_timer <= 3;
+								rg_transfer_timer <= 10;
 								rg_transfer_en <= 1;
 							end
 							else if(rg_transfer_en == 1) begin
-								if(rg_transfer_timer == 0) begin
-									if(w_transfer_active == 0) begin
+								if(w_transfer_active == 0) begin
+									if(rg_transfer_timer == 0) begin
 										rg_transfer_en <= 0;
 									end
-								end
-								else begin
-									rg_transfer_timer <= rg_transfer_timer - 1;
+									else begin
+										rg_transfer_timer <= rg_transfer_timer - 1;
+									end
 								end
 							end
 							else begin
@@ -443,44 +438,22 @@ module ro_toplevel #(
 		end
 	end
 	
-	assign START = decouple_deactivate == 0 ? rg_start : 0;
+	assign START = DECOUPLE == 1'b0  ? rg_start : 0;
   
-	assign SELECT = decouple_deactivate == 0 ? rg_addr[6:0] : 0;
-			
-	assign w_counter_fixed_RO = decouple_deactivate == 0 ? pr_counter_fixed_RO : 0;
+	assign SELECT = DECOUPLE == 1'b0  ? rg_addr[6:0] : 0;
+		
+	assign w_counter_fixed_RO = DECOUPLE == 1'b0 ? pr_counter_fixed_RO : 0;
 
-    FDRE #(.INIT(1'b0)) FDRE_hold_start (.Q(w_started), .C(CLK), .CE(START), .R(w_reset_pulse), .D(1'b1));
-
-	assign data_out_0 = {10'b0, rg_addr, rg_transfer_timer, w_transfer_active, rg_transfer_en, w_done, rg_start, rg_reset_init, rg_start_accepted, w_start_requested, fsm_state}; // debug port
+	// assign data_out_0 = {10'b0, rg_addr, rg_transfer_timer, w_transfer_active, rg_transfer_en, w_done, rg_start, rg_reset_init, rg_start_accepted, w_start_requested, fsm_state}; // debug port
 	//assign data_out_0 = {32'b0}; // debug port
 	assign data_out_1 = w_counter_fixed_RO;
-	assign data_out_2 = {30'b0, rg_transfer_en, rg_data_en};
+	assign data_out_2 = {counting_in[31],START,rg_start,START && select_static == 4'd0,1'b0, DECOUPLE, rg_send_counter[10:0], rg_readouts_counter[5:0], rg_ro_counter[6:0], rg_transfer_en, rg_data_en};
+	assign data_out_0 = icounter_ref;
 	assign data_out = {data_out_2, data_out_1, data_out_0};
 	
 	assign intr_out = gen_intr_out;
 
-	assign reset_counter = decouple_deactivate || w_reset_long || RESET;
-	
-	always @(posedge CLK) begin
-		if(RESET) begin
-			decouple_deactivate <= 0;
-			decouple_counter <= 0;
-		end
-		else begin
-			if(DECOUPLE) begin
-				decouple_deactivate <= 1;
-				decouple_counter <= 24;
-			end
-			else begin
-				if(decouple_counter > 0) begin
-					decouple_counter <= decouple_counter - 1;
-				end
-				else begin
-					decouple_deactivate <= 0;
-				end
-			end
-		end
-	end
+	assign reset_counter = DECOUPLE || w_reset_long || RESET;
 	
 	/* select_static :
 		0 : 1us
@@ -492,12 +465,12 @@ module ro_toplevel #(
 	*/	
 	assign select_static = rg_time[3:0];
 	
-	assign w_done = decouple_deactivate == 0 ? done_static_all : 0;
-	assign w_counting = decouple_deactivate == 0 ? counting_static_all : 0; // non-static, reprogramable counter
+	assign w_done = DECOUPLE == 1'b0 ? done_static > 0 : 0;
+	assign w_counting = DECOUPLE == 1'b0 ? counting_static > 0 : 0; // non-static, reprogramable counter
 	
 	assign done_static[6] = 0;
 	assign counting_static[6] = 0;
-	
+	/*
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_done_static_0t3 (.O(done_static_0to3),.I5(done_static[3]),.I4(done_static[2]),.I3(done_static[1]),.I2(done_static[0]),.I1(select_static[1]),.I0(select_static[0]));
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_done_static_4to7 (.O(done_static_4to7),.I5(done_static[7]),.I4(done_static[6]),.I3(done_static[5]),.I2(done_static[4]),.I1(select_static[1]),.I0(select_static[0]));
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFFFFAAAA55550000)) LUT6_done_static_all (.O(done_static_all),.I5(done_static_4to7),.I4(done_static_0to3),.I3(0),.I2(0),.I1(select_static[3]),.I0(select_static[2]));
@@ -505,13 +478,13 @@ module ro_toplevel #(
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_counting_static_0to3 (.O(counting_static_0to3),.I5(counting_static[3]),.I4(counting_static[2]),.I3(counting_static[1]),.I2(counting_static[0]),.I1(select_static[1]),.I0(select_static[0]));
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_counting_static_4to7 (.O(counting_static_4to7),.I5(counting_static[7]),.I4(counting_static[6]),.I3(counting_static[5]),.I2(counting_static[4]),.I1(select_static[1]),.I0(select_static[0]));
 	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFFFFAAAA55550000)) LUT6_counting_static_all (.O(counting_static_all),.I5(counting_static_4to7),.I4(counting_static_0to3),.I3(0),.I2(0),.I1(select_static[3]),.I0(select_static[2]));
-	
+	*/
 	
 	timer_fixed #(48'd000007000) // 100 MHz
 	inst_timer_70us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd7),
         .done(done_static[7]),
 		.counting(counting_static[7]),
         .timer_count()
@@ -534,7 +507,7 @@ module ro_toplevel #(
 	inst_timer_50us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd5),
         .done(done_static[5]),
 		.counting(counting_static[5]),
         .timer_count()
@@ -544,7 +517,7 @@ module ro_toplevel #(
 	inst_timer_30us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd4),
         .done(done_static[4]),
 		.counting(counting_static[4]),
         .timer_count()
@@ -554,7 +527,7 @@ module ro_toplevel #(
 	inst_timer_1ms (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd3),
         .done(done_static[3]),
 		.counting(counting_static[3]),
         .timer_count()
@@ -564,7 +537,7 @@ module ro_toplevel #(
 	inst_timer_100us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd2),
         .done(done_static[2]),
 		.counting(counting_static[2]),
         .timer_count()
@@ -574,7 +547,7 @@ module ro_toplevel #(
 	inst_timer_10us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd1),
         .done(done_static[1]),
 		.counting(counting_static[1]),
         .timer_count()
@@ -584,7 +557,7 @@ module ro_toplevel #(
 	inst_timer_1us (
         .CLK(CLK),
         .reset(w_reset_pulse),
-        .start(START),
+        .start(START && select_static == 4'd0),
         .done(done_static[0]),
 		.counting(counting_static[0]),
         .timer_count()
@@ -638,7 +611,7 @@ module ro_toplevel #(
 
     generate	
 	for (gv = 0; gv < number_RO; gv = gv + 1) begin : GEN_counting
-		assign counting_in[gv] = (w_counting & (rg_selectROmask[gv] | rg_heatupROmask[gv])) | w_reset_short; 
+		assign counting_in[gv] = !DECOUPLE && ((w_counting & (rg_selectROmask[gv] | rg_heatupROmask[gv])) | w_reset_short); 
 	end
 	endgenerate
 

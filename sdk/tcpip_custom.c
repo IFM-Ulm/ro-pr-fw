@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "xparameters.h"
+
 // forward declarations
 u8 tcpip_custom_insert_data(void);
 struct data_com* tcpip_custom_get_data_tcpip(void);
@@ -112,6 +114,7 @@ s32 tcpip_custom_checkDataSent(u8* returnVal){
 	if(returnVal != NULL){
 
 		if(data_total_acked == data_total_sent){
+			tcpip_custom_resetDataSent(0);
 			*returnVal = 1;
 		}
 		else{
