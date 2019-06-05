@@ -43,9 +43,9 @@ if {[llength $file_list] > 0} {
 
 
 file copy [format "%s/%s.runs/impl_1/toplevel.bit" $project_path $project_name] [format "%s/t1.bit" $project_bitstreams]
-write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t1.bit" $project_bitstreams] [format "%s/t1.bin" $project_bitstreams]
+write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t1.bit" $project_bitstreams] [format "%s/T1.bin" $project_bitstreams]
 file copy [format "%s/%s.runs/impl_2/toplevel.bit" $project_path $project_name] [format "%s/t2.bit" $project_bitstreams]
-write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t2.bit" $project_bitstreams] [format "%s/t2.bin" $project_bitstreams]
+write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t2.bit" $project_bitstreams] [format "%s/T2.bin" $project_bitstreams]
 
 set child_runs_1 [get_runs *child_impl_1_constr_*]
 set run_counter 0
@@ -54,7 +54,7 @@ foreach run $child_runs_1 {
 	incr run_counter 1
 	incr bin_counter_1 1
 	file copy [format "%s/%s.runs/%s/ro_top_inst_PR_module_inst1_PR_module_partial.bit" $project_path $project_name $run] [format "%s/t1i1r%02d.bit" $project_bitstreams $run_counter]
-	write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t1i1r%02d.bit" $project_bitstreams $run_counter] [format "%s/t1i1r%02d.bin" $project_bitstreams $run_counter]
+	write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t1i1r%02d.bit" $project_bitstreams $run_counter] [format "%s/T1I1R%02d.bin" $project_bitstreams $run_counter]
 }
 
 set child_runs_2 [get_runs *child_impl_2_constr_*]
@@ -64,7 +64,7 @@ foreach run $child_runs_2 {
 	incr run_counter 1
 	incr bin_counter_2 1
 	file copy [format "%s/%s.runs/%s/ro_top_inst_PR_module_inst1_PR_module_partial.bit" $project_path $project_name $run] [format "%s/t2i1r%02d.bit" $project_bitstreams $run_counter]
-	write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t2i1r%02d.bit" $project_bitstreams $run_counter] [format "%s/t2i1r%02d.bin" $project_bitstreams $run_counter]
+	write_cfgmem -format BIN -interface SMAPx32 -disablebitswap -loadbit [format "up 0x0 %s/t2i1r%02d.bit" $project_bitstreams $run_counter] [format "%s/T2I1R%02d.bin" $project_bitstreams $run_counter]
 }
 
 
@@ -90,13 +90,13 @@ puts $paramId [format "%d" $ro_number]
 puts $paramId [format "%d" $bin_counter_1]
 puts $paramId [format "%d" $bin_counter_2]
 puts $paramId [format "%d" [expr { $bin_counter_1 + $bin_counter_2 }]]
-set t1_size [file size [format "%s/t1.bin" $project_bitstreams]]
+set t1_size [file size [format "%s/T1.bin" $project_bitstreams]]
 puts $paramId [format "%d" $t1_size]
-set t2_size [file size [format "%s/t2.bin" $project_bitstreams]]
+set t2_size [file size [format "%s/T2.bin" $project_bitstreams]]
 puts $paramId [format "%d" $t2_size]
-set t1b_size [file size [format "%s/t%si1r01.bin" $project_bitstreams "1"]]
+set t1b_size [file size [format "%s/T%sI1R01.bin" $project_bitstreams "1"]]
 puts $paramId [format "%d" $t1b_size]
-set t2b_size [file size [format "%s/t%si1r01.bin" $project_bitstreams "2"]]
+set t2b_size [file size [format "%s/T%sI1R01.bin" $project_bitstreams "2"]]
 puts $paramId [format "%d" $t2b_size]
 close $paramId
 

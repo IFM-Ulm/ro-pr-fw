@@ -34,7 +34,7 @@ module timer_fixed #(
 		.DEVICE("7SERIES"), // Target Device: "VIRTEX5", "VIRTEX6", "7SERIES"
 		.DIRECTION("UP"), // Counter direction, "UP" or "DOWN"
 		.RESET_UPON_TC("FALSE"), // Reset counter upon terminal count, "TRUE" or "FALSE"
-		.TC_VALUE(tc_maxVal),// Terminal count value
+		.TC_VALUE(tc_maxVal-2),// Terminal count value
 		.WIDTH_DATA(48) // Counter output bus width, 1-48
 	) COUNTER_TC_MACRO_inst (
 		.Q(timer_count), // Counter output bus, width determined by WIDTH_DATA parameter
