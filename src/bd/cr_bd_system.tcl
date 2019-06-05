@@ -1,5 +1,7 @@
+# # create with the following command:
+# write_bd_tcl -no_project_wrapper cr_bd_system.tcl
 # # call like:
-# source -quiet D:/FPGA_PUFs/RO/pynq_fw/src/bd/test.tcl
+# source -quiet D:/FPGA_PUFs/RO/pynq_fw/src/bd/cr_bd_system.tcl
 # cr_bd_system ""
 
 # Proc to create BD system

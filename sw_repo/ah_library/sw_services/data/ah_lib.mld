@@ -6,6 +6,7 @@ BEGIN LIBRARY ah_lib
 	OPTION copyfiles = all;
 	OPTION REQUIRES_OS = (standalone);
 	OPTION desc = "AH libraries";
+	OPTION APP_LINKER_FLAGS = "-Wl,--start-group,-lxilffs,-lxil,-llwip4,-lah,-lgcc,-lc,--end-group";
 	OPTION VERSION = 1.1;
 	OPTION NAME = ah_lib;
 

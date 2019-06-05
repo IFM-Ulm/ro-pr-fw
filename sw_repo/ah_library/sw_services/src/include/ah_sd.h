@@ -19,7 +19,7 @@
 
 #include "ff.h"
 
-#ifndef FAT_FS
+#ifndef FF_DEFINED
 #error library xilffs needs to be activated in order to use AH_SD
 #endif
 

@@ -2,7 +2,9 @@
 
 #ifdef AH_GPIO_ACTIVATED
 
+#ifdef XPAR_XGPIO_NUM_INSTANCES
 #include "xgpio.h"
+#endif
 
 #include "ah_scugic.h"
 #include "ah_gpio.h"
@@ -11,9 +13,11 @@
 
 #define UNUSED(x) (void)(x)
 
+#ifdef XPAR_XGPIO_NUM_INSTANCES
 static XGpio Gpio_led;
 static XGpio Gpio_btn;
 static XGpio Gpio_sws;
+#endif
 
 static u8 ah_gpio_intvar_isInit = 0;
 static u8 ah_gpio_intvar_isSetup = 0;
@@ -29,6 +33,8 @@ void (*ah_gpio_intfcn_intrSWS)(u32) = NULL;
 void btn_handler(void* data);
 void sws_handler(void* data);
 s32 ah_gpio_intfnc_readLED(u32* led_value);
+
+#ifdef XPAR_XGPIO_NUM_INSTANCES
 
 s32 ah_gpio_init(void){
 	
@@ -326,8 +332,8 @@ s32 ah_gpio_getLED(u8 led_index, u8* led_value){
 	return XST_SUCCESS;
 #else
 
-		UNUSED(led_index);		
-		UNUSED(led_value);		
+	UNUSED(led_index);		
+	UNUSED(led_value);		
 
 	return XST_FAILURE;
 #endif
@@ -407,6 +413,147 @@ void sws_handler(void* data){
 	UNUSED(&Gpio_sws);
 #endif
 }
+
+#else
+
+
+s32 ah_gpio_init(void){
+	
+	if(!ah_gpio_intvar_isInit){
+				
+		if(!ah_scugic_isInit()){
+			if (ah_scugic_init() != XST_SUCCESS) {
+				return XST_FAILURE;
+			}
+		}
+		
+		ah_gpio_intvar_isInit = 1;
+	}
+	
+	return XST_SUCCESS;
+}
+
+u8 ah_gpio_isInit(void){
+	return ah_gpio_intvar_isInit;
+}
+
+s32 ah_gpio_setup(u8 re_setup){
+	
+	if(!ah_gpio_intvar_isInit){
+		return XST_FAILURE;
+	}
+	
+	if(!ah_gpio_intvar_isSetup_initial && re_setup){
+		return XST_FAILURE;
+	}
+	
+	if(!ah_gpio_intvar_isSetup || re_setup){
+		
+		if(!ah_gpio_intvar_isSetup_initial){
+			if(!ah_scugic_isSetup()){
+				if (ah_scugic_setup() != XST_SUCCESS) {
+					return XST_FAILURE;
+				}
+			}
+		}
+		
+		ah_gpio_intvar_isSetup_initial = 1;
+		ah_gpio_intvar_isSetup = 1;
+	}
+	
+	return XST_SUCCESS;
+}
+
+u8 ah_gpio_isSetup(void){
+	return ah_gpio_intvar_isSetup;
+}
+
+s32 ah_gpio_setup_callbackBTN(void (*fcnptr)(u32)){
+	UNUSED(fcnptr);
+	return XST_SUCCESS;
+}
+
+s32 ah_gpio_setup_callbackSWS(void (*fcnptr)(u32)){
+	UNUSED(fcnptr);
+	return XST_SUCCESS;
+}
+
+s32 ah_gpio_enable(u8 re_enable){
+	
+	if(!ah_gpio_intvar_isEnabled_initial && re_enable){
+		return XST_FAILURE;
+	}
+	
+	if(!ah_gpio_intvar_isEnabled || re_enable){
+	
+		if(!ah_gpio_intvar_isSetup){
+			return XST_FAILURE;
+		}
+			
+		if(!ah_gpio_intvar_isEnabled_initial){
+			if(!ah_scugic_isEnabled()){
+				if (ah_scugic_enable() != XST_SUCCESS) {
+					return XST_FAILURE;
+				}
+			}
+		}
+		
+		ah_gpio_intvar_isEnabled_initial = 1;
+		ah_gpio_intvar_isEnabled = 1;
+	}
+	
+	return XST_SUCCESS;
+}
+
+u8 ah_gpio_isEnabled(void){
+	return ah_gpio_intvar_isEnabled;
+}
+
+s32 ah_gpio_setLED_raw(u32 led_value){
+	
+	UNUSED(led_value);
+	return XST_FAILURE;
+}
+
+s32 ah_gpio_intfnc_readLED(u32* led_value){
+	
+	UNUSED(led_value);
+	return XST_FAILURE;
+}
+
+s32 ah_gpio_setLED(u8 led_index, u8 led_value){
+
+	UNUSED(led_index);
+	UNUSED(led_value);
+	
+	return XST_FAILURE;
+}
+
+s32 ah_gpio_getLED(u8 led_index, u8* led_value){
+
+	UNUSED(led_index);		
+	UNUSED(led_value);		
+
+	return XST_FAILURE;
+}
+
+s32 ah_gpio_getSWS(u8 sws_index, u8* value){
+
+	UNUSED(sws_index);
+	UNUSED(value);
+
+	return XST_FAILURE;
+}
+
+void btn_handler(void* data){
+	UNUSED(data);
+}
+
+void sws_handler(void* data){
+	UNUSED(data);
+}
+
+#endif
 
 
 #endif

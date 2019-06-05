@@ -106,21 +106,32 @@ u8 ah_sd_check_DCacheIsEnabled(void){
 s32 ah_sd_loadFile(char *fileName, u32 addr, u32* fileSize){
 
 	FIL fil;
+	FILINFO finf;
+	FRESULT ff_result;
 	UINT br;
 	
-	if (f_open(&fil, fileName, FA_READ) != FR_OK) {
+	ff_result = f_stat(fileName, &finf);
+	if(ff_result != FR_OK) {
+		return XST_FAILURE;
+	}
+	
+	ff_result = f_open(&fil, fileName, FA_READ);
+	if(ff_result != FR_OK) {
 		return XST_FAILURE;
 	}
 
-	if (f_lseek(&fil, 0) != FR_OK) {
+	ff_result = f_lseek(&fil, 0);
+	if(ff_result != FR_OK) {
 		return XST_FAILURE;
 	}
 
-	if (f_read(&fil, (void*) addr, fil.fsize, &br) != FR_OK) {
+	ff_result = f_read(&fil, (void*) addr, finf.fsize, &br);
+	if(ff_result != FR_OK) {
 		return XST_FAILURE;
 	}
 
-	if (f_close(&fil) != FR_OK) {
+	ff_result = f_close(&fil);
+	if(ff_result != FR_OK) {
 		return XST_FAILURE;
 	}
 
@@ -129,41 +140,13 @@ s32 ah_sd_loadFile(char *fileName, u32 addr, u32* fileSize){
 	}
 
 	if(fileSize != NULL){
-		*fileSize = fil.fsize;
+		*fileSize = finf.fsize;
 	}
 
 	return XST_SUCCESS;
 }
 
 s32 ah_sd_writeFile(char* fileName, u8* data, u32 length){
-
-	FIL file_data;
-	UINT written;
-	
-	if(!ah_sd_intvar_mounted){
-		return XST_FAILURE;
-	}
-	
-	if(data == NULL || fileName == NULL){
-		return XST_FAILURE;
-	}
-	
-	if(f_open(&file_data, fileName, FA_CREATE_ALWAYS | FA_WRITE) != FR_OK){
-		return XST_FAILURE;
-	}
-
-	if(f_write(&file_data, data, length, &written) != FR_OK){
-		return XST_FAILURE;
-	}
-
-	if(f_close(&file_data) != FR_OK){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
-}
-
-s32 ah_sd_appendFile(char* fileName, u8* data, u32 length){
 
 	FIL file_data;
 	FRESULT ff_result;
@@ -176,13 +159,51 @@ s32 ah_sd_appendFile(char* fileName, u8* data, u32 length){
 	if(data == NULL || fileName == NULL){
 		return XST_FAILURE;
 	}
+	
+	ff_result = f_open(&file_data, fileName, FA_CREATE_ALWAYS | FA_WRITE);
+	if(ff_result != FR_OK){
+		return XST_FAILURE;
+	}
 
+	ff_result = f_write(&file_data, data, length, &written);
+	if(ff_result != FR_OK){
+		return XST_FAILURE;
+	}
+
+	ff_result = f_close(&file_data);
+	if(ff_result != FR_OK){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 ah_sd_appendFile(char* fileName, u8* data, u32 length){
+
+	FIL file_data;
+	FILINFO finf;
+	FRESULT ff_result;
+	UINT written;
+	
+	if(!ah_sd_intvar_mounted){
+		return XST_FAILURE;
+	}
+	
+	if(data == NULL || fileName == NULL){
+		return XST_FAILURE;
+	}
+	
+	ff_result = f_stat(fileName, &finf);
+	if(ff_result != FR_OK) {
+		return XST_FAILURE;
+	}
+	
 	ff_result = f_open(&file_data, fileName, FA_CREATE_NEW | FA_WRITE);
 	if(ff_result != FR_OK){
 		return XST_FAILURE;
 	}
 	
-	ff_result = f_lseek(&file_data, file_data.fsize);
+	ff_result = f_lseek(&file_data, finf.fsize);
 	if(ff_result != FR_OK){
 		return XST_FAILURE;
 	}
@@ -206,8 +227,9 @@ s32 ah_sd_appendFile(char* fileName, u8* data, u32 length){
 
 s32 ah_sd_openFile(char* fileName, u8 flag, u8* id){
 	
-	FRESULT ff_result;
 	FIL* file_target = NULL;
+	FRESULT ff_result;
+	FILINFO finf;
 	u32 ind;
 		
 	if(!ah_sd_intvar_mounted){
@@ -236,6 +258,11 @@ s32 ah_sd_openFile(char* fileName, u8 flag, u8* id){
 		return XST_FAILURE;
 	}
 	
+	ff_result = f_stat(fileName, &finf);
+	if(ff_result != FR_OK) {
+		return XST_FAILURE;
+	}
+	
 	if(flag == AH_SD_FLAG_READ){
 		ff_result = f_open(file_target, fileName, FA_READ);
 		files_status[ind] = 2;
@@ -257,13 +284,13 @@ s32 ah_sd_openFile(char* fileName, u8 flag, u8* id){
 	}
 
 	if(flag == AH_SD_FLAG_APPEND){
-		ff_result = f_lseek (file_target, file_target->fsize);
+		ff_result = f_lseek (file_target, finf.fsize);
+		if (ff_result != FR_OK) {
+			files_status[ind] = 1;
+			return XST_FAILURE;
+		}
 	}
-	if (ff_result != FR_OK) {
-		files_status[ind] = 1;
-		return XST_FAILURE;
-	}
-	
+
 	return XST_SUCCESS;	
 }
 
@@ -289,6 +316,7 @@ s32 getFile(u8 id, FIL* file){
 s32 ah_sd_closeFile(u8 id){
 	
 	FIL* file_target = NULL;
+	FRESULT ff_result;
 	
 	if(!ah_sd_intvar_mounted){
 		return XST_FAILURE;
@@ -300,7 +328,8 @@ s32 ah_sd_closeFile(u8 id){
 	
 	file_target = &files_list[id];
 	
-	if(f_close(file_target) != FR_OK){
+	ff_result = f_close(file_target);
+	if(ff_result != FR_OK){
 		files_status[id] = 1;
 		return XST_FAILURE;
 	}
@@ -319,6 +348,7 @@ s32 ah_sd_readLine(u8 id, char* dest, u32* length){
 	char byte_buffer = 0;
 	UINT bytes_read = 0;
 	FIL* file_target = NULL;
+	FRESULT ff_result;
 
 	if(files_status[id] != 2){
 		return XST_FAILURE;
@@ -330,7 +360,8 @@ s32 ah_sd_readLine(u8 id, char* dest, u32* length){
 	
 	file_target = &files_list[id];
 	
-	if(f_read(file_target, (void*) &byte_buffer, 1, &bytes_read) != FR_OK){
+	ff_result = f_read(file_target, (void*) &byte_buffer, 1, &bytes_read);
+	if(ff_result != FR_OK){
 		return XST_FAILURE;
 	}
 
@@ -358,7 +389,8 @@ s32 ah_sd_readLine(u8 id, char* dest, u32* length){
 				dest[counter++] = byte_buffer;
 			}
 
-			if(f_read(file_target, (void*) &byte_buffer, 1, &bytes_read) != FR_OK){
+			ff_result = f_read(file_target, (void*) &byte_buffer, 1, &bytes_read);
+			if(ff_result != FR_OK){
 				return XST_FAILURE;
 			}
 		}

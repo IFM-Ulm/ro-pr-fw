@@ -43,9 +43,9 @@ static u8 ah_tcpip_intvar_server_alive = 0;
 static u8 ah_tcpip_intvar_connection_alive = 0;
 
 static unsigned char ah_tcpip_intvar_mac[6];
-static struct ip_addr ah_tcpip_intvar_ip;
-static struct ip_addr ah_tcpip_intvar_netmask;
-static struct ip_addr ah_tcpip_intvar_gateway;
+static struct ip4_addr ah_tcpip_intvar_ip;
+static struct ip4_addr ah_tcpip_intvar_netmask;
+static struct ip4_addr ah_tcpip_intvar_gateway;
 static u8 ah_tcpip_intvar_port;
 
 static u8 ah_tcpip_intvar_isset_mac = 0;
@@ -64,7 +64,6 @@ static u8 ah_tcpip_intvar_packet_flag = 0;
 static u8 ah_tcpip_intvar_packet_usecallback = 0;
 static u8 ah_tcpip_intvar_packet_usecallback_unsafe = 0;
 
-static u8 ah_tcpip_intvar_memory_manual = 0;
 static u32 ah_tcpip_intvar_data_unacked = 0;
 static u32 ah_tcpip_intvar_max_unacked = 0;
 static u32 ah_tcpip_intvar_accept_data = 0;
@@ -846,10 +845,10 @@ err_t ah_tcpip_intfcn_callback_receive(void *arg, struct tcp_pcb *tpcb, struct p
 		// indicate that the packet has been received */
 		tcp_recved(tpcb, p->len);
 
-		if(!ah_tcpip_intvar_memory_manual){
-			// free the received pbuf
-			pbuf_free(p);
-		}
+#ifndef AH_TCPIP_MANUAL_MEMORY
+		// free the received pbuf
+		pbuf_free(p);
+#endif
 		
 		return ERR_OK;
 	}
