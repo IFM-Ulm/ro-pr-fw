@@ -1,53 +1,38 @@
-`include "portarray_pack_unpack.vh"
-
-module ro_toplevel #(
-		parameter number_inputs = 7,
-		parameter number_outputs = 3
-	)(
+module ro_toplevel (
 	input wire CLK,
 	input wire RESET,
 	input wire DECOUPLE,
 	
-	input wire [number_inputs-1:0] intr_in,
-	input wire [number_inputs*32-1:0] data_in,
+	output data_en,
+	output [31:0] data_out,
+
+	input [31:0] meas_cmd,
+	input [31:0] meas_mode,
+	input [31:0] meas_time,
+	input [31:0] meas_readouts,
+	input [31:0] meas_heatup,
+	input [31:0] meas_cooldown,
 	
-	output wire [number_outputs-1:0] intr_out,
-	output wire [number_outputs*32-1:0] data_out,
+	output meas_done,
 	
-	input wire [3:0] SW,
-	input wire [3:0] BTN,
-	output wire [3:0] LED
+	output transfer_en,
+	input transfer_active
 
 );
 
 	localparam number_RO = 32;
-	localparam last_RO = 64'h0000000080000000;
 
-	wire [31:0] w_inputs [0:number_inputs-1];
-	`UNPACK_PORTARRAY(32, number_inputs, w_inputs, data_in)
-
-	reg [31:0] rg_cmd = 0;
-	reg [31:0] rg_heatup = 0;
-	reg [31:0] rg_cooldown = 0;
 	reg [31:0] rg_addr = 0;
-	reg [31:0] rg_time = 0;
-	reg [31:0] rg_number_readouts = 0;
-	reg [31:0] rg_mode = 0;
-	reg [63:0] rg_selectROmask = 0;
-	reg [63:0] rg_heatupROmask = 0;
+
+	reg [31:0] rg_selectROmask = 0;
+	reg [31:0] rg_heatupROmask = 0;
 
 	wire [number_RO-1:0] counting_in;
 	
 	wire [3:0] select_static;
 	wire [7:0] done_static;
-	// wire done_static_0to3;
-	// wire done_static_4to7;
-	// wire done_static_all;
 	wire [7:0] counting_static;
-	// wire counting_static_0to3;
-	// wire counting_static_4to7;
-	// wire counting_static_all;
-	
+
     wire w_done;
     
     reg system_reset = 0;
@@ -60,14 +45,12 @@ module ro_toplevel #(
 	wire [6:0] SELECT;
 	
 	wire [number_RO - 1 : 0] pr_RO_out;
-	wire pr_ref_out;
+
 	wire [32 * number_RO - 1 : 0] icounter_fixed_RO;
 	wire [31:0] icounter_ref;
 	
     reg [31:0] pr_counter_fixed_RO;
 
-	reg [31:0] rg_LED = 0;
-	
     localparam reset_IDLE = 1'b0, reset_COUNT = 1'b1;
     reg reset_state = reset_IDLE;
 	
@@ -82,7 +65,8 @@ module ro_toplevel #(
 		
     wire [31:0] w_counter_fixed_RO;
 
-	reg [number_outputs - 1 : 0] gen_intr_out = 0;
+	reg rg_meas_done = 0;
+	assign meas_done = rg_meas_done;
     
     wire [31:0] data_out_0;
     wire [31:0] data_out_1;
@@ -99,64 +83,23 @@ module ro_toplevel #(
 	reg rg_data_counter = 0;
 	reg rg_start = 0;
 	reg rg_first_meas = 1;
+	
 	reg rg_data_en = 0;
+	assign data_en = rg_data_en;
 	
 	reg rg_transfer_en = 0;
-	reg [3:0] rg_transfer_timer = 0;
-	wire [31:0] w_data_in_6;
+	assign transfer_en = rg_transfer_en;
 	
-	wire w_transfer_active;
-		
+	reg [3:0] rg_transfer_timer = 0;
+
 	wire w_start_requested;
 	reg rg_start_accepted = 0;
-	
-	assign w_data_in_6 = w_inputs[6];
-	assign w_transfer_active = w_data_in_6[0];
-	
+
 	assign w_reset_long = rg_reset_long || RESET;
 	assign w_reset_short = rg_reset_short || RESET;
 	assign w_reset_pulse = rg_reset_pulse || RESET;
 	
 	assign LED = 0;
-	
-	// logic to store input values when data transfer is indicated by interrupts
-	always @(posedge CLK) begin
-		if(RESET) begin
-			rg_cmd <= 0;
-			rg_mode <= 0;
-			rg_time <= 0;
-			rg_number_readouts <= 0;
-			rg_heatup <= 0;
-			rg_cooldown <= 0;
-		end
-		else begin
-		
-			if(intr_in[0]) begin
-				rg_cmd <= w_inputs[0];
-			end
-			
-			if(intr_in[1]) begin
-				rg_mode <= w_inputs[1];
-			end
-			
-			if(intr_in[2]) begin
-				rg_time <= w_inputs[2];
-			end
-
-			if(intr_in[3]) begin
-				rg_number_readouts <= w_inputs[3];
-			end
-			
-			if(intr_in[4]) begin
-				rg_heatup <= w_inputs[4];
-			end
-			
-			if(intr_in[5]) begin
-				rg_cooldown <= w_inputs[5];
-			end
-
-		end
-	end
 	
 	always @(posedge CLK) begin
 		if(RESET) begin // activate reset by peripherial reset
@@ -225,10 +168,9 @@ module ro_toplevel #(
 			endcase
 		end
 	end
+		
 	
-	
-	
-	assign w_start_requested = rg_cmd[0];
+	assign w_start_requested = meas_cmd[0];
 	
 	always @(posedge CLK) begin
 		if(RESET) begin
@@ -272,7 +214,7 @@ module ro_toplevel #(
 						rg_transfer_en <= 1;
 						rg_readouts_counter <= 0;
 						rg_start <= 0;
-						gen_intr_out[1] <= 0;
+						rg_meas_done <= 0;
 						rg_data_en <= 0;
 						rg_send_counter <= 0;
 						
@@ -285,14 +227,14 @@ module ro_toplevel #(
 						rg_ro_counter <= 0;
 						rg_data_counter <= 0;
 						
-						if(rg_readouts_counter < rg_number_readouts) begin
+						if(rg_readouts_counter < meas_readouts) begin
 							if(rg_send_counter >= 256 && rg_transfer_en == 0) begin
 								rg_send_counter <= rg_send_counter - 256;
 								rg_transfer_timer <= 10;
 								rg_transfer_en <= 1;
 							end
 							else if(rg_transfer_en == 1) begin
-								if(w_transfer_active == 0) begin
+								if(transfer_active == 0) begin
 									if(rg_transfer_timer == 0) begin
 										rg_transfer_en <= 0;
 									end
@@ -309,16 +251,16 @@ module ro_toplevel #(
 						else begin
 														
 							// signal end of measurement
-							gen_intr_out[1] <= 1;
+							rg_meas_done <= 1;
 							
 							fsm_state <= IDLE;
 						end
 						
-						if(rg_mode[0]) begin // parallel
-							rg_selectROmask <= 64'h00000000FFFFFFFF;
+						if(meas_mode[0]) begin // parallel
+							rg_selectROmask <= 32'hFFFFFFFF;
 						end
 						else begin	// serial
-							rg_selectROmask <= 64'h0000000000000001;
+							rg_selectROmask <= 32'h00000001;
 						end
 				
 					end
@@ -329,8 +271,8 @@ module ro_toplevel #(
 						rg_reset_init <= 1;
 						rg_cooldown_counter <= 0;
 						
-						if(rg_heatup_counter < rg_heatup) begin
-							rg_heatupROmask <= 64'h00000000FFFFFFFF;
+						if(rg_heatup_counter < meas_heatup) begin
+							rg_heatupROmask <= 32'hFFFFFFFF;
 						end
 						else begin
 							rg_heatupROmask <= 0;
@@ -344,7 +286,7 @@ module ro_toplevel #(
 
 						
 						if(rg_reset_init == 0 && rg_reset_long == 0) begin
-							if(rg_first_meas == 0 && rg_cooldown_counter < rg_cooldown) begin
+							if(rg_first_meas == 0 && rg_cooldown_counter < meas_cooldown) begin
 								rg_cooldown_counter <= rg_cooldown_counter + 1;
 							end
 							else begin
@@ -362,7 +304,7 @@ module ro_toplevel #(
 						rg_start <= 0;
 
 						if(w_done) begin
-							if(rg_heatup_counter < rg_heatup) begin
+							if(rg_heatup_counter < meas_heatup) begin
 								rg_heatup_counter <= rg_heatup_counter + 1;
 								fsm_state <= RESET_INIT;
 							end
@@ -377,7 +319,7 @@ module ro_toplevel #(
 				
 				SEND_READOUTS : begin
 						
-						if(rg_mode[0]) begin // parallel -> send ro data ("number_RO" times), then ref data
+						if(meas_mode[0]) begin // parallel -> send ro data ("number_RO" times), then ref data
 							if(rg_ro_counter < number_RO) begin
 							
 								// send ro data
@@ -417,13 +359,13 @@ module ro_toplevel #(
 								
 								if(rg_ro_counter < (number_RO-1)) begin
 									// start next ro
-									rg_selectROmask <= {rg_selectROmask[62:0], 1'b0};
+									rg_selectROmask <= {rg_selectROmask[30:0], 1'b0};
 									rg_ro_counter <= rg_ro_counter + 1;
 									fsm_state <= RESET_INIT;
 								end
 								else begin
 									// check for next measurement
-									rg_selectROmask <= 64'h0000000000000001;
+									rg_selectROmask <= 32'h00000001;
 									fsm_state <= CHECK_NEXT_MEAS;
 								end
 								
@@ -443,15 +385,7 @@ module ro_toplevel #(
 	assign SELECT = DECOUPLE == 1'b0  ? rg_addr[6:0] : 0;
 		
 	assign w_counter_fixed_RO = DECOUPLE == 1'b0 ? pr_counter_fixed_RO : 0;
-
-	// assign data_out_0 = {10'b0, rg_addr, rg_transfer_timer, w_transfer_active, rg_transfer_en, w_done, rg_start, rg_reset_init, rg_start_accepted, w_start_requested, fsm_state}; // debug port
-	//assign data_out_0 = {32'b0}; // debug port
-	assign data_out_1 = w_counter_fixed_RO;
-	assign data_out_2 = {counting_in[31],START,rg_start,START && select_static == 4'd0,1'b0, DECOUPLE, rg_send_counter[10:0], rg_readouts_counter[5:0], rg_ro_counter[6:0], rg_transfer_en, rg_data_en};
-	assign data_out_0 = icounter_ref;
-	assign data_out = {data_out_2, data_out_1, data_out_0};
-	
-	assign intr_out = gen_intr_out;
+	assign data_out = w_counter_fixed_RO;
 
 	assign reset_counter = DECOUPLE || w_reset_long || RESET;
 	
@@ -463,23 +397,14 @@ module ro_toplevel #(
 		4 : 10ms
 		5 : 100ms
 	*/	
-	assign select_static = rg_time[3:0];
+	assign select_static = meas_time[3:0];
 	
 	assign w_done = DECOUPLE == 1'b0 ? done_static > 0 : 0;
 	assign w_counting = DECOUPLE == 1'b0 ? counting_static > 0 : 0; // non-static, reprogramable counter
 	
 	assign done_static[6] = 0;
 	assign counting_static[6] = 0;
-	/*
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_done_static_0t3 (.O(done_static_0to3),.I5(done_static[3]),.I4(done_static[2]),.I3(done_static[1]),.I2(done_static[0]),.I1(select_static[1]),.I0(select_static[0]));
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_done_static_4to7 (.O(done_static_4to7),.I5(done_static[7]),.I4(done_static[6]),.I3(done_static[5]),.I2(done_static[4]),.I1(select_static[1]),.I0(select_static[0]));
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFFFFAAAA55550000)) LUT6_done_static_all (.O(done_static_all),.I5(done_static_4to7),.I4(done_static_0to3),.I3(0),.I2(0),.I1(select_static[3]),.I0(select_static[2]));
-		
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_counting_static_0to3 (.O(counting_static_0to3),.I5(counting_static[3]),.I4(counting_static[2]),.I3(counting_static[1]),.I2(counting_static[0]),.I1(select_static[1]),.I0(select_static[0]));
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFEDCBA9876543210)) LUT6_counting_static_4to7 (.O(counting_static_4to7),.I5(counting_static[7]),.I4(counting_static[6]),.I3(counting_static[5]),.I2(counting_static[4]),.I1(select_static[1]),.I0(select_static[0]));
-	(* dont_touch = "yes" *) LUT6 #(.INIT(64'hFFFFAAAA55550000)) LUT6_counting_static_all (.O(counting_static_all),.I5(counting_static_4to7),.I4(counting_static_0to3),.I3(0),.I2(0),.I1(select_static[3]),.I0(select_static[2]));
-	*/
-	
+
 	timer_fixed #(48'd000007000) // 100 MHz
 	inst_timer_70us (
         .CLK(CLK),

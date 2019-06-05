@@ -1,11 +1,6 @@
-`include "portarray_pack_unpack.vh"
-
 module toplevel (
-	input  wire CLK125M,
-	//input  wire [3:0] SW,
-	//input  wire [3:0] BTN,
-	//output  wire [3:0] LED,	
-	
+
+	input wire CLK125M,
 	inout wire [14:0] DDR_addr,
 	inout wire [2:0] DDR_ba,
 	inout wire DDR_cas_n,
@@ -27,41 +22,52 @@ module toplevel (
 	inout wire FIXED_IO_ps_clk,
 	inout wire FIXED_IO_ps_porb,
 	inout wire FIXED_IO_ps_srstb
-	//inout wire FIXED_IO_ps_srstb,
-	//input wire [3:0] btns_4bits_tri_i,
-    //inout wire [3:0] leds_4bits_tri_io,
-    //input wire [3:0] sws_4bits_tri_i
+	// inout wire FIXED_IO_ps_srstb,
+	// input wire [3:0] btns_4bits_tri_i,
+    // inout wire [3:0] leds_4bits_tri_io,
+    // input wire [3:0] sws_4bits_tri_i
 	
 );
 	
-	localparam lp_number_inputs = 7;
-	localparam lp_number_outputs = 3;
-	
 	// outputs from system
 	wire sys_clk0; 
-	wire sys_clk1;
-	wire [lp_number_inputs-1:0] sys_intr_ack;
-	wire [lp_number_inputs-1:0] sys_intr_output;
-	wire [lp_number_inputs*32-1:0] sys_outputs_serial;
 	wire [0:0] sys_reset;
 	wire [0:0] sys_resetn;
 	wire sys_decouple;
+	wire [31:0] meas_cmd;
+	wire [31:0] meas_cooldown;
+	wire [31:0] meas_heatup;
+	wire [31:0] meas_mode;
+	wire [31:0] meas_readouts;
+	wire [31:0] meas_time;
+	wire transfer_active;
 	
 	// inputs to system
-	wire [lp_number_outputs*32-1:0] sys_inputs_serial;	
-	wire [lp_number_outputs-1:0] sys_intr_input;
+	wire data_en;
+	wire [31:0] data;
+	wire meas_done;
+	wire transfer_en;
 
-	ro_toplevel #(.number_inputs(lp_number_inputs), .number_outputs(lp_number_outputs)) ro_top_inst (
+	ro_toplevel ro_top_inst (
 		.CLK(sys_clk0),
 		.RESET(sys_reset),
 		.DECOUPLE(sys_decouple),
-		.intr_in(sys_intr_output),
-		.data_in(sys_outputs_serial),
-		.intr_out(sys_intr_input),
-		.data_out(sys_inputs_serial),
-		.SW(0),
-		.BTN(0),
-		.LED()
+					
+		.data_en(data_en),
+		.data_out(data),
+
+		.meas_cmd(meas_cmd),
+		.meas_mode(meas_mode),
+		.meas_time(meas_time),
+		.meas_readouts(meas_readouts),
+		.meas_heatup(meas_heatup),
+		.meas_cooldown(meas_cooldown),
+		
+		.meas_done(meas_done),
+
+		.transfer_en(transfer_en),
+		.transfer_active(transfer_active)
+
 	);
 	
 	// block design instantiation
@@ -87,20 +93,25 @@ module toplevel (
 		.FIXED_IO_ps_clk(FIXED_IO_ps_clk),
 		.FIXED_IO_ps_porb(FIXED_IO_ps_porb),
 		.FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
-		//.btns_4bits_tri_i(btns_4bits_tri_i),
-        //.leds_4bits_tri_io(leds_4bits_tri_io),
-        //.sws_4bits_tri_i(sws_4bits_tri_i),
+		// .btns_4bits_tri_i(btns_4bits_tri_i),
+        // .leds_4bits_tri_io(leds_4bits_tri_io),
+        // .sws_4bits_tri_i(sws_4bits_tri_i),
 		.sys_clk0(sys_clk0),
-		.sys_clk1(sys_clk1),
-		.sys_inputs_serial(sys_inputs_serial),
-		.sys_intr_ack(sys_intr_ack),
-		.sys_intr_input(sys_intr_input),
-		.sys_intr_output(sys_intr_output),
-		.sys_outputs_serial(sys_outputs_serial),
 		.sys_reset(sys_reset),
 		.sys_resetn(sys_resetn),
-		.sys_decouple(sys_decouple)
+		.sys_decouple(sys_decouple),
+		.data_en(data_en),
+		.data_in(data),
+		.meas_cmd(meas_cmd),
+		.meas_cooldown(meas_cooldown),
+		.meas_done(meas_done),
+		.meas_heatup(meas_heatup),
+		.meas_mode(meas_mode),
+		.meas_readouts(meas_readouts),
+		.meas_time(meas_time),
+		.transfer_active(transfer_active),
+		.transfer_en(transfer_en)
 	);
-	
 
+	
 endmodule

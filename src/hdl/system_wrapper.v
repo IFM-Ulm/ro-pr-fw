@@ -1,5 +1,15 @@
 
 // ToDo: re-include gpio connections, check for board with "get_property BOARD [current_project]" and choose correct header accordingly
+//Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+//--------------------------------------------------------------------------------
+//Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
+//Date        : Wed Jun  5 16:48:24 2019
+//Host        : pcah running 64-bit major release  (build 9200)
+//Command     : generate_target system_wrapper.bd
+//Design      : system_wrapper
+//Purpose     : IP block netlist
+//--------------------------------------------------------------------------------
+`timescale 1 ps / 1 ps
 
 module system_wrapper
    (DDR_addr,
@@ -23,19 +33,24 @@ module system_wrapper
     FIXED_IO_ps_clk,
     FIXED_IO_ps_porb,
     FIXED_IO_ps_srstb,
-    //btns_4bits_tri_i,
-    //leds_4bits_tri_io,
-    //sws_4bits_tri_i,
+    // btns_4bits_tri_i,
+    data_en,
+    data_in,
+    // leds_4bits_tri_io,
+    meas_cmd,
+    meas_cooldown,
+    meas_done,
+    meas_heatup,
+    meas_mode,
+    meas_readouts,
+    meas_time,
+    // sws_4bits_tri_i,
     sys_clk0,
-    sys_clk1,
     sys_decouple,
-    sys_inputs_serial,
-    sys_intr_ack,
-    sys_intr_input,
-    sys_intr_output,
-    sys_outputs_serial,
     sys_reset,
-    sys_resetn);
+    sys_resetn,
+    transfer_active,
+    transfer_en);
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -57,19 +72,24 @@ module system_wrapper
   inout FIXED_IO_ps_clk;
   inout FIXED_IO_ps_porb;
   inout FIXED_IO_ps_srstb;
-  //input [3:0]btns_4bits_tri_i;
-  //inout [3:0]leds_4bits_tri_io;
-  //input [3:0]sws_4bits_tri_i;
+  // input [3:0]btns_4bits_tri_i;
+  input data_en;
+  input [31:0]data_in;
+  // inout [3:0]leds_4bits_tri_io;
+  output [31:0]meas_cmd;
+  output [31:0]meas_cooldown;
+  input meas_done;
+  output [31:0]meas_heatup;
+  output [31:0]meas_mode;
+  output [31:0]meas_readouts;
+  output [31:0]meas_time;
+  // input [3:0]sws_4bits_tri_i;
   output sys_clk0;
-  output sys_clk1;
   output sys_decouple;
-  input [95:0]sys_inputs_serial;
-  output [4:0]sys_intr_ack;
-  input [2:0]sys_intr_input;
-  output [6:0]sys_intr_output;
-  output [223:0]sys_outputs_serial;
   output [0:0]sys_reset;
   output [0:0]sys_resetn;
+  output transfer_active;
+  input transfer_en;
 
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
@@ -92,55 +112,60 @@ module system_wrapper
   wire FIXED_IO_ps_clk;
   wire FIXED_IO_ps_porb;
   wire FIXED_IO_ps_srstb;
-  /*wire [3:0]btns_4bits_tri_i;
-  wire [0:0]leds_4bits_tri_i_0;
-  wire [1:1]leds_4bits_tri_i_1;
-  wire [2:2]leds_4bits_tri_i_2;
-  wire [3:3]leds_4bits_tri_i_3;
-  wire [0:0]leds_4bits_tri_io_0;
-  wire [1:1]leds_4bits_tri_io_1;
-  wire [2:2]leds_4bits_tri_io_2;
-  wire [3:3]leds_4bits_tri_io_3;
-  wire [0:0]leds_4bits_tri_o_0;
-  wire [1:1]leds_4bits_tri_o_1;
-  wire [2:2]leds_4bits_tri_o_2;
-  wire [3:3]leds_4bits_tri_o_3;
-  wire [0:0]leds_4bits_tri_t_0;
-  wire [1:1]leds_4bits_tri_t_1;
-  wire [2:2]leds_4bits_tri_t_2;
-  wire [3:3]leds_4bits_tri_t_3;
-  wire [3:0]sws_4bits_tri_i;*/
+  // wire [3:0]btns_4bits_tri_i;
+  wire data_en;
+  wire [31:0]data_in;
+  // wire [0:0]leds_4bits_tri_i_0;
+  // wire [1:1]leds_4bits_tri_i_1;
+  // wire [2:2]leds_4bits_tri_i_2;
+  // wire [3:3]leds_4bits_tri_i_3;
+  // wire [0:0]leds_4bits_tri_io_0;
+  // wire [1:1]leds_4bits_tri_io_1;
+  // wire [2:2]leds_4bits_tri_io_2;
+  // wire [3:3]leds_4bits_tri_io_3;
+  // wire [0:0]leds_4bits_tri_o_0;
+  // wire [1:1]leds_4bits_tri_o_1;
+  // wire [2:2]leds_4bits_tri_o_2;
+  // wire [3:3]leds_4bits_tri_o_3;
+  // wire [0:0]leds_4bits_tri_t_0;
+  // wire [1:1]leds_4bits_tri_t_1;
+  // wire [2:2]leds_4bits_tri_t_2;
+  // wire [3:3]leds_4bits_tri_t_3;
+  wire [31:0]meas_cmd;
+  wire [31:0]meas_cooldown;
+  wire meas_done;
+  wire [31:0]meas_heatup;
+  wire [31:0]meas_mode;
+  wire [31:0]meas_readouts;
+  wire [31:0]meas_time;
+  // wire [3:0]sws_4bits_tri_i;
   wire sys_clk0;
-  wire sys_clk1;
   wire sys_decouple;
-  wire [95:0]sys_inputs_serial;
-  wire [4:0]sys_intr_ack;
-  wire [2:0]sys_intr_input;
-  wire [5:0]sys_intr_output;
-  wire [191:0]sys_outputs_serial;
   wire [0:0]sys_reset;
   wire [0:0]sys_resetn;
+  wire transfer_active;
+  wire transfer_en;
 
-  /*IOBUF leds_4bits_tri_iobuf_0
-       (.I(leds_4bits_tri_o_0),
-        .IO(leds_4bits_tri_io[0]),
-        .O(leds_4bits_tri_i_0),
-        .T(leds_4bits_tri_t_0));
-  IOBUF leds_4bits_tri_iobuf_1
-       (.I(leds_4bits_tri_o_1),
-        .IO(leds_4bits_tri_io[1]),
-        .O(leds_4bits_tri_i_1),
-        .T(leds_4bits_tri_t_1));
-  IOBUF leds_4bits_tri_iobuf_2
-       (.I(leds_4bits_tri_o_2),
-        .IO(leds_4bits_tri_io[2]),
-        .O(leds_4bits_tri_i_2),
-        .T(leds_4bits_tri_t_2));
-  IOBUF leds_4bits_tri_iobuf_3
-       (.I(leds_4bits_tri_o_3),
-        .IO(leds_4bits_tri_io[3]),
-        .O(leds_4bits_tri_i_3),
-        .T(leds_4bits_tri_t_3));*/
+  // IOBUF leds_4bits_tri_iobuf_0
+       // (.I(leds_4bits_tri_o_0),
+        // .IO(leds_4bits_tri_io[0]),
+        // .O(leds_4bits_tri_i_0),
+        // .T(leds_4bits_tri_t_0));
+  // IOBUF leds_4bits_tri_iobuf_1
+       // (.I(leds_4bits_tri_o_1),
+        // .IO(leds_4bits_tri_io[1]),
+        // .O(leds_4bits_tri_i_1),
+        // .T(leds_4bits_tri_t_1));
+  // IOBUF leds_4bits_tri_iobuf_2
+       // (.I(leds_4bits_tri_o_2),
+        // .IO(leds_4bits_tri_io[2]),
+        // .O(leds_4bits_tri_i_2),
+        // .T(leds_4bits_tri_t_2));
+  // IOBUF leds_4bits_tri_iobuf_3
+       // (.I(leds_4bits_tri_o_3),
+        // .IO(leds_4bits_tri_io[3]),
+        // .O(leds_4bits_tri_i_3),
+        // .T(leds_4bits_tri_t_3));
   system system_i
        (.DDR_addr(DDR_addr),
         .DDR_ba(DDR_ba),
@@ -163,19 +188,24 @@ module system_wrapper
         .FIXED_IO_ps_clk(FIXED_IO_ps_clk),
         .FIXED_IO_ps_porb(FIXED_IO_ps_porb),
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
-        //.btns_4bits_tri_i(btns_4bits_tri_i),
-        //.leds_4bits_tri_i({leds_4bits_tri_i_3,leds_4bits_tri_i_2,leds_4bits_tri_i_1,leds_4bits_tri_i_0}),
-        //.leds_4bits_tri_o({leds_4bits_tri_o_3,leds_4bits_tri_o_2,leds_4bits_tri_o_1,leds_4bits_tri_o_0}),
-        //.leds_4bits_tri_t({leds_4bits_tri_t_3,leds_4bits_tri_t_2,leds_4bits_tri_t_1,leds_4bits_tri_t_0}),
-        //.sws_4bits_tri_i(sws_4bits_tri_i),
+        // .btns_4bits_tri_i(btns_4bits_tri_i),
+        .data_en(data_en),
+        .data_in(data_in),
+        // .leds_4bits_tri_i({leds_4bits_tri_i_3,leds_4bits_tri_i_2,leds_4bits_tri_i_1,leds_4bits_tri_i_0}),
+        // .leds_4bits_tri_o({leds_4bits_tri_o_3,leds_4bits_tri_o_2,leds_4bits_tri_o_1,leds_4bits_tri_o_0}),
+        // .leds_4bits_tri_t({leds_4bits_tri_t_3,leds_4bits_tri_t_2,leds_4bits_tri_t_1,leds_4bits_tri_t_0}),
+        .meas_cmd(meas_cmd),
+        .meas_cooldown(meas_cooldown),
+        .meas_done(meas_done),
+        .meas_heatup(meas_heatup),
+        .meas_mode(meas_mode),
+        .meas_readouts(meas_readouts),
+        .meas_time(meas_time),
+        // .sws_4bits_tri_i(sws_4bits_tri_i),
         .sys_clk0(sys_clk0),
-        .sys_clk1(sys_clk1),
         .sys_decouple(sys_decouple),
-        .sys_inputs_serial(sys_inputs_serial),
-        .sys_intr_ack(sys_intr_ack),
-        .sys_intr_input(sys_intr_input),
-        .sys_intr_output(sys_intr_output),
-        .sys_outputs_serial(sys_outputs_serial),
         .sys_reset(sys_reset),
-        .sys_resetn(sys_resetn));
+        .sys_resetn(sys_resetn),
+        .transfer_active(transfer_active),
+        .transfer_en(transfer_en));
 endmodule

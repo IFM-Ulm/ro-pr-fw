@@ -27,22 +27,7 @@ if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is 1, expected call index is $fw_flow_execute"
 }
 
-# Set the directory path for the new project
-# set project_path [get_property directory [current_project]]
-# set project_name [current_project]
-# set project_sources [format "%s/%s.srcs" $project_path $project_name]
-
-
-# add_files -norecurse "$project_path/src/hdl/counter_fixed.v"
-# add_files -norecurse "$project_path/src/hdl/portarray_pack_unpack.vh"
-# add_files -norecurse "$project_path/src/hdl/RO_ref.v"
-# add_files -norecurse "$project_path/src/hdl/ro_toplevel.v"
-# add_files -norecurse "$project_path/src/hdl/ro4.v"
-# add_files -norecurse "$project_path/src/hdl/timer_fixed.v"
-# add_files -norecurse "$project_path/src/hdl/toplevel.v"
-# add_files -norecurse "$project_path/src/hdl/system_wrapper.v"
 import_files -norecurse "$project_path/src/hdl/counter_fixed.v"
-import_files -norecurse "$project_path/src/hdl/portarray_pack_unpack.vh"
 import_files -norecurse "$project_path/src/hdl/RO_ref.v"
 import_files -norecurse "$project_path/src/hdl/ro_toplevel.v"
 import_files -norecurse "$project_path/src/hdl/ro4.v"
@@ -59,29 +44,9 @@ cr_bd_system ""
 generate_target all [get_files "$project_sources/sources_1/bd/system/system.bd"]
 
 create_fileset -constrset constrs_synth
-# add_files -fileset constrs_synth -norecurse "$project_path/src/constr/constrs_synth/timings.xdc"
-# add_files -fileset constrs_synth -norecurse "$project_path/src/constr/constrs_synth/vivado.xdc"
-# set_property target_constrs_file "$project_path/src/constr/constrs_synth/vivado.xdc" [get_filesets constrs_synth]
-
-# # empty for now in order to prevent inclusion when generating partial constraints
-# import_files -fileset constrs_synth -norecurse "$project_path/src/constr/constrs_synth/timings.xdc"
-# import_files -fileset constrs_synth -norecurse "$project_path/src/constr/constrs_synth/vivado.xdc"
-# set_property target_constrs_file "$project_sources/constrs_synth/imports/constrs_synth/vivado.xdc" [get_filesets constrs_synth]
 
 create_fileset -constrset constrs_static_1
 
-# option copy into project:
-# add_files -fileset constrs_static_2 -norecurse D:/FPGA_PUFs/RO/pynq_fw2/src/constr/constrs_static_2/pins.xdc
-# import_files -fileset constrs_static_2 D:/FPGA_PUFs/RO/pynq_fw2/src/constr/constrs_static_2/pins.xdc
-# new file path (selection): D:/FPGA_PUFs/RO/pynq_fw2/pynq_fw2.srcs/constrs_static_2/imports/RO/pynq_fw2/src/constr/constrs_static_2
-# new file path (script import): D:/FPGA_PUFs/RO/pynq_fw2/pynq_fw2.srcs/constrs_static_2/imports/constrs_static_2
-
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/partial.xdc"
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/pins.xdc"
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/prohibits.xdc"
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/puf_ref_ro4.xdc"
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/timings.xdc"
-# add_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/vivado.xdc"
 import_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/partial.xdc"
 import_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/pins.xdc"
 import_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/constrs_static_1/prohibits.xdc"
@@ -91,24 +56,12 @@ import_files -fileset constrs_static_1 -norecurse "$project_path/src/constr/cons
 
 
 set_property target_constrs_file "$project_sources/constrs_static_1/imports/constrs_static_1/vivado.xdc" [get_filesets constrs_static_1]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_1/pins.xdc"]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_1/vivado.xdc"]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_1/puf_ref_ro4.xdc"]
 set_property used_in_synthesis false [get_files  "$project_sources/constrs_static_1/imports/constrs_static_1/pins.xdc"]
 set_property used_in_synthesis false [get_files  "$project_sources/constrs_static_1/imports/constrs_static_1/vivado.xdc"]
 set_property used_in_synthesis false [get_files  "$project_sources/constrs_static_1/imports/constrs_static_1/puf_ref_ro4.xdc"]
 
 
 create_fileset -constrset constrs_static_2
-# add_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/partial.xdc"
-# add_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/pins.xdc"
-# add_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/puf_ref_ro4.xdc"
-# add_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/timings.xdc"
-# add_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/vivado.xdc"
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_2/vivado.xdc" [get_filesets constrs_static_2]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_2/pins.xdc"]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_2/vivado.xdc"]
-# set_property used_in_synthesis false [get_files  "$project_path/src/constr/constrs_static_2/puf_ref_ro4.xdc"]
 import_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/partial.xdc"
 import_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/pins.xdc"
 import_files -fileset constrs_static_2 -norecurse "$project_path/src/constr/constrs_static_2/prohibits.xdc"
