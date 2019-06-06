@@ -5,11 +5,11 @@ set fw_flow_current 7
 global call_by_script
 set call_by_script 1
 
-if { ! [file exists [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]] } {
+if { ! [file exists [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]] } {
 	error "flow control file misc_fw_flow.tcl not existent, call fw1_generate_filesets.tcl first"
 }
 
-source -notrace [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]
 
 if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is $fw_flow_current, expected call index is $fw_flow_execute"
@@ -18,7 +18,7 @@ if { $fw_flow_execute != $fw_flow_current } {
 file mkdir "$project_path/$project_name.sdk"
 file copy -force "$project_path/$project_name.runs/impl_1/toplevel.sysdef" "$project_path/$project_name.sdk/toplevel.hdf"
 
-set bifId [open [format "%s/%s.bif" $project_sources_sdk $project_sdk_name_project] "w+"]
+set bifId [open [format "%s/%s.bif" $project_generated_sources_sdk $project_sdk_name_project] "w+"]
 puts $bifId "//arch = zynq; split = false; format = BIN"
 puts $bifId "the_ROM_image:"
 puts $bifId "{"
@@ -28,7 +28,7 @@ puts $bifId [format "\t%s/%s.sdk/%s/Release/%s.elf" $project_path $project_name 
 puts $bifId "}"
 close $bifId
 
-set helperId [open [format "%s/%s" $project_sources_tcl "help_generate_sdk_projects.tcl"] "w+"]
+set helperId [open [format "%s/%s" $project_generated_sources_tcl "help_generate_sdk_projects.tcl"] "w+"]
 puts $helperId [format "cd %s/%s.sdk" $project_path $project_name]
 puts $helperId ""
 puts $helperId [format "setws %s/%s.sdk" $project_path $project_name]
@@ -86,6 +86,7 @@ puts $helperId [format "configapp -app %s -add compiler-misc {-std=c11}" $projec
 # puts $helperId [format "changebsp -app %s -newbsp %s_bsp" $project_sdk_name_project $project_sdk_name_project]
 puts $helperId ""
 puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
+puts $helperId [format "importsources -name %s -path \"%s\"" $project_sdk_name_project $project_generated_sources_sdk]
 puts $helperId ""
 
 puts $helperId [format "createapp -name %s -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject %s -os standalone" $project_sdk_name_fsbl $project_sdk_name_hw]
@@ -94,14 +95,14 @@ puts $helperId [format "configapp -app %s build-config release" $project_sdk_nam
 # puts $helperId "projects -clean"
 puts $helperId "projects -build"
 puts $helperId ""
-puts $helperId [format "exec bootgen -image %s/%s.bif -arch zynq -w -o %s/BOOT.bin" $project_sources_sdk $project_sdk_name_project $project_bitstreams]
+puts $helperId [format "exec bootgen -image %s/%s.bif -arch zynq -w -o %s/BOOT.bin" $project_generated_sources_sdk $project_sdk_name_project $project_bitstreams]
 puts $helperId ""
 close $helperId
 
-exec xsdk -batch -source [format "%s/%s" $project_sources_tcl "help_generate_sdk_projects.tcl"]
+exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "help_generate_sdk_projects.tcl"]
 
 
-set flowfile [open [format "%s/misc_fw_flow.tcl" $project_sources_tcl] "w+"]
+set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
 

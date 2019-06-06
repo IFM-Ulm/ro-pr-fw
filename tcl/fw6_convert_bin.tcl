@@ -10,11 +10,11 @@ set fw_flow_current 6
 global call_by_script
 set call_by_script 1
 
-if { ! [file exists [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]] } {
+if { ! [file exists [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]] } {
 	error "flow control file misc_fw_flow.tcl not existent, call fw1_generate_filesets.tcl first"
 }
 
-source -notrace [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]
 
 if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is $fw_flow_current, expected call index is $fw_flow_execute"
@@ -100,7 +100,7 @@ set t2b_size [file size [format "%s/T%sI1R01.bin" $project_bitstreams "2"]]
 puts $paramId [format "%d" $t2b_size]
 close $paramId
 
-set headerId [open [format "%s/fw_impl_generated.h" $project_sources_sdk] "w+"]
+set headerId [open [format "%s/fw_impl_generated.h" $project_generated_sources_sdk] "w+"]
 puts $headerId "#ifndef SRC_FW_IMPL_GENERATED_H_"
 puts $headerId "#define SRC_FW_IMPL_GENERATED_H_"
 puts $headerId [format "#define IMPL_NUMBER_DUT %d" $ro_number]
@@ -111,7 +111,7 @@ close $headerId
 
 puts "conversion to .bin done"
 
-set flowfile [open [format "%s/misc_fw_flow.tcl" $project_sources_tcl] "w+"]
+set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
 
