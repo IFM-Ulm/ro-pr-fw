@@ -18,7 +18,7 @@ set project_import_sources_constr_static2 [format "%s/constrs_static_2" $project
 set project_import_sources_constr_partial [format "%s/constrs_partial" $project_import_sources_constr]
 set project_import_sources_bd [format "%s/bd" $project_import_sources]
 
-set project_sources_tcl [format "%s/tcl" $script_path]
+set project_sources_tcl [format "%s" $script_path]
 set project_sources_sdk [format "%s/sdk" $script_path]
 set project_sources_sw_repo [format "%s/sw_repo" $script_path]
 
