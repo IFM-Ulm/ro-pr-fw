@@ -10,10 +10,6 @@
 *.a
 *.o
 
-# in this branch, ignore additional files from uart
-sdk/uart_custom.c
-sdk/uart_custom.h
-
 # ignore files and folders generated in a project instance
 *.cache/*
 *.hw/*
