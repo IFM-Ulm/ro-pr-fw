@@ -1,5 +1,4 @@
-
-source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 
 set_property constrset constrs_synth [get_runs synth_1]
 set_property constrset constrs_static_1 [get_runs impl_1]
