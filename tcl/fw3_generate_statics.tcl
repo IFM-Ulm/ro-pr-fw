@@ -1,5 +1,5 @@
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
+source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 
 set fw_flow_current 3
 global call_by_script
@@ -56,33 +56,29 @@ set lst_prohibits_Y_end $lst_prohibits1_Y_end
 
 set_property constrset constrs_static_1 [get_runs impl_1]
 
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_1/puf_ref_ro4.xdc" [get_filesets constrs_static_1]
-set_property target_constrs_file "$project_sources/constrs_static_1/imports/constrs_static_1/puf_ref_ro4.xdc" [get_filesets constrs_static_1]
+set_property target_constrs_file "$project_sources_constr_static_1/puf_ref_ro4.xdc" [get_filesets constrs_static_1]
 
 open_run synth_1 -name synth_1 -pr_config [current_pr_configuration]
 
-source -notrace "$project_path/tcl/help_generate_ref.tcl"
+source -notrace "$project_sources_tcl/help_generate_ref.tcl"
 
 save_constraints
 
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_1/partial.xdc" [get_filesets constrs_static_1]
-set_property target_constrs_file "$project_sources/constrs_static_1/imports/constrs_static_1/partial.xdc" [get_filesets constrs_static_1]
+set_property target_constrs_file "$project_sources_constr_static_1/partial.xdc" [get_filesets constrs_static_1]
 
-source -notrace "$project_path/tcl/help_generate_partial.tcl"
-
-save_constraints
-
-
-set_property target_constrs_file "$project_sources/constrs_static_1/imports/constrs_static_1/prohibits.xdc" [get_filesets constrs_static_1]
-
-source -notrace "$project_path/tcl/help_generate_prohibits.tcl"
+source -notrace "$project_sources_tcl/help_generate_partial.tcl"
 
 save_constraints
 
 
+set_property target_constrs_file "$project_sources_constr_static_1/prohibits.xdc" [get_filesets constrs_static_1]
 
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_1/vivado.xdc" [get_filesets constrs_static_1]
-set_property target_constrs_file "$project_sources/constrs_static_1/imports/constrs_static_1/vivado.xdc" [get_filesets constrs_static_1]
+source -notrace "$project_sources_tcl/help_generate_prohibits.tcl"
+
+save_constraints
+
+
+set_property target_constrs_file "$project_sources_constr_static_1/vivado.xdc" [get_filesets constrs_static_1]
 
 close_design
 
@@ -116,8 +112,7 @@ set lst_prohibits_Y_start $lst_prohibits2_Y_start
 set lst_prohibits_Y_end $lst_prohibits2_Y_end
 
 set_property constrset constrs_static_2 [get_runs impl_1]
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_2/puf_ref_ro4.xdc" [get_filesets constrs_static_2]
-set_property target_constrs_file "$project_sources/constrs_static_2/imports/constrs_static_2/puf_ref_ro4.xdc" [get_filesets constrs_static_2]
+set_property target_constrs_file "$project_sources_constr_static_2/puf_ref_ro4.xdc" [get_filesets constrs_static_2]
 
 open_run synth_1 -name synth_1 -pr_config [current_pr_configuration]
 
@@ -125,23 +120,20 @@ source -notrace "$project_path/tcl/help_generate_ref.tcl"
 
 save_constraints
 
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_2/partial.xdc" [get_filesets constrs_static_2]
-set_property target_constrs_file "$project_sources/constrs_static_2/imports/constrs_static_2/partial.xdc" [get_filesets constrs_static_2]
+set_property target_constrs_file "$project_sources_constr_static_2/partial.xdc" [get_filesets constrs_static_2]
 
 source -notrace "$project_path/tcl/help_generate_partial.tcl"
 
 save_constraints
 
 
-set_property target_constrs_file "$project_sources/constrs_static_2/imports/constrs_static_2/prohibits.xdc" [get_filesets constrs_static_2]
+set_property target_constrs_file "$project_sources_constr_static_2/prohibits.xdc" [get_filesets constrs_static_2]
 
-source -notrace "$project_path/tcl/help_generate_prohibits.tcl"
+source -notrace "$project_sources_tcl/help_generate_prohibits.tcl"
 
 save_constraints
 
-
-# set_property target_constrs_file "$project_path/src/constr/constrs_static_2/vivado.xdc" [get_filesets constrs_static_2]
-set_property target_constrs_file "$project_sources/constrs_static_2/imports/constrs_static_2/vivado.xdc" [get_filesets constrs_static_2]
+set_property target_constrs_file "$project_sources_constr_static_2/vivado.xdc" [get_filesets constrs_static_2]
 
 close_design
 

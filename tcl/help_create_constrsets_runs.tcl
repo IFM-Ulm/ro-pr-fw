@@ -5,6 +5,10 @@ if { $call_by_script != 1 } {
 
 proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	
+	source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
+	source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+	source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
+	
 	global DEBUG
 	global fast_approach
 	
@@ -31,18 +35,13 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	global pr_module
 	
 	global lst_prohibits_X
-			
-	source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-	source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
-	source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
-	
+
 	set pr_route_tcl [format "%s/%s" $project_sources_tcl $pr_route_file]
 	
 	puts "sourcing $pr_route_tcl"
 	source -notrace $pr_route_tcl
 	
 
-	# set file_path [format "%s/constr_partial" $project_sources]
 	set file_ident [format "t%si1r%02d" $toplevel_prefix $run_counter]
 	
 	set constrset_path [format "%s/%s" $project_generated_sources_constr $constrset_name]
@@ -72,7 +71,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 			set_property constrset $constrset_name [get_runs impl_1]
 			set_property constrset $constrset_name [get_runs impl_2]
 		}
-		# current_run [get_runs impl_1]
 
 		set run_name [format "child_%s_%s" $impl_parent $constrset_name]		
 	}
@@ -82,12 +80,9 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	if { $DEBUG < 2 } {
 		
 		if { ! $fast_approach } {
-			# open_run -name synth_1 -pr_config [current_pr_configuration] -quiet synth_1
 			open_run -name synth_1 -pr_config [current_pr_configuration] synth_1
 			current_instance "ro_top_inst/PR_module_inst1"
 		
-			
-			# set_property constrset $constrset_name [get_runs synth_1]
 			set_property constrset $constrset_name [get_runs impl_1]
 			set_property constrset $constrset_name [get_runs impl_2]
 			set_property target_constrs_file $constrset_file [get_filesets $constrset_name]
@@ -96,13 +91,7 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 
 	
 	# route PR_module_1	
-	
-	if { $DEBUG < 2 } {
-		
-		# current_instance $pr_module
-		# current_instance
-		# 
-	}
+
 	
 	source -notrace [format "%s/%s" $project_sources_tcl $pr_undo_file]
 	
@@ -113,11 +102,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 
 		for { set index 0 } {$index < $ro_number} {incr index} {
 				
-			# manipulate addresses to avoid using non-reconfigurable slices
-			# while { $pr_X == 0 || $pr_X == 1 || $pr_X == 14 || $pr_X == 15 || $pr_X == 20 || $pr_X == 21} {
-				# set pr_X [expr {$pr_X + $pr_X_shift}]
-			# }	
-			# ToDo: also search for combination of X/Y and not only X as for the Z7020 there is such a combination
 			while { [lsearch $lst_prohibits_X $pr_X] > -1 } {
 				set pr_X [expr {$pr_X + $pr_X_shift}]
 			}
@@ -180,10 +164,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 		
 		for { set index $placed_ROs } {$index < $ro_number} {incr index} {
 			
-			# manipulate addresses to avoid using non-reconfigurable slices 
-			# while { $misplace_X == 0 || $misplace_X == 1 || $misplace_X == 14 || $misplace_X == 15 || $misplace_X == 20 || $misplace_X == 21} {
-				# set misplace_X [expr {$misplace_X + $pr_X_shift}]
-			# }
 			while { [lsearch $lst_prohibits_X $misplace_X] > -1 } {
 				set misplace_X [expr {$misplace_X + $pr_X_shift}]
 			}
