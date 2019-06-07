@@ -13,7 +13,7 @@
 #include "fw_datatypes.h"
 #include "fw_hw.h"
 #include "fw_meas.h"
-#include "tcpip_custom.h"
+#include "com_custom.h"
 
 s32 com_init(void){
 
@@ -458,6 +458,14 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 	return returnValue;
 }
 
+struct data_com* com_custom_pop(void){
+	return data_com* tcpip_custom_pop();
+}
 
+s32 com_custom_free(struct data_com* packet){
+	return tcpip_custom_free(packet);
+}
 
-
+s32 com_custom_push(void* data, u32 len){
+	return tcpip_custom_push(data, len);
+}

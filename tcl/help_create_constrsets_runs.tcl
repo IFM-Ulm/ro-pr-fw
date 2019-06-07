@@ -33,8 +33,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	global lst_prohibits_X
 			
 	source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-
-	# source -notrace [format "%s/set_syn.tcl" $project_sources_tcl]
 	source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 	source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
 	
@@ -47,7 +45,7 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	# set file_path [format "%s/constr_partial" $project_sources]
 	set file_ident [format "t%si1r%02d" $toplevel_prefix $run_counter]
 	
-	set constrset_path [format "%s/%s" $project_import_sources_constr_partial $constrset_name]
+	set constrset_path [format "%s/%s" $project_generated_sources_constr $constrset_name]
 	set constrset_file [format "%s/%s_inst.xdc" $constrset_path $constrset_name]
 
 	if { $DEBUG < 2 } {

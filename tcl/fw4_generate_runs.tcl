@@ -12,11 +12,11 @@ set fw_flow_current 4
 global call_by_script
 set call_by_script 1
 
-if { ! [file exists [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]] } {
+if { ! [file exists [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]] } {
 	error "flow control file misc_fw_flow.tcl not existent, call fw1_generate_filesets.tcl first"
 }
 
-source -notrace [format "%s/tcl/misc_fw_flow.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl]
 
 if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is $fw_flow_current, expected call index is $fw_flow_execute"
@@ -320,7 +320,7 @@ incr ro_counter $pr_counter
 
 set resultId [open [format "%s/placement_results.txt" $project_bitstreams] "a+"]
 puts $resultId ""
-puts $resultId [format "ro_counter (impl_2): %d" [expr { $bin_counter - $pr_counter }]]
+puts $resultId [format "ro_counter (impl_2): %d" [expr { $ro_counter - $pr_counter }]]
 puts $resultId [format "bin_counter (impl_2): %d" [expr { $bin_counter - $bin_counter_prev }]]
 puts $resultId ""
 close $resultId
@@ -356,7 +356,7 @@ close $resultId
 
 puts "done"
 
-set flowfile [open [format "%s/misc_fw_flow.tcl" $project_sources_tcl] "w+"]
+set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
 

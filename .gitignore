@@ -14,6 +14,12 @@
 sdk/uart_custom.c
 sdk/uart_custom.h
 
-#/tcl/misc_fw_flow.tcl
-#/tcl/help_generate_sdk_projects.tcl
-#/sdk/fw_impl_generated.h
+# ignore files and folders generated in a project instance
+*.cache/*
+*.hw/*
+*.ip_user_files/*
+*.runs/*
+*.sdk/*
+*.sim/*
+*.srcs/*
+*.xpr

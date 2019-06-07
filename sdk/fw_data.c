@@ -1,6 +1,6 @@
 #include "fw_data.h"
 #include "fw_hw.h"
-#include "tcpip_custom.h"
+#include "com_custom.h"
 
 s32 data_send_measurements(void){
 	
