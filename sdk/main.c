@@ -73,7 +73,7 @@ u32 param_t2b_size = 0;*/
 #include "xpseudo_asm.h"
 #include "xdebug.h"
 
-#include "uart_custom.h"
+#include "com_custom.h"
 
 extern unsigned int _heap_start;
 extern unsigned int _heap_end;

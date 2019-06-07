@@ -18,4 +18,8 @@ s32 com_handleErrors(u8* returnVal);
 s32 com_handleDisconnect(u8* returnVal);
 s32 com_handleInactivity(u8* returnVal);
 
+struct data_com* com_custom_pop(void);
+s32 com_custom_free(struct data_com* packet);
+s32 com_custom_push(void* data, u32 len);
+
 #endif
