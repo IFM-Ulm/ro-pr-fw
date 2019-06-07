@@ -8,7 +8,7 @@ set project_sources_bd [format "%s/sources_1/bd/system" $project_sources]
 set project_sources_constr_static_1 [format "%s/constrs_static_1/imports/constrs_static_1" $project_sources]
 set project_sources_constr_static_2 [format "%s/constrs_static_1/imports/constrs_static_2" $project_sources]
 
-set project_import_sources [format "%s/src" $project_path]
+set project_import_sources [format "%s/src" $script_path]
 set project_import_sources_hdl [format "%s/hdl" $project_import_sources]
 set project_import_sources_repo [format "%s/ip_repo" $project_import_sources]
 set project_import_sources_constr [format "%s/constr" $project_import_sources]
