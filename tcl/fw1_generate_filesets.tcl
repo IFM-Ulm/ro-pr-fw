@@ -35,7 +35,7 @@ import_files -norecurse "$project_import_sources_hdl/timer_fixed.v"
 import_files -norecurse "$project_import_sources_hdl/toplevel.v"
 import_files -norecurse "$project_import_sources_hdl/system_wrapper.v"
 
-set_property  ip_repo_paths "$project_path/ip_repo" [current_project]
+set_property  ip_repo_paths "$project_import_sources_repo" [current_project]
 update_ip_catalog
 
 source -notrace "$project_import_sources_bd/cr_bd_system.tcl"

@@ -140,8 +140,6 @@ close_design
 
 set_property constrset constrs_static_1 [get_runs impl_1]
 
-# file mkdir $project_bitstreams
-
 set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
