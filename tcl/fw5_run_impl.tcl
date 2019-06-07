@@ -1,12 +1,6 @@
-# reset_run impl_1
-# reset_run impl_2
-
-# launch_runs impl_1 impl_2 -to_step write_bitstream -jobs 2
-# launch_runs [get_runs *child_impl_*_constr_*] -to_step write_bitstream -jobs 2
-
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
-source -notrace [format "%s/tcl/settings_jobs.tcl" $project_path]
+source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_jobs.tcl" $project_sources_tcl]
 
 set fw_flow_current 5
 global call_by_script
@@ -105,7 +99,6 @@ foreach run $child_runs_2 {
 		
 		puts [format "checking run %s for PROGRESS" $run]
 		if {[get_property PROGRESS [get_runs $run]] != "100%"} {
-		   # error "ERROR: run failed"  
 		   puts "run failed, resetting and restarting..."
 		   reset_runs [get_runs $run]
 		   launch_runs [get_runs $run] -to_step write_bitstream -jobs $jobs_impl_2
@@ -115,9 +108,6 @@ foreach run $child_runs_2 {
 		
 	}
 }
-
-# puts "starting convert_generic.tcl"
-# source -notrace [format "%s/convert_generic.tcl" $project_sources_tcl]
 
 puts ""
 puts "all done"

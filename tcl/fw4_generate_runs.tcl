@@ -1,12 +1,6 @@
-# set project_path [get_property DIRECTORY [current_project]]
-# set project_name [current_project]
-# set project_sources [format "%s/%s.srcs" $project_path $project_name]
-# # set project_sources [format "%s" $project_path]
-# set project_sources_tcl [format "%s/tcl" $project_path]
-# set project_bitstreams [format "%s/bitstreams" $project_path]
-
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
+source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
 
 set fw_flow_current 4
 global call_by_script
@@ -29,40 +23,15 @@ source -notrace [format "%s/settings_impl.tcl" $project_sources_tcl]
 # set variables DEBUG and DEBUG_RUNS by script
 source -notrace [format "%s/settings_debug.tcl" $project_sources_tcl]
 
-# set variable EXTRACT_DELAY by script
-# source -notrace [format "%s/set_extraction.tcl" $project_sources_tcl]
-
-# project message settings
-# set_msg_config -id "Vivado 12-4884" -suppress
-
-# Ensure that each RO output of the PR module is constrained as a very fast clock
-# for { set index 0 } {$index < $ro_number} {incr index} {
-	# create_clock -period 1.851 -name [format "clk_RO_out_%02d" $index] [get_pins [format "ro_top_inst/PR_module_inst1/RO_out\[%d\]" $index]]
-# }
-
-source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
-
 source -notrace [format "%s/help_create_constrsets_runs.tcl" $project_sources_tcl]
 
 set_property constrset constrs_synth [get_runs synth_1]
 set_property constrset constrs_static_1 [get_runs impl_1]
 set_property constrset constrs_static_2 [get_runs impl_2]
 
-# file mkdir $project_bitstreams
-
-
 set csvId [open [format "%s/config.csv" $project_bitstreams] "w+"]
 puts $csvId [format "constrset,inst,index,x,y,valid"]
 close $csvId
-
-# if { $EXTRACT_DELAY > 1 } {
-	# set netdelayId [open [format "%s/netdelays.csv" $project_bitstreams] "w+"]
-	# close $netdelayId
-# }
-# if { $EXTRACT_DELAY > 0 } {
-	# set netdelayrefId [open [format "%s/netdelays_ref.csv" $project_bitstreams] "w+"]
-	# close $netdelayrefId
-# }
 
 set resultId [open [format "%s/placement_results.txt" $project_bitstreams] "w+"]
 close $resultId
@@ -147,7 +116,6 @@ if { $DEBUG < 2 } {
 		
 	if { $fast_approach } {
 		current_run [get_runs impl_1]
-		# open_run -name synth_1 -pr_config [current_pr_configuration] -quiet synth_1 
 		open_run synth_1 -constrset constrs_synth -name synth_1 -pr_config [current_pr_configuration]
 		current_instance "ro_top_inst/PR_module_inst1"
 	}
@@ -195,12 +163,6 @@ foreach partial_areas_x $lst_partial_areas_X_start {
 				set pr_stop 1
 			}
 		}
-		
-		# prevent script from running infinitely, break after 150 runs
-		# if { $bin_counter > 150 } {
-			# set pr_stop 1
-			# error [format "stopping at bin_counter = %d, must be some error!" $bin_counter]
-		# }
 		
 	}
 
@@ -252,7 +214,6 @@ if { $DEBUG < 2 } {
 		close_design
 		
 		current_run [get_runs impl_2]
-		# open_run -name synth_1 -pr_config [current_pr_configuration] -quiet synth_1 
 		open_run synth_1 -constrset constrs_synth -name synth_1 -pr_config [current_pr_configuration]
 		current_instance "ro_top_inst/PR_module_inst1"
 	}
@@ -305,12 +266,6 @@ foreach partial_areas_x $lst_partial_areas_X_start {
 				set pr_stop 1 
 			}
 		}
-		
-		# prevent script from running infinitely, break after 150 runs
-		# if { $bin_counter > 150 } {
-			# set pr_stop 1
-			# error [format "stopping at bin_counter = %d, must be some error!" $bin_counter]
-		# }
 
 	}
 
@@ -331,12 +286,6 @@ set_property constrset constrs_synth [get_runs synth_1]
 set_property constrset constrs_static_1 [get_runs impl_1]
 set_property constrset constrs_static_2 [get_runs impl_2]
 
-
-# set identId [open [format "%s/settings_impl.tcl" $project_sources_tcl] "w+"]
-# puts $identId [format "set impl_ro_var \"%s\"" $impl_ro]
-# puts $identId [format "set ro_number_var %d" $ro_number]
-# puts $identId [format "set bin_counter_var %d" $bin_counter]
-# close $identId
 
 if {  $DEBUG < 2 } {
 	if { $fast_approach } {

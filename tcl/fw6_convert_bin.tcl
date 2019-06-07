@@ -1,10 +1,5 @@
-# set project_path [get_property DIRECTORY [current_project]]
-# set project_bitstreams [format "%s/bitstreams" $project_path]
-# set project_sources_tcl [format "%s/tcl" [get_property DIRECTORY [current_project]]]
-# set project_name [current_project]
-
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
+source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 
 set fw_flow_current 6
 global call_by_script

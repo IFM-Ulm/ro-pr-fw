@@ -1,6 +1,6 @@
 source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
-source -notrace [format "%s/tcl/settings_project.tcl" $project_path]
-source -notrace [format "%s/tcl/settings_ro.tcl" $project_path]
+source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
 
 set fw_flow_current 8
 global call_by_script

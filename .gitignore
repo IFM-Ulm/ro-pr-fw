@@ -10,10 +10,6 @@
 *.a
 *.o
 
-# in this branch, ignore additional files from tcpip
-sdk/tcpip_custom.c
-sdk/tcpip_custom.h
-
 # ignore files and folders generated in a project instance
 *.cache/*
 *.hw/*
