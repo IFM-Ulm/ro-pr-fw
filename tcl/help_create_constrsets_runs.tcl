@@ -5,7 +5,7 @@ if { $call_by_script != 1 } {
 
 proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	
-	source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
+	source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 	source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 	source -notrace [format "%s/settings_ro.tcl" $project_sources_tcl]
 	
@@ -75,7 +75,7 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 		set run_name [format "child_%s_%s" $impl_parent $constrset_name]		
 	}
 	
-	set csvId [open [format "%s/bitstreams/config.csv" $project_path] "a+"]
+	set csvId [open [format "%s/config.csv" $project_bitstreams] "a+"]
 	
 	if { $DEBUG < 2 } {
 		

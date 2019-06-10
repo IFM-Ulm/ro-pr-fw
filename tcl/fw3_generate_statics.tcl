@@ -1,4 +1,4 @@
-source -notrace [format "%s/tcl/settings_paths.tcl" [get_property DIRECTORY [current_project]]]
+source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 
 set fw_flow_current 3
@@ -116,13 +116,13 @@ set_property target_constrs_file "$project_sources_constr_static_2/puf_ref_ro4.x
 
 open_run synth_1 -name synth_1 -pr_config [current_pr_configuration]
 
-source -notrace "$project_path/tcl/help_generate_ref.tcl"
+source -notrace "$project_sources_tcl/help_generate_ref.tcl"
 
 save_constraints
 
 set_property target_constrs_file "$project_sources_constr_static_2/partial.xdc" [get_filesets constrs_static_2]
 
-source -notrace "$project_path/tcl/help_generate_partial.tcl"
+source -notrace "$project_sources_tcl/help_generate_partial.tcl"
 
 save_constraints
 
