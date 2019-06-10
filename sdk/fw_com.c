@@ -459,7 +459,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 }
 
 struct data_com* com_custom_pop(void){
-	return data_com* tcpip_custom_pop();
+	return tcpip_custom_pop();
 }
 
 s32 com_custom_free(struct data_com* packet){

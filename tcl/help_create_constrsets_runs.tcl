@@ -75,7 +75,7 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 		set run_name [format "child_%s_%s" $impl_parent $constrset_name]		
 	}
 	
-	set csvId [open [format "%s/bitstreams/config.csv" $project_path] "a+"]
+	set csvId [open [format "%s/config.csv" $project_bitstreams] "a+"]
 	
 	if { $DEBUG < 2 } {
 		

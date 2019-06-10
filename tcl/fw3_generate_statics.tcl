@@ -116,13 +116,13 @@ set_property target_constrs_file "$project_sources_constr_static_2/puf_ref_ro4.x
 
 open_run synth_1 -name synth_1 -pr_config [current_pr_configuration]
 
-source -notrace "$project_path/tcl/help_generate_ref.tcl"
+source -notrace "$project_sources_tcl/help_generate_ref.tcl"
 
 save_constraints
 
 set_property target_constrs_file "$project_sources_constr_static_2/partial.xdc" [get_filesets constrs_static_2]
 
-source -notrace "$project_path/tcl/help_generate_partial.tcl"
+source -notrace "$project_sources_tcl/help_generate_partial.tcl"
 
 save_constraints
 
