@@ -1,4 +1,4 @@
-#include "uart_custom.h"
+#include "com_custom.h"
 
 #include "xuartps.h"
 #include <stdlib.h>
