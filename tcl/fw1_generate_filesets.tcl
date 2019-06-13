@@ -27,6 +27,14 @@ if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is 1, expected call index is $fw_flow_execute"
 }
 
+set property_board [get_property BOARD [current_project]]
+# if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "em.avnet.com:zed:part0:1.4" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0"} { 
+if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0"} { 
+	error "unknown board detected, not supported"
+}
+
+
+
 import_files -norecurse "$project_import_sources_hdl/counter_fixed.v"
 import_files -norecurse "$project_import_sources_hdl/RO_ref.v"
 import_files -norecurse "$project_import_sources_hdl/ro_toplevel.v"
