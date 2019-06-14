@@ -1,6 +1,6 @@
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
-source -notrace [format "%s/settings_jobs.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_jobs.tcl" $project_generated_sources_tcl]
 
 set fw_flow_current 5
 global call_by_script
@@ -58,17 +58,14 @@ if {[get_property PROGRESS [get_runs impl_2]] != "100%"} {
    error "ERROR: impl_2 failed"  
 }
 
-set child_runs_1 [get_runs *child_impl_1_constr_*]
-set child_runs_2 [get_runs *child_impl_2_constr_*]
 
-puts "launching runs child_impl_1_constr_*"
-launch_runs $child_runs_1 -to_step write_bitstream -jobs $jobs_impl_1
+set child_runs_all [get_runs *child_impl_*_constr_*]
 
-puts "launching runs child_impl_2_constr_*"
-launch_runs $child_runs_2 -to_step write_bitstream -jobs $jobs_impl_2
+puts "launching runs child_impl_*_constr_*"
+launch_runs $child_runs_all -to_step write_bitstream -jobs $jobs_impl_all
 
-puts "waiting on runs child_impl_1_constr_*"
-foreach run $child_runs_1 {
+puts "waiting on runs child_impl_*_constr_*"
+foreach run $child_runs_all {
 
 	wait_on_run $run
 	
@@ -81,7 +78,7 @@ foreach run $child_runs_1 {
 		   # error "ERROR: run failed"  
 		   puts "run failed, resetting and restarting..."
 		   reset_runs [get_runs $run]
-		   launch_runs [get_runs $run] -to_step write_bitstream -jobs $jobs_impl_1
+		   launch_runs [get_runs $run] -to_step write_bitstream -jobs 1
 		} else {
 			puts "run successful"
 		}
@@ -90,24 +87,56 @@ foreach run $child_runs_1 {
 	
 }
 
-puts "waiting on runs child_impl_2_constr_*"
-foreach run $child_runs_2 {
+# set child_runs_1 [get_runs *child_impl_1_constr_*]
+# set child_runs_2 [get_runs *child_impl_2_constr_*]
 
-	while {[get_property PROGRESS [get_runs $run]] != "100%"} {
+# puts "launching runs child_impl_1_constr_*"
+# launch_runs $child_runs_1 -to_step write_bitstream -jobs $jobs_impl_1
 
-		wait_on_run $run
+# puts "launching runs child_impl_2_constr_*"
+# launch_runs $child_runs_2 -to_step write_bitstream -jobs $jobs_impl_2
+
+# puts "waiting on runs child_impl_1_constr_*"
+# foreach run $child_runs_1 {
+
+	# wait_on_run $run
+	
+	# while {[get_property PROGRESS [get_runs $run]] != "100%"} {
+
+		# wait_on_run $run
 		
-		puts [format "checking run %s for PROGRESS" $run]
-		if {[get_property PROGRESS [get_runs $run]] != "100%"} {
-		   puts "run failed, resetting and restarting..."
-		   reset_runs [get_runs $run]
-		   launch_runs [get_runs $run] -to_step write_bitstream -jobs $jobs_impl_2
-		} else {
-			puts "run successful"
-		}
+		# puts [format "checking run %s for PROGRESS" $run]
+		# if {[get_property PROGRESS [get_runs $run]] != "100%"} {
+		   # # error "ERROR: run failed"  
+		   # puts "run failed, resetting and restarting..."
+		   # reset_runs [get_runs $run]
+		   # launch_runs [get_runs $run] -to_step write_bitstream -jobs 1
+		# } else {
+			# puts "run successful"
+		# }
 		
-	}
-}
+	# }
+	
+# }
+
+# puts "waiting on runs child_impl_2_constr_*"
+# foreach run $child_runs_2 {
+
+	# while {[get_property PROGRESS [get_runs $run]] != "100%"} {
+
+		# wait_on_run $run
+		
+		# puts [format "checking run %s for PROGRESS" $run]
+		# if {[get_property PROGRESS [get_runs $run]] != "100%"} {
+		   # puts "run failed, resetting and restarting..."
+		   # reset_runs [get_runs $run]
+		   # launch_runs [get_runs $run] -to_step write_bitstream -jobs 1
+		# } else {
+			# puts "run successful"
+		# }
+		
+	# }
+# }
 
 puts ""
 puts "all done"

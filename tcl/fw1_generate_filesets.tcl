@@ -84,6 +84,15 @@ set_property used_in_synthesis false [get_files  "$project_sources_constr_static
 set_property constrset constrs_synth [get_runs synth_1]
 
 
+set jobfile [open [format "%s/settings_jobs.tcl" $project_generated_sources_tcl] "w+"]
+puts $jobfile "set jobs_synth 4"
+puts $jobfile "set jobs_impl_1 1"
+puts $jobfile "set jobs_impl_2 1"
+puts $jobfile "set jobs_impl_all 1"
+close $jobfile
+
+puts [format "settings for implementation runs created at %s/settings_jobs.tcl - please adapt for reduced implementation times" $project_generated_sources_tcl]
+
 set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
