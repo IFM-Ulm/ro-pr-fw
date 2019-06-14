@@ -4,7 +4,7 @@ if { $call_by_script != 1 } {
 }
 
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
-source -notrace [format "%s/settings_jobs.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_jobs.tcl" $project_generated_sources_tcl]
 
 puts "checking run PR_module_synth_1 for REFRESH"
 if {[expr { [get_property NEEDS_REFRESH [get_runs PR_module_synth_1]] == 1 || [get_property PROGRESS [get_runs PR_module_synth_1]] != "100%"}]} {
