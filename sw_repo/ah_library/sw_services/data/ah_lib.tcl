@@ -165,6 +165,24 @@ proc xgen_opts_file {libhandle} {
 		set uart_activated [get_property CONFIG.uart $libhandle]
 		if {$uart_activated == true} {
 			puts $file_handle "#define AH_UART_ACTIVATED"
+			
+			if {$property_board == "digilentinc.com:zybo:part0:1.0"} {
+				# zybo
+				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID"
+				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_1_INTR"
+			} elseif {$property_board == "em.avnet.com:zed:part0:1.4"} {
+				# zedboard
+				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID"
+				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_1_INTR"
+			} elseif {$property_board == "www.digilentinc.com:pynq-z1:part0:1.0"} {
+				# pynq
+				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_0_DEVICE_ID"
+				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_0_INTR"
+			} else {
+				error "can't create UART defines - board not supported"
+			}
+			
+			
 		}
 		
 		set gpio_activated [get_property CONFIG.gpio $libhandle]

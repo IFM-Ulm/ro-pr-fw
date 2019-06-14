@@ -49,7 +49,7 @@ s32 ah_uart_init(void){
 			}
 		}
 
-		XUartPs_Config_p = XUartPs_LookupConfig(XPAR_PS7_UART_1_DEVICE_ID);
+		XUartPs_Config_p = XUartPs_LookupConfig(AH_UART_DEVICE_ID);
 		if (XUartPs_Config_p == NULL) {
 			return XST_FAILURE;
 		}
@@ -82,11 +82,11 @@ s32 ah_uart_setup(void){
 
 	if(!ah_uart_intvar_isSetup){
 
-		if(ah_scugic_setup_connectHandler(XPAR_XUARTPS_1_INTR, (Xil_ExceptionHandler) ah_uart_intfcn_wa_XUartPs_InterruptHandler, (void *) &ah_uart_intvar_instance) != XST_SUCCESS){
+		if(ah_scugic_setup_connectHandler(AH_UART_INTR, (Xil_ExceptionHandler) ah_uart_intfcn_wa_XUartPs_InterruptHandler, (void *) &ah_uart_intvar_instance) != XST_SUCCESS){
 			return XST_FAILURE;
 		}
 
-		if(ah_scugic_setup_enableHandler(XPAR_XUARTPS_1_INTR) != XST_SUCCESS){
+		if(ah_scugic_setup_enableHandler(AH_UART_INTR) != XST_SUCCESS){
 			return XST_FAILURE;
 		}
 
@@ -98,7 +98,7 @@ s32 ah_uart_setup(void){
 		// Set the UART in Normal Mode
 		XUartPs_SetOperMode(&ah_uart_intvar_instance, XUARTPS_OPER_MODE_NORMAL);
 
-		if(ah_scugic_setup_connectEnable(XPAR_PS7_UART_1_DEVICE_ID, ah_uart_intfcn_enable_connector, NULL) != XST_SUCCESS){
+		if(ah_scugic_setup_connectEnable(AH_UART_DEVICE_ID, ah_uart_intfcn_enable_connector, NULL) != XST_SUCCESS){
 			return XST_FAILURE;
 		}
 
