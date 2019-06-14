@@ -33,13 +33,13 @@ if { [get_property NEEDS_REFRESH [get_runs impl_2]] == 1 } {
 puts "checking run impl_1 for PROGRESS"
 if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
 	puts "launching run impl_1"
-	launch_runs [get_runs impl_1] -to_step write_bitstream -jobs $jobs_impl_1
+	launch_runs [get_runs impl_1] -to_step write_bitstream -jobs 1
 }
 
 puts "checking run impl_2 for PROGRESS"
 if {[get_property PROGRESS [get_runs impl_2]] != "100%"} {
 	puts "launching run impl_2"
-	launch_runs [get_runs impl_2] -to_step write_bitstream -jobs $jobs_impl_2
+	launch_runs [get_runs impl_2] -to_step write_bitstream -jobs 1
 }
 
 puts "waiting on run impl_1"
