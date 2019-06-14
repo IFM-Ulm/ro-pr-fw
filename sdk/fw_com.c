@@ -167,7 +167,10 @@ s32 com_pull(u8* retVal){
 }
 
 s32 com_isConnected(u8* returnVal){
-	*returnVal = ah_tcpip_checkConnection();
+	
+	if(returnVal != NULL){
+		*returnVal = ah_tcpip_checkConnection();
+	}
 	return XST_SUCCESS;
 }
 
@@ -263,16 +266,26 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 	u8 answer[3];
 
+	if(nextState == NULL){
+		return XST_FAILURE;
+	}
+
 	readCommand = tcpip_custom_pop();
 	if(readCommand == NULL){
-
-		*returnVal = 0;
+		
+		if(returnVal != NULL){
+			*returnVal = 0;
+		}
+		
 		*nextState = st_check_commands;
 
 		return XST_SUCCESS;
 	}
-
-	*returnVal = 1;
+	
+	if(returnVal != NULL){
+		*returnVal = 1;
+	}
+	
 	*nextState = st_check_commands; // default next state
 
 	datap = readCommand->data;
