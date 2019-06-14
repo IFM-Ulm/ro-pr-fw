@@ -86,8 +86,8 @@ set_property constrset constrs_synth [get_runs synth_1]
 
 set jobfile [open [format "%s/settings_jobs.tcl" $project_generated_sources_tcl] "w+"]
 puts $jobfile "set jobs_synth 4"
-puts $jobfile "set jobs_impl_1 1"
-puts $jobfile "set jobs_impl_2 1"
+# puts $jobfile "set jobs_impl_1 1"
+# puts $jobfile "set jobs_impl_2 1"
 puts $jobfile "set jobs_impl_all 1"
 close $jobfile
 
