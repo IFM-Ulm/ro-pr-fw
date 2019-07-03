@@ -12,7 +12,7 @@ s32 data_send_measurements(void){
 	}
 
 	ah_tcip_setflag_copy(0);
-	if(tcpip_custom_push((void*) data, (u32)len) != XST_SUCCESS){
+	if(tcpip_custom_push((void*) data, (u32)(len + 4)) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 	ah_tcip_setflag_copy(1);
@@ -22,11 +22,7 @@ s32 data_send_measurements(void){
 
 s32 data_send_temperatures(u16 temp_start, u16 temp_end){
 
-	if(tcpip_custom_push((void*) &temp_start, 2) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(tcpip_custom_push((void*) &temp_end, 2) != XST_SUCCESS){
+	if(hardware_insert_temperature_data(temp_start, temp_end) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
