@@ -309,7 +309,7 @@ int main(){
 							goto MAIN_EXIT;
 						}
 
-						next_state = st_wait_connection;
+						state = st_wait_connection;
 
 					}
 					
