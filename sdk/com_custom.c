@@ -43,6 +43,8 @@ static volatile u32 data_added = 0;
 static volatile u32 data_removed = 0;
 static volatile u32 data_counted = 0;
 
+static volatile u32 data_sent = 0;
+static volatile u32 data_acked = 0;								   
 static volatile u32 data_total_sent = 0;
 static volatile u32 data_total_acked = 0;
 
@@ -113,8 +115,15 @@ s32 tcpip_custom_checkDataSent(u8* returnVal){
 
 	if(returnVal != NULL){
 
-		if(data_total_acked == data_total_sent){
+		if(data_acked == data_sent){
 			tcpip_custom_resetDataSent(0);
+			*returnVal = 1;
+		}
+		else if(data_acked > data_sent){
+			// theoretically not possible, but occured during the dark ages of debugging
+			// thus, this case is covered such that it can take a breakpoint for further debugging
+			data_acked = data_acked - data_sent;
+			data_sent = 0;
 			*returnVal = 1;
 		}
 		else{
@@ -131,9 +140,9 @@ s32 tcpip_custom_checkDataSent(u8* returnVal){
 
 s32 tcpip_custom_resetDataSent(u8 force){
 
-	if(data_total_acked == data_total_sent || force){
-		data_total_sent = 0;
-		data_total_acked = 0;
+	if(data_acked == data_sent || force){
+		data_sent = 0;
+		data_acked = 0;
 	}
 
 	return XST_SUCCESS;
@@ -144,6 +153,9 @@ s32 tcpip_custom_push(void* data, u32 len){
 	u16 rem = len;
 	u16 send_len;
 	u32 total_len = len;
+	u32 total_len_max = 65070; // was 65535
+	
+	u16 transmit_len = 1446;
 	void* temp = data;
 	u8 received;
 
@@ -155,8 +167,8 @@ s32 tcpip_custom_push(void* data, u32 len){
 
 	while(total_len > 0){
 
-		if(total_len > 65535){
-			send_len = 65535;
+		if(total_len > total_len_max){
+			send_len = total_len_max;
 		}
 		else{
 			send_len = (u16)total_len;
@@ -164,9 +176,9 @@ s32 tcpip_custom_push(void* data, u32 len){
 
 		rem = send_len;
 
-		while(rem > 1446){
+		while(rem > transmit_len){
 
-			checkbuffer = ah_tcpip_checkBuffer(1446);
+			checkbuffer = ah_tcpip_checkBuffer(transmit_len);
 
 			while(!checkbuffer){
 
@@ -175,22 +187,13 @@ s32 tcpip_custom_push(void* data, u32 len){
 				}
 
 				ah_tcpip_send_output();
-
-				checkbuffer = ah_tcpip_checkBuffer(1446);
-
-				if(!checkbuffer){
-					received = 1;
-					while(received){
-						if(ah_tcpip_pull(&received) != XST_SUCCESS){
-							return XST_FAILURE;
-						}
-					}
-				}
-
+				
+				checkbuffer = ah_tcpip_checkBuffer(transmit_len);
 			}
-			if(ah_tcpip_send(temp, 1446, 1) == XST_SUCCESS){
-				rem -= 1446;
-				temp += 1446;
+			
+			if(ah_tcpip_send(temp, transmit_len, 0) == XST_SUCCESS){
+				rem -= transmit_len;
+				temp += transmit_len;
 			}
 
 		}
@@ -221,6 +224,7 @@ s32 tcpip_custom_push(void* data, u32 len){
 		total_len -= (u32)send_len;
 	}
 
+	data_sent += len;			   
 	data_total_sent += len;
 
 	return XST_SUCCESS;
@@ -300,6 +304,7 @@ void tcpip_custom_receive(u16 connection_index, struct pbuf* buffer, void* data,
 
 void tcpip_custom_sent(u16 connection_index, u16 len){
 
+	data_acked += (u32)len;					
 	data_total_acked += (u32)len;
 
 }
