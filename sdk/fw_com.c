@@ -7,7 +7,6 @@
 #include "xil_types.h"
 #include "xstatus.h"
 
-#include "ah_tcpip.h"
 #include "ah_sd.h"
 
 #include "fw_datatypes.h"
@@ -16,234 +15,62 @@
 #include "com_custom.h"
 
 s32 com_init(void){
-
-	if(ah_tcpip_init() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_init();
 }
 
 s32 com_setup(void){
-
-	u8 id_ip_csv;
-	char buff[40];
-	u32 temp;
-
-	unsigned int mac_address[6];
-	int ip_address[4];
-	int ip_netmask[4];
-	int ip_gateway[4];
-	int ip_port;
-
-	if(ah_sd_openFile("ip.csv", AH_SD_FLAG_READ, &id_ip_csv) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%X,%X,%X,%X,%X,%X", &(mac_address[0]), &(mac_address[1]), &(mac_address[2]),
-			&(mac_address[3]), &(mac_address[4]), &(mac_address[5])) != 6){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_address[0]), &(ip_address[1]), &(ip_address[2]), &(ip_address[3])) != 4){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_netmask[0]), &(ip_netmask[1]), &(ip_netmask[2]), &(ip_netmask[3])) != 4){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d,%d,%d,%d", &(ip_gateway[0]), &(ip_gateway[1]), &(ip_gateway[2]), &(ip_gateway[3])) != 4){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(sscanf(buff, "%d", &ip_port) != 1){
-		return XST_FAILURE;
-	}
-
-	if(ah_sd_closeFile(id_ip_csv) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_mac((u8)mac_address[0], (u8)mac_address[1], (u8)mac_address[2],
-			(u8)mac_address[3], (u8)mac_address[4], (u8)mac_address[5]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_ip((u8)ip_address[0], (u8)ip_address[1], (u8)ip_address[2], (u8)ip_address[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_netmask((u8)ip_netmask[0], (u8)ip_netmask[1], (u8)ip_netmask[2], (u8)ip_netmask[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_gateway((u8)ip_gateway[0], (u8)ip_gateway[1], (u8)ip_gateway[2], (u8)ip_gateway[3]) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_timerIntervalMS(10) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_pollingmode(0) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackReceived(tcpip_custom_receive) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackError(tcpip_custom_error) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_callbackSent(tcpip_custom_sent) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_setup_port(ip_port) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	/*if(ah_tcpip_setup_max_send_size(49164) != XST_SUCCESS){
-		return XST_FAILURE;
-	}*/
-
-	ah_tcpip_setup_max_send_size(0);
-
-	//tcpip_custom_setThresholds(2048000, 1024000);
-	tcpip_custom_setThresholds(20480, 10240);
-
-	if(ah_tcpip_setup() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_setup();
 }
 
 s32 com_enable(void){
-
-	if(ah_tcpip_enable() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_tcpip_open() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
-
+	return com_custom_enable();
 }
 
 s32 com_disable(void){
+	return com_custom_disable();
+}
 
-	if(ah_tcpip_close(1) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
 
-	return XST_SUCCESS;
+s32 com_isConnected(u8* returnVal){
+	return com_custom_isConnected(returnVal);
 }
 
 s32 com_pull(u8* retVal){
-
-	return ah_tcpip_pull(retVal);
-
+	return com_custom_pull(retVal);
 }
 
-s32 com_isConnected(u8* returnVal){
-	
-	if(returnVal != NULL){
-		*returnVal = ah_tcpip_checkConnection();
-	}
-	return XST_SUCCESS;
+
+struct data_com* com_pop(void){
+	return com_custom_pop();
 }
+
+s32 com_free(struct data_com* packet){
+	return com_custom_free(packet);
+}
+
+s32 com_push(void* data, u32 len){
+	return com_custom_push(data, len);
+}
+
 
 s32 com_handleErrors(u8* returnVal){
-
-	u8 retVal = 0;
-
-	tcpip_custom_dataflow_getStatus(&retVal);
-
-	if(returnVal != NULL){
-		*returnVal  = retVal;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_handleErrors(returnVal);
 }
 
 s32 com_handleDisconnect(u8* returnVal){
-
-	u8 retVal = 0;
-
-	if(tcpip_custom_flushpackets_ip() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-	if(tcpip_custom_flushpackets_data() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(returnVal != NULL){
-		*returnVal  = retVal;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_handleDisconnect(returnVal);
 }
 
 s32 com_handleInactivity(u8* returnVal){
+	return com_custom_handleInactivity(returnVal);
+}
 
-	u8 retVal = 0;
+s32 com_check_sent(u8* returnVal){
+	return com_custom_check_sent(returnVal);
+}
 
-	u8 checkVal;
-
-	if(tcpip_custom_getDataAvailable() > 0){
-
-		if(tcpip_custom_dataflow_control(1) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(tcpip_custom_dataflow_request_refuse(1) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(tcpip_custom_dataflow_getActive(&checkVal) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-
-		if(!checkVal){
-			tcpip_custom_update_list(1);
-		}
-
-		if(tcpip_custom_dataflow_control(0) != XST_SUCCESS){
-			return XST_FAILURE;
-		}
-		
-	if(tcpip_custom_dataflow_request_accept(0) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	}
-
-	if(returnVal != NULL){
-		*returnVal  = retVal;
-	}
-
-	return XST_SUCCESS;
+s32 com_reset_sent(u8 force){
+	return com_custom_reset_sent(force);
 }
 
 s32 com_checkCommands(u8* returnVal, states* nextState){
@@ -270,7 +97,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		return XST_FAILURE;
 	}
 
-	readCommand = tcpip_custom_pop();
+	readCommand = com_custom_pop();
 	if(readCommand == NULL){
 		
 		if(returnVal != NULL){
@@ -294,16 +121,11 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 		case 0x00:
 
-			//returnValue = XST_FAILURE;
 			returnValue = XST_FAILURE;
 
 			break;
 
 		case 0x01:	// ack for testing
-
-				/*if(tcpip_custom_push(&ack, 1) != XST_SUCCESS){
-					returnValue = XST_FAILURE;
-				}*/
 
 				*nextState = st_check_commands;
 
@@ -454,7 +276,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		answer[2] = 0x15; // NACK
 	}
 
-	if(tcpip_custom_push(answer, 3) != XST_SUCCESS){
+	if(com_custom_push(answer, 3) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
@@ -464,21 +286,10 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		filename = NULL;
 	}
 
-	if(tcpip_custom_free(readCommand) != XST_SUCCESS){
+	if(com_custom_free(readCommand) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
 	return returnValue;
 }
 
-struct data_com* com_custom_pop(void){
-	return tcpip_custom_pop();
-}
-
-s32 com_custom_free(struct data_com* packet){
-	return tcpip_custom_free(packet);
-}
-
-s32 com_custom_push(void* data, u32 len){
-	return tcpip_custom_push(data, len);
-}

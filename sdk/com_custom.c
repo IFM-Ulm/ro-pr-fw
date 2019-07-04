@@ -3,11 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "xparameters.h"
+#include "ah_tcpip.h"
+#include "ah_sd.h"
 
-// forward declarations
-u8 tcpip_custom_insert_data(void);
-struct data_com* tcpip_custom_get_data_tcpip(void);
+#include "xparameters.h"
 
 struct tpcip_packet {
 
@@ -23,6 +22,23 @@ struct tpcip_packet {
 #endif
 
 };
+
+// forward declarations
+void tcpip_custom_receive(u16 connection_index, struct pbuf* buffer, void* data, u16 data_len)
+void tcpip_custom_sent(u16 connection_index, u16 len);
+void tcpip_custom_error(u16 connection_index, u8 status);
+s32 tcpip_custom_setThresholds(u32 refuse_data, u32 accept_data);
+s32 tcpip_custom_dataflow_getActive(u8* returnVal);
+s32 tcpip_custom_dataflow_control(u8 override);
+s32 tcpip_custom_dataflow_request_refuse(u8 validation);
+s32 tcpip_custom_dataflow_request_accept(u8 validation);
+s32 tcpip_custom_dataflow_getStatus(u8* returnVal);
+u32 tcpip_custom_getDataAvailable(void);
+s32 tcpip_custom_update_list(u8 force);
+u8 tcpip_custom_insert_data(void);
+struct data_com* tcpip_custom_get_data_tcpip(void);
+s32 tcpip_custom_flushpackets_ip(void);
+s32 tcpip_custom_flushpackets_data(void);
 
 static struct tpcip_packet* packet_queue = NULL;
 static struct tpcip_packet* packet_queue_pending = NULL;
@@ -53,8 +69,239 @@ static u32 accept_data_threshold = 0;
 static u8 data_threshold_override = 0;
 static u8 receive_active = 0;
 
-struct data_com* tcpip_custom_pop(void){
+s32 com_custom_init(void){
 
+	if(ah_tcpip_init() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_setup(void){
+
+	u8 id_ip_csv;
+	char buff[40];
+	u32 temp;
+
+	unsigned int mac_address[6];
+	int ip_address[4];
+	int ip_netmask[4];
+	int ip_gateway[4];
+	int ip_port;
+
+	if(ah_sd_openFile("ip.csv", AH_SD_FLAG_READ, &id_ip_csv) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(sscanf(buff, "%X,%X,%X,%X,%X,%X", &(mac_address[0]), &(mac_address[1]), &(mac_address[2]),
+			&(mac_address[3]), &(mac_address[4]), &(mac_address[5])) != 6){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(sscanf(buff, "%d,%d,%d,%d", &(ip_address[0]), &(ip_address[1]), &(ip_address[2]), &(ip_address[3])) != 4){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(sscanf(buff, "%d,%d,%d,%d", &(ip_netmask[0]), &(ip_netmask[1]), &(ip_netmask[2]), &(ip_netmask[3])) != 4){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(sscanf(buff, "%d,%d,%d,%d", &(ip_gateway[0]), &(ip_gateway[1]), &(ip_gateway[2]), &(ip_gateway[3])) != 4){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_readLine(id_ip_csv, buff, &temp) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(sscanf(buff, "%d", &ip_port) != 1){
+		return XST_FAILURE;
+	}
+
+	if(ah_sd_closeFile(id_ip_csv) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_mac((u8)mac_address[0], (u8)mac_address[1], (u8)mac_address[2],
+			(u8)mac_address[3], (u8)mac_address[4], (u8)mac_address[5]) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_ip((u8)ip_address[0], (u8)ip_address[1], (u8)ip_address[2], (u8)ip_address[3]) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_netmask((u8)ip_netmask[0], (u8)ip_netmask[1], (u8)ip_netmask[2], (u8)ip_netmask[3]) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_gateway((u8)ip_gateway[0], (u8)ip_gateway[1], (u8)ip_gateway[2], (u8)ip_gateway[3]) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_timerIntervalMS(10) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_pollingmode(0) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_callbackReceived(tcpip_custom_receive) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_callbackError(tcpip_custom_error) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_callbackSent(tcpip_custom_sent) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_setup_port(ip_port) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	/*if(ah_tcpip_setup_max_send_size(49164) != XST_SUCCESS){
+		return XST_FAILURE;
+	}*/
+
+	ah_tcpip_setup_max_send_size(0);
+
+	//tcpip_custom_setThresholds(2048000, 1024000);
+	tcpip_custom_setThresholds(20480, 10240);
+
+	if(ah_tcpip_setup() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_enable(void){
+
+	if(ah_tcpip_enable() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_tcpip_open() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+
+}
+
+s32 com_custom_disable(void){
+
+	if(ah_tcpip_close(1) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+
+
+s32 com_custom_isConnected(u8* returnVal){
+	
+	if(returnVal != NULL){
+		*returnVal = ah_tcpip_checkConnection();
+	}
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleErrors(u8* returnVal){
+
+	u8 retVal = 0;
+
+	tcpip_custom_dataflow_getStatus(&retVal);
+
+	if(returnVal != NULL){
+		*returnVal  = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleDisconnect(u8* returnVal){
+
+	u8 retVal = 0;
+
+	if(tcpip_custom_flushpackets_ip() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	if(tcpip_custom_flushpackets_data() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(returnVal != NULL){
+		*returnVal  = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleInactivity(u8* returnVal){
+
+	u8 retVal = 0;
+
+	u8 checkVal;
+
+	if(tcpip_custom_getDataAvailable() > 0){
+
+		if(tcpip_custom_dataflow_control(1) != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+
+		if(tcpip_custom_dataflow_request_refuse(1) != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+
+		if(tcpip_custom_dataflow_getActive(&checkVal) != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+
+		if(!checkVal){
+			tcpip_custom_update_list(1);
+		}
+
+		if(tcpip_custom_dataflow_control(0) != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+		
+	if(tcpip_custom_dataflow_request_accept(0) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	}
+
+	if(returnVal != NULL){
+		*returnVal  = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+
+s32 com_custom_pull(u8* retVal){
+	return ah_tcpip_pull(retVal);
+}
+
+struct data_com* com_custom_pop(void){
+	
 	struct data_com* ret = NULL;
 
 	if(tcpip_data_queue == NULL){
@@ -86,8 +333,8 @@ struct data_com* tcpip_custom_pop(void){
 	return ret;
 }
 
-s32 tcpip_custom_free(struct data_com* packet){
-
+s32 com_custom_free(struct data_com* packet){
+	
 	if(packet != NULL){
 		if(packet->data != NULL){
 
@@ -108,48 +355,11 @@ s32 tcpip_custom_free(struct data_com* packet){
 	else{
 		return XST_FAILURE;
 	}
-
+	
 }
 
-s32 tcpip_custom_checkDataSent(u8* returnVal){
-
-	if(returnVal != NULL){
-
-		if(data_acked == data_sent){
-			tcpip_custom_resetDataSent(0);
-			*returnVal = 1;
-		}
-		else if(data_acked > data_sent){
-			// theoretically not possible, but occured during the dark ages of debugging
-			// thus, this case is covered such that it can take a breakpoint for further debugging
-			data_acked = data_acked - data_sent;
-			data_sent = 0;
-			*returnVal = 1;
-		}
-		else{
-			*returnVal = 0;
-		}
-
-		return XST_SUCCESS;
-	}
-	else{
-		return XST_FAILURE;
-	}
-
-}
-
-s32 tcpip_custom_resetDataSent(u8 force){
-
-	if(data_acked == data_sent || force){
-		data_sent = 0;
-		data_acked = 0;
-	}
-
-	return XST_SUCCESS;
-}
-
-s32 tcpip_custom_push(void* data, u32 len){
-
+s32 com_custom_push(void* data, u32 len){
+	
 	u16 rem = len;
 	u16 send_len;
 	u32 total_len = len;
@@ -165,6 +375,10 @@ s32 tcpip_custom_push(void* data, u32 len){
 		return XST_FAILURE;
 	}
 
+	if(len > 12800){
+		ah_tcip_setflag_copy(0);
+	}
+	
 	while(total_len > 0){
 
 		if(total_len > total_len_max){
@@ -224,11 +438,52 @@ s32 tcpip_custom_push(void* data, u32 len){
 		total_len -= (u32)send_len;
 	}
 
+	ah_tcip_setflag_copy(1);
+
 	data_sent += len;			   
 	data_total_sent += len;
 
 	return XST_SUCCESS;
 }
+
+
+s32 com_custom_check_sent(u8* returnVal){
+	
+	if(returnVal != NULL){
+
+		if(data_acked == data_sent){
+			com_custom_reset_sent(0);
+			*returnVal = 1;
+		}
+		else if(data_acked > data_sent){
+			// theoretically not possible, but occured during the dark ages of debugging
+			// thus, this case is covered such that it can take a breakpoint for further debugging
+			data_acked = data_acked - data_sent;
+			data_sent = 0;
+			*returnVal = 1;
+		}
+		else{
+			*returnVal = 0;
+		}
+
+		return XST_SUCCESS;
+	}
+	else{
+		return XST_FAILURE;
+	}
+}
+
+s32 com_custom_reset_sent(u8 force){
+	
+	if(data_acked == data_sent || force){
+		data_sent = 0;
+		data_acked = 0;
+	}
+
+	return XST_SUCCESS;
+}
+
+// tcp/ip  specific internal helper functions
 
 void tcpip_custom_receive(u16 connection_index, struct pbuf* buffer, void* data, u16 data_len){
 
@@ -308,8 +563,6 @@ void tcpip_custom_sent(u16 connection_index, u16 len){
 	data_total_acked += (u32)len;
 
 }
-
-
 
 
 void tcpip_custom_error(u16 connection_index, u8 status){
@@ -883,3 +1136,5 @@ s32 tcpip_custom_flushpackets_data(void){
 
 	return XST_SUCCESS;
 }
+
+
