@@ -77,7 +77,7 @@ if {[llength $file_list] > 0} {
 	}
 }
 
-source -notrace [format "%s/settings_impl.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_impl.tcl" $project_generated_sources_tcl]
 
 set paramId [open [format "%s/params.csv" $project_bitstreams] "w+"]
 puts $paramId [format "%s" $impl_ro]
