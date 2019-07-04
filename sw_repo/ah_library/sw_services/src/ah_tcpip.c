@@ -71,7 +71,7 @@ static u32 ah_tcpip_intvar_accept_data = 0;
 static u8 ah_tcpip_intvar_flag_copy = 1;
 static u8 ah_tcpip_intvar_flag_more = 0;
 static u8 ah_tcpip_intvar_flag_total = TCP_WRITE_FLAG_COPY;
-
+volatile u8 ah_tcpip_intvar_flag_tcp_output_locked = 0;
 
 void (*ah_tcpip_intfcn_accepted)(u16) = NULL;
 void (*ah_tcpip_intfcn_received)(u16, struct pbuf*, void*, u16_t) = NULL;
@@ -498,6 +498,8 @@ u8 ah_tcpip_checkBuffer(u16 len){
 
 	u16 sndbuf_val;
 	u16 sndwnd_val;
+	u16 cwnd_val;
+	u16 snd_queuelen;		  
 
 	// ToDo: should be "return XST_FAILURE;", rewrite function
 	if(!ah_tcpip_intvar_connection_alive){
@@ -505,15 +507,25 @@ u8 ah_tcpip_checkBuffer(u16 len){
 	}
 
 	sndbuf_val = (u16)tcp_sndbuf(ah_tcpip_intvar_pcb_connection);
-	if(len < sndbuf_val){
-		
-		sndwnd_val = ah_tcpip_intvar_pcb_connection->snd_wnd;
-		// workaround: do not try to stuff packets in the send queue, if the receivers window is closing (windows size < 3 * IP MSS)
-		if(sndwnd_val < 4338){
+	sndwnd_val = ah_tcpip_intvar_pcb_connection->snd_wnd;
+	cwnd_val = ah_tcpip_intvar_pcb_connection->cwnd;
+	snd_queuelen = ah_tcpip_intvar_pcb_connection->snd_queuelen;
+	
+	if((3 * len) < sndbuf_val){
+
+		// workaround: do not try to stuff packets in the send queue, if the receivers window is closing (sndwnd_val < 3 * IP MSS)
+		// workaround: do not try to stuff packets in the send queue, if the congestion window is closing (cwnd_val < 3 * IP MSS)
+		// mentioned in https://savannah.nongnu.org/bugs/?24212
+		if(sndwnd_val < 4338 || cwnd_val < 4338){
 			return 0;
 		}
 		else{
 			
+			// if the send queue starts to fill up, it can lead to congestions, try to avoid this by
+			// avoiding to fill up the whole send queue with new data (30 * IP MSSS = 43380)
+			if(snd_queuelen > 30){
+				return 0;
+			}
 			if(ah_tcpip_intvar_max_unacked > 0){
 				
 				if(((u32)len + ah_tcpip_intvar_data_unacked) <= ah_tcpip_intvar_max_unacked){
@@ -584,32 +596,35 @@ s32 ah_tcip_setflag_more(u8 flag){
 
 s32 ah_tcpip_send(const void *data, u16 len, u8 force_send){
 
-	err_t result;
+	err_t write_result;
+	s32 output_result;
 
 	if(ah_tcpip_intvar_connection_alive == 0){
 		return XST_FAILURE;
 	}
 
-	result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
+	write_result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
 	
-	// testing, trying to prevent out_of_memory crashes
-	if(result == ERR_MEM){
-		result = tcp_output(ah_tcpip_intvar_pcb_connection);
-		if(result != ERR_OK){
+	if(write_result == ERR_MEM){
+		
+		output_result = ah_tcpip_send_output();
+
+		if(output_result != XST_SUCCESS){
 			return XST_FAILURE;
 		}
-		result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
+		
+		write_result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
 	}
 	
-	if(result != ERR_OK){
+	if(write_result != ERR_OK){
 		return XST_FAILURE;
 	}
 	
 	ah_tcpip_intvar_data_unacked += (u32)len;
 	
 	if(force_send == 1){
-		result = tcp_output(ah_tcpip_intvar_pcb_connection);
-		if(result != ERR_OK){
+		output_result = ah_tcpip_send_output();
+		if(output_result != XST_SUCCESS){
 			return XST_FAILURE;
 		}
 	}	
@@ -619,28 +634,31 @@ s32 ah_tcpip_send(const void *data, u16 len, u8 force_send){
 
 s32 ah_tcpip_send_blocking(const void *data, u16 len, u8 force_send){
 
-	err_t result;
-
+	err_t write_result;
+	s32 output_result;
+	
 	if(ah_tcpip_intvar_connection_alive == 0){
 		return XST_FAILURE;
 	}
 
 	// ToDo: include useage of TCP_WRITE_FLAG_MORE ? prevents setting PSH flag to indicate that more data is on its way
-	result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
+	write_result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
 	
 	// testing, trying to prevent out_of_memory crashes
-	while(result != ERR_OK){
-		result = tcp_output(ah_tcpip_intvar_pcb_connection);
-		if(result == ERR_OK){
-			result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
+	while(write_result != ERR_OK){
+		
+		output_result = ah_tcpip_send_output();
+		
+		if(output_result == XST_SUCCESS){
+			write_result = tcp_write(ah_tcpip_intvar_pcb_connection, data, (u16_t) len, ah_tcpip_intvar_flag_total);
 		}
 	}
 	
 	ah_tcpip_intvar_data_unacked += (u32)len;
 	
 	if(force_send == 1){
-		result = tcp_output(ah_tcpip_intvar_pcb_connection);
-		if(result != ERR_OK){
+		output_result = ah_tcpip_send_output();
+		if(output_result != XST_SUCCESS){
 			return XST_FAILURE;
 		}
 	}	
@@ -653,9 +671,41 @@ s32 ah_tcpip_send_output(void){
 	err_t result;
 	
 	u8 received = 1;
-	u8 received_counter = 0;
+	//u32 received_counter = 0;
+	
+	/* prevent a possible error mentioned in: 
+	
+		https://github.com/espressif/ESP8266_RTOS_SDK/issues/318
+		
+		and
+		
+		http://savannah.nongnu.org/bugs/?27791
+		
+		when the timer calls ah_tcpip_intfcn_callback_timer, which in turn calls tcp_tmr(),
+		while the regular program executes tcp_output(), it is possible that
+		the list of pcb->unacked gets updated by the timer, but was already copied 
+		as a NULL referenec to the variable useg, which leads to a DataAbort in the following code:
+		
+		if (pcb->unacked == NULL) {
+			...
+		} else {
+			...
+			
+			// the following line de-references the NULL value stored in useg
+			if (TCP_SEQ_LT(lwip_ntohl(seg->tcphdr->seqno), lwip_ntohl(useg->tcphdr->seqno))) {
+				...
+			}
+			...
+		}
+	*/
+	
+	
+	ah_tcpip_intvar_flag_tcp_output_locked = 1;			
 	
 	result = tcp_output(ah_tcpip_intvar_pcb_connection);
+	
+	ah_tcpip_intvar_flag_tcp_output_locked = 0;
+	
 	if(result != ERR_OK){
 		return XST_FAILURE;
 	}
@@ -665,10 +715,10 @@ s32 ah_tcpip_send_output(void){
 			if(ah_tcpip_pull(&received) != XST_SUCCESS){
 				return XST_FAILURE;
 			}
-			received_counter += received;
-			if(received_counter >= 64){
+			//received_counter += (u32)received;
+			/*if(received_counter >= 2048){
 				break;
-			}
+			}*/
 		}
 	}
 	
@@ -736,6 +786,9 @@ void ah_tcpip_intfcn_callback_timer(void* instance){
 	
 	UNUSED(instance);
 	
+	if(ah_tcpip_intvar_flag_tcp_output_locked == 1){
+		return;
+	}						
 	// probably outdated, see https://lwip.fandom.com/wiki/LwIP_with_or_without_an_operating_system
 	tcp_tmr();
 
