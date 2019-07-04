@@ -23,7 +23,7 @@ if { $impl_ro == "ro4" } {
 
 proc pr_set_instance_name { index impl_ro } {
 	if { $impl_ro == "ro4" } {
-		set instance_name [format "RoGen\[%d\].puf2" $index]
+		set instance_name [format "ro_top_inst/PR_module_inst1/RoGen\[%d\].puf2" $index]
 	} else {
 		error [format "unknown impl_ro = %s" $impl_ro]
 	}
