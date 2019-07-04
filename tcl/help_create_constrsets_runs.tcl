@@ -192,7 +192,9 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 			set_property used_in_synthesis false [get_files $constrset_file]
 			set_property used_in_implementation true [get_files $constrset_file]
 
-			remove_files -fileset $constrset_name [get_files -of_objects [get_filesets $constrset_name] -filter [format "NAME !~ *%s_inst.xdc" $constrset_name]]
+			set rm_file [get_files -of_objects [get_filesets $constrset_name] -filter [format "NAME !~ *%s_inst.xdc" $constrset_name]]
+			remove_file -fileset $constrset_name $rm_files
+			file delete -force $rm_file
 		}
 	}
 				
