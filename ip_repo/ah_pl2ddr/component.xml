@@ -3,7 +3,7 @@
   <spirit:vendor>uni-ulm.de</spirit:vendor>
   <spirit:library>aherkle</spirit:library>
   <spirit:name>AH_PL2DDR</spirit:name>
-  <spirit:version>2.6</spirit:version>
+  <spirit:version>2.9</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>M_AXI_OUT</spirit:name>
@@ -16,282 +16,10 @@
       <spirit:portMaps>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>WLAST</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_wlast</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>BREADY</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_bready</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWLEN</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awlen</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWQOS</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awqos</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWREADY</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awready</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARBURST</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arburst</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>BUSER</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_buser</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWPROT</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awprot</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RRESP</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rresp</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARPROT</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arprot</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RVALID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rvalid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARLOCK</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arlock</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
             <spirit:name>AWID</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>m_axi_out_awid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RLAST</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rlast</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>WUSER</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_wuser</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWCACHE</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awcache</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>WREADY</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_wready</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>WSTRB</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_wstrb</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>BRESP</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_bresp</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>BID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_bid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWUSER</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awuser</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARLEN</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arlen</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARQOS</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arqos</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RDATA</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rdata</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>BVALID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_bvalid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARCACHE</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arcache</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RREADY</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rready</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWVALID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awvalid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARSIZE</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_arsize</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>WDATA</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_wdata</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARUSER</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_aruser</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>AWSIZE</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_awsize</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RID</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_rid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>ARADDR</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_araddr</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
         <spirit:portMap>
@@ -304,34 +32,26 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>ARREADY</spirit:name>
+            <spirit:name>AWLEN</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
-            <spirit:name>m_axi_out_arready</spirit:name>
+            <spirit:name>m_axi_out_awlen</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>WVALID</spirit:name>
+            <spirit:name>AWSIZE</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
-            <spirit:name>m_axi_out_wvalid</spirit:name>
+            <spirit:name>m_axi_out_awsize</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>ARVALID</spirit:name>
+            <spirit:name>AWBURST</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
-            <spirit:name>m_axi_out_arvalid</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RUSER</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_out_ruser</spirit:name>
+            <spirit:name>m_axi_out_awburst</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
         <spirit:portMap>
@@ -344,10 +64,290 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>AWBURST</spirit:name>
+            <spirit:name>AWCACHE</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
-            <spirit:name>m_axi_out_awburst</spirit:name>
+            <spirit:name>m_axi_out_awcache</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWPROT</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_awprot</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWQOS</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_awqos</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWUSER</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_awuser</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_awvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>AWREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_awready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WSTRB</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wstrb</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WUSER</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wuser</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>WREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_wready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_bid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BRESP</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_bresp</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BUSER</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_buser</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_bvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>BREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_bready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARADDR</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_araddr</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARLEN</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arlen</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARSIZE</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arsize</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARBURST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arburst</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARLOCK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arlock</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARCACHE</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arcache</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARPROT</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arprot</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARQOS</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arqos</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARUSER</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_aruser</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ARREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_arready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RDATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rdata</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RRESP</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rresp</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RLAST</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rlast</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RUSER</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_ruser</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RVALID</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rvalid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>RREADY</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>m_axi_out_rready</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
       </spirit:portMaps>
@@ -430,7 +430,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>SENSITIVITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_SENT.SENSITIVITY">EDGE_RISING</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_SENT.SENSITIVITY" spirit:choiceRef="choice_list_99a1d2b9">LEVEL_HIGH</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -452,7 +452,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>SENSITIVITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_DONE.SENSITIVITY">EDGE_RISING</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_DONE.SENSITIVITY" spirit:choiceRef="choice_list_99a1d2b9">LEVEL_HIGH</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -474,7 +474,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>SENSITIVITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_ERROR.SENSITIVITY">EDGE_RISING</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_ERROR.SENSITIVITY" spirit:choiceRef="choice_list_99a1d2b9">LEVEL_HIGH</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -496,7 +496,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>SENSITIVITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_ACK.SENSITIVITY">EDGE_RISING</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.INTR_ACK.SENSITIVITY" spirit:choiceRef="choice_list_99a1d2b9">LEVEL_HIGH</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -566,6 +566,48 @@
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>clk_data</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>CLK</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>clk_data</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.CLK_DATA.ASSOCIATED_BUSIF">data_in</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>ASSOCIATED_RESET</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.CLK_DATA.ASSOCIATED_RESET">reset_data</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>data_in</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="data" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="data_rtl" spirit:version="1.0"/>
+      <spirit:slave/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>DATA</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>data_in</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+    </spirit:busInterface>
   </spirit:busInterfaces>
   <spirit:addressSpaces>
     <spirit:addressSpace>
@@ -588,7 +630,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>04255303</spirit:value>
+            <spirit:value>19678ac1</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -604,7 +646,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>8999e26c</spirit:value>
+            <spirit:value>19678ac1</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -618,7 +660,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>9e8d7e8b</spirit:value>
+            <spirit:value>be78c6ea</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -647,7 +689,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>273a56e4</spirit:value>
+            <spirit:value>4043c2e1</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -661,7 +703,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>1458fa38</spirit:value>
+            <spirit:value>5e03b322</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1729,6 +1771,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1819,6 +1864,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1836,6 +1884,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1853,6 +1904,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1870,6 +1924,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1883,6 +1940,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2088,6 +2148,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2105,6 +2168,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2122,6 +2188,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2139,6 +2208,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2152,6 +2224,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2169,6 +2244,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2182,6 +2260,9 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -2211,7 +2292,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="reg">
         <spirit:name>ENABLE_MODE_INPUT</spirit:name>
-        <spirit:displayName>Enable mode input</spirit:displayName>
+        <spirit:displayName>Enable Mode Input</spirit:displayName>
         <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ENABLE_MODE_INPUT">false</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="reg">
@@ -2241,20 +2322,23 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="reg">
         <spirit:name>ENABLE_INTR_ERROR</spirit:name>
-        <spirit:displayName>Enable interrupt on error</spirit:displayName>
+        <spirit:displayName>Enable Intr Error</spirit:displayName>
         <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ENABLE_INTR_ERROR">false</spirit:value>
-        <spirit:vendorExtensions>
-          <xilinx:parameterInfo>
-            <xilinx:enablement>
-              <xilinx:isEnabled xilinx:id="MODELPARAM_ENABLEMENT.ENABLE_INTR_ERROR">false</xilinx:isEnabled>
-            </xilinx:enablement>
-          </xilinx:parameterInfo>
-        </spirit:vendorExtensions>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="reg">
         <spirit:name>DSP_FOR_CALC</spirit:name>
-        <spirit:displayName>Use DSP elements for calculations</spirit:displayName>
+        <spirit:displayName>Dsp For Calc</spirit:displayName>
         <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.DSP_FOR_CALC">false</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="reg">
+        <spirit:name>ENABLE_TRANSFER_CONTROL</spirit:name>
+        <spirit:displayName>Enable Transfer Control</spirit:displayName>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ENABLE_TRANSFER_CONTROL">false</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>RESET_WAIT</spirit:name>
+        <spirit:displayName>Reset Wait</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.RESET_WAIT">2</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>DEFAULT_SAMPLING_MODE</spirit:name>
@@ -2278,7 +2362,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>DEFAULT_DDR_HIGH</spirit:name>
-        <spirit:displayName>Target DDR max address</spirit:displayName>
+        <spirit:displayName>Default Ddr High</spirit:displayName>
         <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.DEFAULT_DDR_HIGH" spirit:bitStringLength="32">0x03FFFFFF</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
@@ -2321,10 +2405,6 @@
         <spirit:displayName>C M Axi Out Buser Width</spirit:displayName>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_OUT_BUSER_WIDTH">0</spirit:value>
       </spirit:modelParameter>
-      <spirit:modelParameter spirit:dataType="reg">
-        <spirit:name>ENABLE_TRANSFER_CONTROL</spirit:name>
-        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ENABLE_TRANSFER_CONTROL">false</spirit:value>
-      </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
   <spirit:choices>
@@ -2340,6 +2420,13 @@
     <spirit:choice>
       <spirit:name>choice_list_6fc15197</spirit:name>
       <spirit:enumeration>32</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
+      <spirit:name>choice_list_99a1d2b9</spirit:name>
+      <spirit:enumeration>LEVEL_HIGH</spirit:enumeration>
+      <spirit:enumeration>LEVEL_LOW</spirit:enumeration>
+      <spirit:enumeration>EDGE_RISING</spirit:enumeration>
+      <spirit:enumeration>EDGE_FALLING</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
       <spirit:name>choice_list_9d8b0d81</spirit:name>
@@ -2365,16 +2452,34 @@
     <spirit:fileSet>
       <spirit:name>xilinx_verilogsynthesis_view_fileset</spirit:name>
       <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_timing.xdc</spirit:name>
+        <spirit:userFileType>xdc</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>hdl/AH_PL2DDR_v1_0_M_AXI_OUT.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/AH_PL2DDR_v1_0.v</spirit:name>
+        <spirit:name>hdl/ah_pl2ddr_calc.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_d2e683d0</spirit:userFileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_cmd_fsm.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_data_collector.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/ah_pl2ddr_data_control.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_signal_control.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -2382,21 +2487,9 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_cmd_fsm.v</spirit:name>
+        <spirit:name>hdl/AH_PL2DDR_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_signal_control.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_calc.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_data_collector.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_15b674cd</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_24e050d3</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -2406,24 +2499,12 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/AH_PL2DDR_v1_0.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_data_control.v</spirit:name>
+        <spirit:name>hdl/ah_pl2ddr_calc.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_tdp_bram.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>hdl/ah_pl2ddr_cmd_fsm.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_signal_control.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -2432,18 +2513,29 @@
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/ah_pl2ddr_calc.v</spirit:name>
+        <spirit:name>hdl/ah_pl2ddr_data_control.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_signal_control.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/ah_pl2ddr_tdp_bram.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/AH_PL2DDR_v1_0.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/AH_PL2DDR_v2_6.tcl</spirit:name>
+        <spirit:name>xgui/AH_PL2DDR_v2_9.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_9e8d7e8b</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_be78c6ea</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -2459,6 +2551,8 @@
       <spirit:file>
         <spirit:name>hdl/tb_AH_PL2DDR.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
+        <spirit:userFileType>USED_IN_testbench</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -2493,23 +2587,6 @@
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">AH_PL2DDR_v2_6</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>ENABLE_MODE_INPUT</spirit:name>
-      <spirit:displayName>Enable mode input</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_MODE_INPUT">false</spirit:value>
-    </spirit:parameter>
-    <spirit:parameter>
-      <spirit:name>DEFAULT_DDR_HIGH</spirit:name>
-      <spirit:displayName>Target DDR max address</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_DDR_HIGH" spirit:bitStringLength="32">0x03FFFFFF</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.DEFAULT_DDR_HIGH">true</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
-    </spirit:parameter>
-    <spirit:parameter>
       <spirit:name>ENABLE_INFO_OUTPUT</spirit:name>
       <spirit:displayName>Enable info output</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_INFO_OUTPUT">false</spirit:value>
@@ -2525,18 +2602,6 @@
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_ERROR_OUTPUT">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>ENABLE_INTR_ERROR</spirit:name>
-      <spirit:displayName>Enable interrupt on error</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_INTR_ERROR">false</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.ENABLE_INTR_ERROR">false</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
-    </spirit:parameter>
-    <spirit:parameter>
       <spirit:name>ENABLE_INTR_ACK</spirit:name>
       <spirit:displayName>Enable interrupt on cmd ack</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_INTR_ACK">false</spirit:value>
@@ -2549,11 +2614,6 @@
       </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
-      <spirit:name>DSP_FOR_CALC</spirit:name>
-      <spirit:displayName>Use DSP elements for calculations</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.DSP_FOR_CALC">false</spirit:value>
-    </spirit:parameter>
-    <spirit:parameter>
       <spirit:name>DATA_WIDTH</spirit:name>
       <spirit:displayName>Data width</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.DATA_WIDTH" spirit:choiceRef="choice_list_43503be1">1</spirit:value>
@@ -2562,6 +2622,11 @@
       <spirit:name>ENABLE_CMD_INPUT</spirit:name>
       <spirit:displayName>Enable cmd input</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_CMD_INPUT">false</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>ENABLE_MODE_INPUT</spirit:name>
+      <spirit:displayName>Enable mode input</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_MODE_INPUT">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>ENABLE_SAMPLES_INPUT</spirit:name>
@@ -2589,52 +2654,49 @@
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_INTR_DONE">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
+      <spirit:name>ENABLE_INTR_ERROR</spirit:name>
+      <spirit:displayName>Enable interrupt on error</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_INTR_ERROR">false</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>DSP_FOR_CALC</spirit:name>
+      <spirit:displayName>Use DSP elements for calculations</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.DSP_FOR_CALC">false</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>ENABLE_TRANSFER_CONTROL</spirit:name>
+      <spirit:displayName>Enable transfer control</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_TRANSFER_CONTROL">false</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>RESET_WAIT</spirit:name>
+      <spirit:displayName>Reset wait (clock cycles of synchronization)</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.RESET_WAIT" spirit:minimum="2" spirit:maximum="65536" spirit:rangeType="long">2</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
       <spirit:name>DEFAULT_SAMPLING_MODE</spirit:name>
       <spirit:displayName>Sampling mode</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_SAMPLING_MODE" spirit:choiceRef="choice_pairs_00bb09ad">0</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.DEFAULT_SAMPLING_MODE">true</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>DEFAULT_SAMPLE_NUMBER</spirit:name>
       <spirit:displayName>Number of samples</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_SAMPLE_NUMBER" spirit:minimum="0" spirit:maximum="2147483647" spirit:rangeType="long">0</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.DEFAULT_SAMPLE_NUMBER">true</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>DEFAULT_UNDERSAMPLING_VALUE</spirit:name>
       <spirit:displayName>Undersampling factor</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE" spirit:minimum="0" spirit:maximum="2147483647" spirit:rangeType="long">0</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.DEFAULT_UNDERSAMPLING_VALUE">true</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>DEFAULT_DDR_LOW</spirit:name>
       <spirit:displayName>Target DDR base address</spirit:displayName>
       <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_DDR_LOW" spirit:bitStringLength="32">0x00100000</spirit:value>
-      <spirit:vendorExtensions>
-        <xilinx:parameterInfo>
-          <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="generated" xilinx:id="PARAM_ENABLEMENT.DEFAULT_DDR_LOW">true</xilinx:isEnabled>
-          </xilinx:enablement>
-        </xilinx:parameterInfo>
-      </spirit:vendorExtensions>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>DEFAULT_DDR_HIGH</spirit:name>
+      <spirit:displayName>Target DDR max address</spirit:displayName>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.DEFAULT_DDR_HIGH" spirit:bitStringLength="32">0x03FFFFFF</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>C_M_AXI_OUT_ID_WIDTH</spirit:name>
@@ -2676,11 +2738,6 @@
       <spirit:displayName>C M Axi Out Buser Width</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_AXI_OUT_BUSER_WIDTH">0</spirit:value>
     </spirit:parameter>
-    <spirit:parameter>
-      <spirit:name>ENABLE_TRANSFER_CONTROL</spirit:name>
-      <spirit:displayName>Enable transfer control</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_TRANSFER_CONTROL">false</spirit:value>
-    </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
@@ -2691,14 +2748,17 @@
         <xilinx:taxonomy>/AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>AH_PL2DDR</xilinx:displayName>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>uni-ulm.de:user:AH_PL2DDR:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.3</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.4</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.5</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.6</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.7</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.8</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2019-04-23T11:37:53Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2019-07-04T12:32:26Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="uni-ulm.de:user:AH_PL2DDR:1.0_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.2_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
@@ -2706,16 +2766,54 @@
         <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.4_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.5_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.6_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.7_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.8_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61f7d034_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1b33ab11_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@44983313_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b18077a_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@607f493_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7f5bb73f_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65501b9_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@657fa920_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7069bfe8_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c50d24d_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68ea3a26_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4eff36e1_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6e744d01_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@192dcc01_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7de46abf_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f9dd83c_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2c435d98_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@181629ba_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@393f3e40_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6da84c56_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47823ec5_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b7f66b_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@674eea2e_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@145bdd0a_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@583a4312_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63b659c_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60848344_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65e548b5_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28725f69_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@120ce447_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c66957e_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68b9d097_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1477717f_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d3fe9ea_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6339d30d_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15869ebc_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="55e011fa"/>
+      <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="e1bc9117"/>
       <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="07a68512"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="037b0cec"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="3ecc0911"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="172d63b8"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="10fd776d"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="7f778af3"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="10ac3e7e"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="ac0e7dc8"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="5494a718"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

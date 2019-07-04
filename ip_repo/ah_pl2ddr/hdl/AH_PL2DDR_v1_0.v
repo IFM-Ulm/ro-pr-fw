@@ -14,6 +14,8 @@
 		parameter reg DSP_FOR_CALC = 0,
 		parameter reg ENABLE_TRANSFER_CONTROL = 0,
 		
+		parameter integer RESET_WAIT = 0,
+		
 		parameter integer DEFAULT_SAMPLING_MODE = 0,
 		parameter integer DEFAULT_SAMPLE_NUMBER = 0,
 		parameter integer DEFAULT_UNDERSAMPLING_VALUE = 0,
@@ -316,7 +318,8 @@
 	
 	ah_pl2ddr_cmd_fsm #(
 		.DATA_WIDTH(DATA_WIDTH),
-		.DSP_FOR_CALC(DSP_FOR_CALC)
+		.DSP_FOR_CALC(DSP_FOR_CALC),
+		.RESET_WAIT(RESET_WAIT)
 	) inst_cmd_fsm (
 
 		.clk(m_axi_out_aclk),

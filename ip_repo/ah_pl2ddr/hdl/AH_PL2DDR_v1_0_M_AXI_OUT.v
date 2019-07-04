@@ -191,7 +191,10 @@
 	//AXI4 internal temp signals
 	reg [C_M_AXI_ADDR_WIDTH-1 : 0] 	axi_awaddr;
 	reg  	axi_awvalid;
-	reg [C_M_AXI_DATA_WIDTH-1 : 0] 	axi_wdata;
+	// reg [C_M_AXI_DATA_WIDTH-1 : 0] 	axi_wdata;
+	wire [C_M_AXI_DATA_WIDTH-1 : 0] 	axi_wdata;
+	// assign axi_wdata = axi_wvalid ? data_in : 0;
+	assign axi_wdata = data_in;
 	reg  	axi_wlast;
 	reg  	axi_wvalid;
 	reg  	axi_bready;
@@ -221,7 +224,8 @@
 	wire  	init_txn_pulse;
 
 	reg rg_data_next = 0;
-	assign data_next = ((rg_data_next || wnext) && !axi_wlast) || (M_AXI_AWREADY && axi_awvalid && write_burst_counter > 0);
+	// assign data_next = ((rg_data_next || wnext) && !axi_wlast) || (M_AXI_AWREADY && axi_awvalid && write_burst_counter > 0);
+	assign data_next = ((rg_data_next || wnext)) || (M_AXI_AWREADY && axi_awvalid && write_burst_counter > 0);
 
 	// I/O Connections assignments
 
@@ -425,29 +429,29 @@
 		// Write Data Generator                                                                
 		always @(posedge M_AXI_ACLK) begin                                                                             
 			if (M_AXI_ARESETN == 0) begin                                                     
-				axi_wdata <= 0;
-				rg_data_next <= 0;
+				//axi_wdata <= 0;
+				// rg_data_next <= 0;
 			end
 			else if(init_txn_pulse == 1) begin
-				axi_wdata <= data_in;
-				rg_data_next <= 1;
+				//axi_wdata <= data_in;
+				// rg_data_next <= 1;
 			end
 			else if(axi_wlast && wnext) begin
-				axi_wdata <= 0;
-				rg_data_next <= 0;
+				//axi_wdata <= 0;
+				// rg_data_next <= 0;
 			end
 			else if(M_AXI_AWREADY && axi_awvalid && write_burst_counter > 0) begin
-				axi_wdata <= data_in;
+				//axi_wdata <= data_in;
 			end
 			else if (wnext) begin
-				axi_wdata <= data_in;
-				rg_data_next <= 0;
+				//axi_wdata <= data_in;
+				// rg_data_next <= 0;
 			end
 			else begin                                                                         
-				axi_wdata <= axi_wdata;
-				rg_data_next <= 0;
+				//axi_wdata <= axi_wdata;
+				// rg_data_next <= 0;
 			end                                                                             
-end
+		end
 
 	//----------------------------
 	//Write Response (B) Channel

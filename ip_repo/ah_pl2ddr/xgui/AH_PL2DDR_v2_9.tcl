@@ -28,7 +28,8 @@ proc init_gui { IPINST } {
   #Adding Page
   set Address_options [ipgui::add_page $IPINST -name "Address options"]
   ipgui::add_param $IPINST -name "DEFAULT_DDR_LOW" -parent ${Address_options}
-  ipgui::add_param $IPINST -name "DEFAULT_DDR_HIGH" -parent ${Address_options}
+  set DEFAULT_DDR_HIGH [ipgui::add_param $IPINST -name "DEFAULT_DDR_HIGH" -parent ${Address_options}]
+  set_property tooltip {Target DDR base address} ${DEFAULT_DDR_HIGH}
 
   #Adding Page
   set Advanced [ipgui::add_page $IPINST -name "Advanced"]
@@ -37,10 +38,11 @@ proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "ENABLE_ERROR_OUTPUT" -parent ${Advanced}
   ipgui::add_param $IPINST -name "ENABLE_INTR_ACK" -parent ${Advanced}
   ipgui::add_param $IPINST -name "ENABLE_INTR_ERROR" -parent ${Advanced}
-  set ENABLE_TRANSFER_CONTROL [ipgui::add_param $IPINST -name "ENABLE_TRANSFER_CONTROL" -parent ${Advanced}]
-  set_property tooltip {Enable transfer control} ${ENABLE_TRANSFER_CONTROL}
+  ipgui::add_param $IPINST -name "ENABLE_TRANSFER_CONTROL" -parent ${Advanced}
   set DSP_FOR_CALC [ipgui::add_param $IPINST -name "DSP_FOR_CALC" -parent ${Advanced}]
   set_property tooltip {DSP48 elements are used for internal calculations. Reduces utilized logic (SLICE and LUT) greatly, but could potentially lead to timing issues.} ${DSP_FOR_CALC}
+  set RESET_WAIT [ipgui::add_param $IPINST -name "RESET_WAIT" -parent ${Advanced}]
+  set_property tooltip {Number of clock cycles to wait after any reset occured. Use this to avoid synchronization problems: the reset wait should be at least as long as ceil(freq(system clock) / freq(data clock)), e.g. system clock = 100MHz, data clock = 30MHz, reset wait = 4 } ${RESET_WAIT}
 
   #Adding Page
   set Help [ipgui::add_page $IPINST -name "Help"]
@@ -171,96 +173,6 @@ and paste it to the source folder of your project directly.
 
 }
 
-proc update_PARAM_VALUE.DEFAULT_DDR_HIGH { PARAM_VALUE.DEFAULT_DDR_HIGH PARAM_VALUE.ENABLE_ADDRESS_INPUT } {
-	# Procedure called to update DEFAULT_DDR_HIGH when any of the dependent parameters in the arguments change
-	
-	set DEFAULT_DDR_HIGH ${PARAM_VALUE.DEFAULT_DDR_HIGH}
-	set ENABLE_ADDRESS_INPUT ${PARAM_VALUE.ENABLE_ADDRESS_INPUT}
-	set values(ENABLE_ADDRESS_INPUT) [get_property value $ENABLE_ADDRESS_INPUT]
-	if { [gen_USERPARAMETER_DEFAULT_DDR_HIGH_ENABLEMENT $values(ENABLE_ADDRESS_INPUT)] } {
-		set_property enabled true $DEFAULT_DDR_HIGH
-	} else {
-		set_property enabled false $DEFAULT_DDR_HIGH
-	}
-}
-
-proc validate_PARAM_VALUE.DEFAULT_DDR_HIGH { PARAM_VALUE.DEFAULT_DDR_HIGH } {
-	# Procedure called to validate DEFAULT_DDR_HIGH
-	return true
-}
-
-proc update_PARAM_VALUE.DEFAULT_DDR_LOW { PARAM_VALUE.DEFAULT_DDR_LOW PARAM_VALUE.ENABLE_ADDRESS_INPUT } {
-	# Procedure called to update DEFAULT_DDR_LOW when any of the dependent parameters in the arguments change
-	
-	set DEFAULT_DDR_LOW ${PARAM_VALUE.DEFAULT_DDR_LOW}
-	set ENABLE_ADDRESS_INPUT ${PARAM_VALUE.ENABLE_ADDRESS_INPUT}
-	set values(ENABLE_ADDRESS_INPUT) [get_property value $ENABLE_ADDRESS_INPUT]
-	if { [gen_USERPARAMETER_DEFAULT_DDR_LOW_ENABLEMENT $values(ENABLE_ADDRESS_INPUT)] } {
-		set_property enabled true $DEFAULT_DDR_LOW
-	} else {
-		set_property enabled false $DEFAULT_DDR_LOW
-	}
-}
-
-proc validate_PARAM_VALUE.DEFAULT_DDR_LOW { PARAM_VALUE.DEFAULT_DDR_LOW } {
-	# Procedure called to validate DEFAULT_DDR_LOW
-	return true
-}
-
-proc update_PARAM_VALUE.DEFAULT_SAMPLE_NUMBER { PARAM_VALUE.DEFAULT_SAMPLE_NUMBER PARAM_VALUE.ENABLE_SAMPLES_INPUT } {
-	# Procedure called to update DEFAULT_SAMPLE_NUMBER when any of the dependent parameters in the arguments change
-	
-	set DEFAULT_SAMPLE_NUMBER ${PARAM_VALUE.DEFAULT_SAMPLE_NUMBER}
-	set ENABLE_SAMPLES_INPUT ${PARAM_VALUE.ENABLE_SAMPLES_INPUT}
-	set values(ENABLE_SAMPLES_INPUT) [get_property value $ENABLE_SAMPLES_INPUT]
-	if { [gen_USERPARAMETER_DEFAULT_SAMPLE_NUMBER_ENABLEMENT $values(ENABLE_SAMPLES_INPUT)] } {
-		set_property enabled true $DEFAULT_SAMPLE_NUMBER
-	} else {
-		set_property enabled false $DEFAULT_SAMPLE_NUMBER
-	}
-}
-
-proc validate_PARAM_VALUE.DEFAULT_SAMPLE_NUMBER { PARAM_VALUE.DEFAULT_SAMPLE_NUMBER } {
-	# Procedure called to validate DEFAULT_SAMPLE_NUMBER
-	return true
-}
-
-proc update_PARAM_VALUE.DEFAULT_SAMPLING_MODE { PARAM_VALUE.DEFAULT_SAMPLING_MODE PARAM_VALUE.ENABLE_MODE_INPUT } {
-	# Procedure called to update DEFAULT_SAMPLING_MODE when any of the dependent parameters in the arguments change
-	
-	set DEFAULT_SAMPLING_MODE ${PARAM_VALUE.DEFAULT_SAMPLING_MODE}
-	set ENABLE_MODE_INPUT ${PARAM_VALUE.ENABLE_MODE_INPUT}
-	set values(ENABLE_MODE_INPUT) [get_property value $ENABLE_MODE_INPUT]
-	if { [gen_USERPARAMETER_DEFAULT_SAMPLING_MODE_ENABLEMENT $values(ENABLE_MODE_INPUT)] } {
-		set_property enabled true $DEFAULT_SAMPLING_MODE
-	} else {
-		set_property enabled false $DEFAULT_SAMPLING_MODE
-	}
-}
-
-proc validate_PARAM_VALUE.DEFAULT_SAMPLING_MODE { PARAM_VALUE.DEFAULT_SAMPLING_MODE } {
-	# Procedure called to validate DEFAULT_SAMPLING_MODE
-	return true
-}
-
-proc update_PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE { PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE PARAM_VALUE.ENABLE_UNDERSAMPLES_INPUT } {
-	# Procedure called to update DEFAULT_UNDERSAMPLING_VALUE when any of the dependent parameters in the arguments change
-	
-	set DEFAULT_UNDERSAMPLING_VALUE ${PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE}
-	set ENABLE_UNDERSAMPLES_INPUT ${PARAM_VALUE.ENABLE_UNDERSAMPLES_INPUT}
-	set values(ENABLE_UNDERSAMPLES_INPUT) [get_property value $ENABLE_UNDERSAMPLES_INPUT]
-	if { [gen_USERPARAMETER_DEFAULT_UNDERSAMPLING_VALUE_ENABLEMENT $values(ENABLE_UNDERSAMPLES_INPUT)] } {
-		set_property enabled true $DEFAULT_UNDERSAMPLING_VALUE
-	} else {
-		set_property enabled false $DEFAULT_UNDERSAMPLING_VALUE
-	}
-}
-
-proc validate_PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE { PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE } {
-	# Procedure called to validate DEFAULT_UNDERSAMPLING_VALUE
-	return true
-}
-
 proc update_PARAM_VALUE.ENABLE_INTR_ACK { PARAM_VALUE.ENABLE_INTR_ACK PARAM_VALUE.ENABLE_DEBUG_OUTPUT } {
 	# Procedure called to update ENABLE_INTR_ACK when any of the dependent parameters in the arguments change
 	
@@ -276,24 +188,6 @@ proc update_PARAM_VALUE.ENABLE_INTR_ACK { PARAM_VALUE.ENABLE_INTR_ACK PARAM_VALU
 
 proc validate_PARAM_VALUE.ENABLE_INTR_ACK { PARAM_VALUE.ENABLE_INTR_ACK } {
 	# Procedure called to validate ENABLE_INTR_ACK
-	return true
-}
-
-proc update_PARAM_VALUE.ENABLE_INTR_ERROR { PARAM_VALUE.ENABLE_INTR_ERROR PARAM_VALUE.ENABLE_ERROR_OUTPUT } {
-	# Procedure called to update ENABLE_INTR_ERROR when any of the dependent parameters in the arguments change
-	
-	set ENABLE_INTR_ERROR ${PARAM_VALUE.ENABLE_INTR_ERROR}
-	set ENABLE_ERROR_OUTPUT ${PARAM_VALUE.ENABLE_ERROR_OUTPUT}
-	set values(ENABLE_ERROR_OUTPUT) [get_property value $ENABLE_ERROR_OUTPUT]
-	if { [gen_USERPARAMETER_ENABLE_INTR_ERROR_ENABLEMENT $values(ENABLE_ERROR_OUTPUT)] } {
-		set_property enabled true $ENABLE_INTR_ERROR
-	} else {
-		set_property enabled false $ENABLE_INTR_ERROR
-	}
-}
-
-proc validate_PARAM_VALUE.ENABLE_INTR_ERROR { PARAM_VALUE.ENABLE_INTR_ERROR } {
-	# Procedure called to validate ENABLE_INTR_ERROR
 	return true
 }
 
@@ -378,6 +272,51 @@ proc validate_PARAM_VALUE.DATA_WIDTH { PARAM_VALUE.DATA_WIDTH } {
 	return true
 }
 
+proc update_PARAM_VALUE.DEFAULT_DDR_HIGH { PARAM_VALUE.DEFAULT_DDR_HIGH } {
+	# Procedure called to update DEFAULT_DDR_HIGH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.DEFAULT_DDR_HIGH { PARAM_VALUE.DEFAULT_DDR_HIGH } {
+	# Procedure called to validate DEFAULT_DDR_HIGH
+	return true
+}
+
+proc update_PARAM_VALUE.DEFAULT_DDR_LOW { PARAM_VALUE.DEFAULT_DDR_LOW } {
+	# Procedure called to update DEFAULT_DDR_LOW when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.DEFAULT_DDR_LOW { PARAM_VALUE.DEFAULT_DDR_LOW } {
+	# Procedure called to validate DEFAULT_DDR_LOW
+	return true
+}
+
+proc update_PARAM_VALUE.DEFAULT_SAMPLE_NUMBER { PARAM_VALUE.DEFAULT_SAMPLE_NUMBER } {
+	# Procedure called to update DEFAULT_SAMPLE_NUMBER when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.DEFAULT_SAMPLE_NUMBER { PARAM_VALUE.DEFAULT_SAMPLE_NUMBER } {
+	# Procedure called to validate DEFAULT_SAMPLE_NUMBER
+	return true
+}
+
+proc update_PARAM_VALUE.DEFAULT_SAMPLING_MODE { PARAM_VALUE.DEFAULT_SAMPLING_MODE } {
+	# Procedure called to update DEFAULT_SAMPLING_MODE when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.DEFAULT_SAMPLING_MODE { PARAM_VALUE.DEFAULT_SAMPLING_MODE } {
+	# Procedure called to validate DEFAULT_SAMPLING_MODE
+	return true
+}
+
+proc update_PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE { PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE } {
+	# Procedure called to update DEFAULT_UNDERSAMPLING_VALUE when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE { PARAM_VALUE.DEFAULT_UNDERSAMPLING_VALUE } {
+	# Procedure called to validate DEFAULT_UNDERSAMPLING_VALUE
+	return true
+}
+
 proc update_PARAM_VALUE.DSP_FOR_CALC { PARAM_VALUE.DSP_FOR_CALC } {
 	# Procedure called to update DSP_FOR_CALC when any of the dependent parameters in the arguments change
 }
@@ -441,6 +380,15 @@ proc validate_PARAM_VALUE.ENABLE_INTR_DONE { PARAM_VALUE.ENABLE_INTR_DONE } {
 	return true
 }
 
+proc update_PARAM_VALUE.ENABLE_INTR_ERROR { PARAM_VALUE.ENABLE_INTR_ERROR } {
+	# Procedure called to update ENABLE_INTR_ERROR when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.ENABLE_INTR_ERROR { PARAM_VALUE.ENABLE_INTR_ERROR } {
+	# Procedure called to validate ENABLE_INTR_ERROR
+	return true
+}
+
 proc update_PARAM_VALUE.ENABLE_INTR_SENT { PARAM_VALUE.ENABLE_INTR_SENT } {
 	# Procedure called to update ENABLE_INTR_SENT when any of the dependent parameters in the arguments change
 }
@@ -483,6 +431,15 @@ proc update_PARAM_VALUE.ENABLE_UNDERSAMPLES_INPUT { PARAM_VALUE.ENABLE_UNDERSAMP
 
 proc validate_PARAM_VALUE.ENABLE_UNDERSAMPLES_INPUT { PARAM_VALUE.ENABLE_UNDERSAMPLES_INPUT } {
 	# Procedure called to validate ENABLE_UNDERSAMPLES_INPUT
+	return true
+}
+
+proc update_PARAM_VALUE.RESET_WAIT { PARAM_VALUE.RESET_WAIT } {
+	# Procedure called to update RESET_WAIT when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.RESET_WAIT { PARAM_VALUE.RESET_WAIT } {
+	# Procedure called to validate RESET_WAIT
 	return true
 }
 
@@ -535,6 +492,16 @@ proc update_MODELPARAM_VALUE.ENABLE_INTR_ERROR { MODELPARAM_VALUE.ENABLE_INTR_ER
 proc update_MODELPARAM_VALUE.DSP_FOR_CALC { MODELPARAM_VALUE.DSP_FOR_CALC PARAM_VALUE.DSP_FOR_CALC } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.DSP_FOR_CALC}] ${MODELPARAM_VALUE.DSP_FOR_CALC}
+}
+
+proc update_MODELPARAM_VALUE.ENABLE_TRANSFER_CONTROL { MODELPARAM_VALUE.ENABLE_TRANSFER_CONTROL PARAM_VALUE.ENABLE_TRANSFER_CONTROL } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.ENABLE_TRANSFER_CONTROL}] ${MODELPARAM_VALUE.ENABLE_TRANSFER_CONTROL}
+}
+
+proc update_MODELPARAM_VALUE.RESET_WAIT { MODELPARAM_VALUE.RESET_WAIT PARAM_VALUE.RESET_WAIT } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.RESET_WAIT}] ${MODELPARAM_VALUE.RESET_WAIT}
 }
 
 proc update_MODELPARAM_VALUE.DEFAULT_SAMPLING_MODE { MODELPARAM_VALUE.DEFAULT_SAMPLING_MODE PARAM_VALUE.DEFAULT_SAMPLING_MODE } {

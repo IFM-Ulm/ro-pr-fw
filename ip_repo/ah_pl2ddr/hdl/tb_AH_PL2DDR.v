@@ -7,10 +7,10 @@ module tb_AH_PL2DDR();
 	reg tb_clk = 0;
 	always #2.5 tb_clk = !tb_clk; // 100 MHz
 	
-	reg tb_clk_data = 0;
-	always #8.333 tb_clk_data = !tb_clk_data; // 20 MHz
-	// wire tb_clk_data;
-	// assign tb_clk_data = tb_clk;
+	// reg tb_clk_data = 0;
+	// always #8.333 tb_clk_data = !tb_clk_data; // 20 MHz
+	wire tb_clk_data;
+	assign tb_clk_data = tb_clk;
 	
 	reg tb_rstn = 1;
 	initial begin
@@ -92,7 +92,7 @@ module tb_AH_PL2DDR();
 	reg [31:0] tb_number_samples = 0;
 	initial begin
 		tb_number_samples = 0;
-		#100 tb_number_samples = 4096;
+		#100 tb_number_samples = 640;
 	end
 		
 	reg [31:0] tb_undersample_factor = 0;
@@ -118,45 +118,60 @@ module tb_AH_PL2DDR();
 		#100 tb_sampling_mode = SAMPLED;
 	end
 	
+	
+	// wire tb_transfer_en;
+	// assign tb_transfer_en = 
 	reg tb_transfer_en = 1;
-	//initial begin
-		//tb_transfer_en <= 0;
-		//#21000 tb_transfer_en <= 1;
-	//end
+	initial begin
+		tb_transfer_en <= 0;
+		#21000 tb_transfer_en <= 1;
+	end
 	
 	reg [DATA_WIDTH-1 : 0] tb_data_in = 0;
 	// wire tb_data_en;
-	reg tb_data_en;
-	initial begin
-		tb_data_en = 0;
-		#500 tb_data_en <= 1;
-	end
+	// assign tb_data_en = tb_samples_collected == 256;
+	reg tb_data_en = 0;
+	// initial begin
+		// tb_data_en = 0;
+		// #500 tb_data_en <= 1;
+	// end
 	
 	//assign tb_data_en = 1;
 	reg [2:0] tb_data_in_counter = 0;
 	reg [2:0] tb_data_in_temp = 0;
 	
-	always @(posedge tb_clk_data) begin
-		if(tb_rstn == 0) begin
-			tb_data_in <= 0;
-			tb_data_in_counter <= 0;
-			tb_data_in_temp <= 1;
-		end
-		else begin
-			if(tb_data_en) begin
-				if(tb_data_in_counter == 0) begin
-					tb_data_in <= tb_data_in_temp;
-					tb_data_in_temp <= tb_data_in_temp + 1;
-					tb_data_in_counter <= 0;
-				end
-				else begin
-					tb_data_in <= 0;
-					tb_data_in_counter <= tb_data_in_counter + 1;
-				end
-			end
-		end
-	end
+	// always @(posedge tb_clk_data) begin
+		// if(tb_rstn == 0) begin
+			// tb_data_in <= 0;
+			// tb_data_in_counter <= 0;
+			// tb_data_in_temp <= 1;
+		// end
+		// else begin
+			// if(tb_data_en) begin
+				// if(tb_data_in_counter == 0) begin
+					// tb_data_in <= tb_data_in_temp;
+					// tb_data_in_temp <= tb_data_in_temp + 1;
+					// tb_data_in_counter <= 0;
+				// end
+				// else begin
+					// tb_data_in <= 0;
+					// tb_data_in_counter <= tb_data_in_counter + 1;
+				// end
+			// end
+		// end
+	// end
 	
+	always #1000 begin
+		
+		if(tb_transfer_en && ! tb_transfer_active) begin
+			
+			tb_data_in = tb_data_in + 1; tb_data_en = 1;
+			#5 tb_data_in = tb_data_in + 10;
+			#5 tb_data_in = tb_data_in - 10; tb_data_en = 0;
+			
+		end
+		
+	end	
 	
 
 	// AXI4 stuff	
