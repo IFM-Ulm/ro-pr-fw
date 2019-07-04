@@ -141,7 +141,7 @@ s32 hardware_reset(void){
 
 s32 hardware_measurement_setup(u8 meas_mode, u32 meas_readouts, u32 meas_time, u32 meas_heatup, u32 meas_cooldown){
 	
-	u32 ddr_addr_low = (u32)data_buffer;
+	u32 ddr_addr_low = (u32)(data_buffer + 4);
 	u32 ddr_addr_high = (u32)data_buffer + (u32)MAX_BUFFER_BYTES;
 
 	if(meas_mode != READOUT_MASK_SEQ && meas_mode != READOUT_MASK_PAR){
@@ -224,6 +224,16 @@ s32 hardware_start(void){
 	return XST_SUCCESS;
 }
 
+s32 hardware_insert_temperature_data(u16 temp_start, u16 temp_end){
+	
+	data_buffer[0] = (u8)(temp_start & 0xFF);
+	data_buffer[1] = (u8)((temp_start >> 8) & 0xFF);
+
+	data_buffer[2] = (u8)(temp_end & 0xFF);
+	data_buffer[3] = (u8)((temp_end >> 8) & 0xFF);
+
+	return XST_SUCCESS;
+}
 
 s32 hardware_check_data(u8* returnVal){
 

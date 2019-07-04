@@ -3,9 +3,20 @@
 #include "xuartps.h"
 #include <stdlib.h>
 
+#include "ah_uart.h"
+
 #define UART_CUSTOM_RECEIVE_BUFFSIZE (10485760UL)
 #define UART_CUSTOM_SEND_BUFFSIZE (10485760UL)
 
+// forward declarations
+s32 uart_custom_enable(void);
+void uart_custom_callback_rx(u32 event, u32 data);
+void uart_custom_callback_tx(u32 event, u32 data);
+struct data_com* uart_custom_pop(void);
+s32 uart_custom_free(struct data_com* packet);
+s32 uart_custom_push(void* data, u32 len);
+s32 uart_custom_check_sent(u8* returnVal);
+s32 uart_custom_reset_sent(u8 force);
 
 static u8 receive_buff[UART_CUSTOM_RECEIVE_BUFFSIZE];
 static u8 received_length = 0;
@@ -14,6 +25,121 @@ static u8 send_free = 0;
 
 static struct data_com* uart_data_queue = NULL;
 
+s32 com_custom_init(void){
+	
+	if(ah_uart_init() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+	
+	return XST_SUCCESS;	
+}
+
+s32 com_custom_setup(void){
+
+	if(ah_uart_setup_baudrate(115200) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_uart_setup_callbackConnect_rx(uart_custom_callback_rx) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_uart_setup_callbackConnect_tx(uart_custom_callback_tx) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(ah_uart_setup() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_enable(void){
+
+	if(ah_uart_enable() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	if(uart_custom_enable() != XST_SUCCESS){
+		return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+
+}
+
+s32 com_custom_isConnected(u8* returnVal){
+
+	*returnVal = 1;
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_pull(u8* retVal){
+
+	if(retVal != NULL){
+		*retVal = 0;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleErrors(u8* returnVal){
+
+	u8 retVal = 0;
+
+	if(returnVal != NULL){
+		*returnVal = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleDisconnect(u8* returnVal){
+
+	u8 retVal = 0;
+
+	if(returnVal != NULL){
+		*returnVal  = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+s32 com_custom_handleInactivity(u8* returnVal){
+
+	u8 retVal = 0;
+
+	if(returnVal != NULL){
+		*returnVal  = retVal;
+	}
+
+	return XST_SUCCESS;
+}
+
+struct data_com* com_custom_pop(void){
+	return uart_custom_pop();
+}
+
+s32 com_custom_free(struct data_com* packet){
+	return uart_custom_free(packet);	
+}
+
+s32 com_custom_push(void* data, u32 len){
+	return uart_custom_push(data, len);
+}
+
+s32 com_custom_check_sent(u8* returnVal){
+	return uart_custom_check_sent(returnVal);
+}
+	
+s32 com_custom_reset_sent(u8 force){
+	return uart_custom_reset_sent(force);
+}
+
+
+// uart specific functions
 s32 uart_custom_enable(void){
 
 	send_free = 1;
@@ -142,7 +268,7 @@ s32 uart_custom_push(void* data, u32 len){
 	return XST_SUCCESS;
 }
 
-s32 uart_custom_checkDataSent(u8* returnVal){
+s32 uart_custom_check_sent(u8* returnVal){
 
 	if(send_free){
 		*returnVal = 1;
@@ -153,3 +279,9 @@ s32 uart_custom_checkDataSent(u8* returnVal){
 
 	return XST_SUCCESS;
 }
+
+s32 uart_custom_reset_sent(u8 force){
+	return XST_SUCCESS;
+}
+
+

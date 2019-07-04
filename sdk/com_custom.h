@@ -3,18 +3,23 @@
 
 #include "xstatus.h"
 
-#include "ah_uart.h"
 #include "fw_datatypes.h"
 
-s32 uart_custom_enable(void);
+s32 com_custom_init(void);
+s32 com_custom_setup(void);
+s32 com_custom_enable(void);
 
-void uart_custom_callback_rx(u32 event, u32 data);
-void uart_custom_callback_tx(u32 event, u32 data);
+s32 com_custom_isConnected(u8* returnVal)
+s32 com_custom_pull(u8* retVal);
 
-struct data_com* uart_custom_pop(void);
-s32 uart_custom_free(struct data_com* packet);
-s32 uart_custom_push(void* data, u32 len);
+s32 com_custom_handleErrors(u8* returnVal);
+s32 com_custom_handleDisconnect(u8* returnVal);
+s32 com_custom_handleInactivity(u8* returnVal);
 
-s32 uart_custom_checkDataSent(u8* returnVal);
+struct data_com* com_custom_pop(void);
+s32 com_custom_free(struct data_com* packet);
+s32 com_custom_push(void* data, u32 len);
+s32 com_custom_check_sent(u8* returnVal);
+s32 com_custom_reset_sent(u8 force);
 
 #endif

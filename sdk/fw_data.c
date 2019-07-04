@@ -11,7 +11,7 @@ s32 data_send_measurements(void){
 		return XST_FAILURE;
 	}
 
-	if(uart_custom_push((void*) data, (u32)len) != XST_SUCCESS){
+	if(com_custom_push((void*) data, (u32)(len + 4)) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -20,11 +20,7 @@ s32 data_send_measurements(void){
 
 s32 data_send_temperatures(u16 temp_start, u16 temp_end){
 
-	if(uart_custom_push((void*) &temp_start, 2) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(uart_custom_push((void*) &temp_end, 2) != XST_SUCCESS){
+	if(hardware_insert_temperature_data(temp_start, temp_end) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -33,8 +29,7 @@ s32 data_send_temperatures(u16 temp_start, u16 temp_end){
 
 s32 data_check_sent(u8* returnVal){
 
-
-	if(uart_custom_checkDataSent(returnVal) != XST_SUCCESS){
+	if(com_custom_check_sent(returnVal) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 
@@ -42,6 +37,10 @@ s32 data_check_sent(u8* returnVal){
 }
 
 s32 data_reset_sent(u8 force){
+
+	if(com_custom_reset_sent(force) != XST_SUCCESS){
+		return XST_FAILURE;
+	}
 
 	return XST_SUCCESS;
 }

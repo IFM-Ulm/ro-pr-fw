@@ -7,7 +7,6 @@
 #include "xil_types.h"
 #include "xstatus.h"
 
-#include "ah_uart.h"
 #include "ah_sd.h"
 
 #include "fw_datatypes.h"
@@ -16,101 +15,39 @@
 #include "com_custom.h"
 
 s32 com_init(void){
-
-	if(ah_uart_init() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_init();
 }
 
 s32 com_setup(void){
-
-	if(ah_uart_setup_baudrate(115200) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_uart_setup_callbackConnect_rx(uart_custom_callback_rx) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_uart_setup_callbackConnect_tx(uart_custom_callback_tx) != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(ah_uart_setup() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_setup();
 }
 
 s32 com_enable(void){
-
-	if(ah_uart_enable() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	if(uart_custom_enable() != XST_SUCCESS){
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
-
+	return com_custom_enable();
 }
 
 s32 com_disable(void){
-
 	return XST_SUCCESS;
 }
 
 s32 com_isConnected(u8* returnVal){
-
-	*returnVal = 1;
-
-	return XST_SUCCESS;
+	return com_custom_isConnected(returnVal);
 }
 
 s32 com_pull(u8* retVal){
-
-	if(retVal != NULL){
-		*retVal = 0;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_pull(retVal);
 }
 
 s32 com_handleErrors(u8* returnVal){
-
-	u8 retVal = 0;
-
-	if(returnVal != NULL){
-		*returnVal = retVal;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_handleErrors(returnVal);
 }
 
 s32 com_handleDisconnect(u8* returnVal){
-
-	u8 retVal = 0;
-
-	if(returnVal != NULL){
-		*returnVal  = retVal;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_handleDisconnect(returnVal);
 }
 
 s32 com_handleInactivity(u8* returnVal){
-
-	u8 retVal = 0;
-
-	if(returnVal != NULL){
-		*returnVal  = retVal;
-	}
-
-	return XST_SUCCESS;
+	return com_custom_handleInactivity(returnVal);
 }
 
 s32 com_checkCommands(u8* returnVal, states* nextState){
@@ -133,7 +70,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 	u8 answer[3];
 
-	readCommand = uart_custom_pop();
+	readCommand = com_custom_pop();
 	if(readCommand == NULL){
 
 		*returnVal = 0;
@@ -311,7 +248,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		answer[2] = 0x15; // NACK
 	}
 
-	if(uart_custom_push(answer, 3) != XST_SUCCESS){
+	if(com_custom_push(answer, 3) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
@@ -321,21 +258,10 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		filename = NULL;
 	}
 
-	if(uart_custom_free(readCommand) != XST_SUCCESS){
+	if(com_custom_free(readCommand) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
 	return returnValue;
 }
 
-struct data_com* com_custom_pop(void){
-	return uart_custom_pop();
-}
-
-s32 com_custom_free(struct data_com* packet){
-	return uart_custom_free(packet);	
-}
-
-s32 com_custom_push(void* data, u32 len){
-	return uart_custom_push(data, len);
-}
