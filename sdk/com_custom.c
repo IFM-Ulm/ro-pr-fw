@@ -183,7 +183,6 @@ s32 com_custom_reset_sent(u8 force){
 	return XST_SUCCESS;
 }
 
-
 // uart specific functions
 
 void uart_custom_callback_rx(u32 event, u32 data){
