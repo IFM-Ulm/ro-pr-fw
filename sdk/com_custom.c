@@ -731,7 +731,6 @@ u8 tcpip_custom_insert_data(void){
 	next_packet = tcpip_custom_get_data_tcpip();
 
 	if(next_packet != NULL){
-	//while(next_packet != NULL){
 
 		if(tcpip_data_queue == NULL){
 			tcpip_data_queue = next_packet;
@@ -745,7 +744,6 @@ u8 tcpip_custom_insert_data(void){
 		}
 
 		retVal = 1;
-		//next_packet = tcpip_custom_get_data_tcpip();
 	}
 
 	return retVal;
