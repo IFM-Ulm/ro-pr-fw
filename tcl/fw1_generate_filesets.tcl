@@ -33,6 +33,52 @@ if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "w
 	error "unknown board detected, not supported"
 }
 
+if { ! [file exists [format "%s/settings_debug.tcl" $project_generated_sources_tcl]] } {
+	set debugfile [open [format "%s/settings_debug.tcl" $project_generated_sources_tcl] "w+"]
+	
+	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
+	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
+	puts $debugfile "# DEBUG = 2 : omit constraint creation"
+	puts $debugfile "# DEBUG = 3 : omit constraint creation, restrict to $DEBUG_RUNS child run"
+	puts $debugfile ""
+	puts $debugfile "global DEBUG"
+	puts $debugfile "set DEBUG 1"
+	puts $debugfile "set DEBUG_RUNS 1"
+	puts $debugfile ""
+	puts $debugfile "global fast_approach"
+	puts $debugfile "set fast_approach true"
+	puts $debugfile ""
+
+	close $debugfile
+}
+
+if { ! [file exists [format "%s/settings_extract.tcl" $project_generated_sources_tcl]] } {
+	set extractfile [open [format "%s/settings_extract.tcl" $project_generated_sources_tcl] "w+"]
+	
+	puts $extractfile "# EXTRACT_DELAY = 2 : execute net delay extraction for all"
+	puts $extractfile "# EXTRACT_DELAY = 1 : execute net delay extraction for ref only"
+	puts $extractfile "# EXTRACT_DELAY = 0 : skip extraction"
+	puts $extractfile ""
+	puts $extractfile "global EXTRACT_DELAY"
+	puts $extractfile "set EXTRACT_DELAY 2"
+	puts $extractfile ""
+
+	close $extractfile
+}
+
+if { ! [file exists [format "%s/settings_impl.tcl" $project_generated_sources_tcl]] } {
+	set extractfile [open [format "%s/settings_impl.tcl" $project_generated_sources_tcl] "w+"]
+	
+	puts $extractfile "global impl_ro"
+	puts $extractfile "global ro_number"
+	puts $extractfile ""
+	puts $extractfile "set impl_ro "ro4""
+	puts $extractfile "set ro_number 32"
+	puts $extractfile "set ref_number 1"
+	puts $extractfile ""
+
+	close $extractfile
+}
 
 
 import_files -norecurse "$project_import_sources_hdl/counter_fixed.v"

@@ -17,7 +17,7 @@ if { $fw_flow_execute != $fw_flow_current } {
 }
 
 # set variables impl_ro and ro_number by script
-source -notrace [format "%s/settings_impl.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_impl.tcl" $project_generated_sources_tcl]
 
 source -notrace [format "%s/settings_extract.tcl" $project_sources_tcl]
 

@@ -1,5 +1,5 @@
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
-source -notrace [format "%s/settings_impl.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_impl.tcl" $project_generated_sources_tcl]
 
 set project_part [get_property PART [current_project]]
 puts "found part is $project_part"
