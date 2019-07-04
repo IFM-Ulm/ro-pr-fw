@@ -14,7 +14,6 @@
 
 // lib functions
 #include "ah_scugic.h"
-#include "ah_tcpip.h"
 #include "ah_pcap.h"
 #include "ah_sd.h"
 #include "ah_gpio.h"
@@ -72,8 +71,6 @@ u32 param_t2b_size = 0;*/
 #include "xil_exception.h"
 #include "xpseudo_asm.h"
 #include "xdebug.h"
-
-#include "com_custom.h"
 
 extern unsigned int _heap_start;
 extern unsigned int _heap_end;

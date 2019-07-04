@@ -27,8 +27,9 @@ s32 com_enable(void){
 }
 
 s32 com_disable(void){
-	return XST_SUCCESS;
+	return com_custom_disable();
 }
+
 
 s32 com_isConnected(u8* returnVal){
 	return com_custom_isConnected(returnVal);
@@ -37,6 +38,20 @@ s32 com_isConnected(u8* returnVal){
 s32 com_pull(u8* retVal){
 	return com_custom_pull(retVal);
 }
+
+
+struct data_com* com_pop(void){
+	return com_custom_pop();
+}
+
+s32 com_free(struct data_com* packet){
+	return com_custom_free(packet);
+}
+
+s32 com_push(void* data, u32 len){
+	return com_custom_push(data, len);
+}
+
 
 s32 com_handleErrors(u8* returnVal){
 	return com_custom_handleErrors(returnVal);
@@ -48,6 +63,14 @@ s32 com_handleDisconnect(u8* returnVal){
 
 s32 com_handleInactivity(u8* returnVal){
 	return com_custom_handleInactivity(returnVal);
+}
+
+s32 com_check_sent(u8* returnVal){
+	return com_custom_check_sent(returnVal);
+}
+
+s32 com_reset_sent(u8 force){
+	return com_custom_reset_sent(force);
 }
 
 s32 com_checkCommands(u8* returnVal, states* nextState){
@@ -70,16 +93,26 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 	u8 answer[3];
 
+	if(nextState == NULL){
+		return XST_FAILURE;
+	}
+
 	readCommand = com_custom_pop();
 	if(readCommand == NULL){
-
-		*returnVal = 0;
+		
+		if(returnVal != NULL){
+			*returnVal = 0;
+		}
+		
 		*nextState = st_check_commands;
 
 		return XST_SUCCESS;
 	}
-
-	*returnVal = 1;
+	
+	if(returnVal != NULL){
+		*returnVal = 1;
+	}
+	
 	*nextState = st_check_commands; // default next state
 
 	datap = readCommand->data;
@@ -88,16 +121,11 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 
 		case 0x00:
 
-			//returnValue = XST_FAILURE;
 			returnValue = XST_FAILURE;
 
 			break;
 
 		case 0x01:	// ack for testing
-
-				/*if(tcpip_custom_push(&ack, 1) != XST_SUCCESS){
-					returnValue = XST_FAILURE;
-				}*/
 
 				*nextState = st_check_commands;
 
