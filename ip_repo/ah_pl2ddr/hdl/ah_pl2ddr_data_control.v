@@ -74,7 +74,8 @@ module ah_pl2ddr_data_control #(
 	assign data_out = rg_buffered && !rg_buffer_used ? rg_data_buffer : w_data_out;
 		
 	wire [9:0] next_address;
-	assign next_address = rg_addr_out;
+	// assign next_address = rg_addr_out;
+	assign next_address = rg_buffered == 1 ? rg_addr_out + 1 : rg_addr_out;
 	
 	reg rg_error = 0;
 	assign error = rg_error;
@@ -86,8 +87,8 @@ module ah_pl2ddr_data_control #(
 			rg_addr_out <= 0;
 		end
 		else begin
-			if(rg_buffered == 0 && data_next == 0 && rg_data_available > 0) begin
-				rg_addr_out <= rg_addr_out < 1023 ? rg_addr_out + 1 : 0;
+			if(rg_buffered == 0 && data_next == 0 && w_data_available > 1) begin
+				// rg_addr_out <= rg_addr_out < 1023 ? rg_addr_out + 1 : 0;
 			end
 			else begin
 				if(data_next == 1) begin				
@@ -104,7 +105,7 @@ module ah_pl2ddr_data_control #(
 			rg_buffer_used <= 0;
 		end
 		else begin
-			if(rg_buffered == 0 && data_next == 0 && rg_data_available > 0) begin
+			if(rg_buffered == 0 && data_next == 0 && w_data_available > 1) begin
 				rg_data_buffer <= w_data_out;
 				rg_buffer_used <= 0;
 				rg_buffered <= 1;
@@ -116,26 +117,39 @@ module ah_pl2ddr_data_control #(
 					//rg_buffered <= 0;
 				end
 				else begin
-					if(rg_buffer_used) begin
-						rg_data_buffer <= w_data_out;
-					end	
-					if(rg_data_available == 0) begin
+					if(w_data_available == 0) begin
 						rg_data_buffer <= 0;
 						rg_buffered <= 0;
+						//rg_buffer_used <= 0;
 					end
-					rg_buffer_used <= 0;
+					else begin
+						if(rg_buffer_used && rg_data_available > 1) begin
+							rg_data_buffer <= w_data_out;
+							rg_buffer_used <= 0;
+							rg_buffered <= 1;
+						end
+					end
 				end
 			end
 		end
 	end
 	
-	
+	reg rg_next = 0;
+	always @(posedge clk_system) begin
+		if (rst == 1 || w_reset_data == 1) begin
+			rg_next <= 0;
+		end
+		else begin
+			rg_next <= data_next;
+		end
+	end
 	
 	always @(posedge clk_system) begin
 		if (rst == 1 || w_reset_data == 1) begin
 			rg_data_read <= 0;
 		end
 		else begin
+			// if(data_next == 1 || rg_next) begin
 			if(data_next == 1) begin
 				rg_data_read <= rg_data_read + 1;
 			end

@@ -1,7 +1,8 @@
 
 module ah_pl2ddr_cmd_fsm #(
 		parameter DATA_WIDTH = 1,
-		parameter DSP_FOR_CALC = 0
+		parameter DSP_FOR_CALC = 0,
+		parameter RESET_WAIT = 0
 	)(
 	
 	input wire clk,
@@ -275,6 +276,7 @@ module ah_pl2ddr_cmd_fsm #(
 					rg_intr_error <= 0;
 					
 					rg_enable_ovw <= 0;
+					rg_transfer_active <= 0;
 					
 					if(rg_cmd_rcvd == 1) begin
 						if(rg_cmd_ack == 0) begin
@@ -292,8 +294,10 @@ module ah_pl2ddr_cmd_fsm #(
 						state <= INIT_TX;
 					end
 					else if(rg_done == 0 && w_done_on_sampled && in_transfer_en) begin
+						
 						rg_enable_active <= 0;
 						rg_transfer_active <= 1;
+						
 						if(in_data_pending > 0) begin
 							state <= FILL_DATA;
 						end
@@ -359,6 +363,7 @@ module ah_pl2ddr_cmd_fsm #(
 							rg_done <= 0;
 							rg_fill_data <= 0;
 							rg_error <= 0;
+							rg_transfer_active <= 0;
 														
 							rg_wait_counter <= 2;
 							state <= WAIT;
@@ -367,7 +372,7 @@ module ah_pl2ddr_cmd_fsm #(
 						CMD_RST_ADDR : begin
 							rg_ddr_offset <= 0;
 							
-							rg_wait_counter <= 2;
+							rg_wait_counter <= RESET_WAIT;
 							state <= WAIT;							
 						end
 						
@@ -375,7 +380,7 @@ module ah_pl2ddr_cmd_fsm #(
 							rg_rst_data <= 1;
 							rg_done <= 0;
 							
-							rg_wait_counter <= 2;
+							rg_wait_counter <= RESET_WAIT;
 							state <= WAIT;
 						end
 												
