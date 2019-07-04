@@ -1,5 +1,5 @@
-#ifndef SRC_UART_CUSTOM_H_
-#define SRC_UART_CUSTOM_H_
+#ifndef SRC_COM_CUSTOM_H_
+#define SRC_COM_CUSTOM_H_
 
 #include "xstatus.h"
 
@@ -10,7 +10,7 @@ s32 com_custom_setup(void);
 s32 com_custom_enable(void);
 s32 com_custom_disable(void);
 
-s32 com_custom_isConnected(u8* returnVal);
+s32 com_custom_isConnected(u8* returnVal)
 s32 com_custom_handleErrors(u8* returnVal);
 s32 com_custom_handleDisconnect(u8* returnVal);
 s32 com_custom_handleInactivity(u8* returnVal);
@@ -22,5 +22,6 @@ s32 com_custom_free(struct data_com* packet);
 s32 com_custom_push(void* data, u32 len);
 s32 com_custom_check_sent(u8* returnVal);
 s32 com_custom_reset_sent(u8 force);
+
 
 #endif
