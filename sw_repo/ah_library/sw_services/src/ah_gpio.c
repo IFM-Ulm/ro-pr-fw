@@ -25,7 +25,9 @@ static u8 ah_gpio_intvar_isSetup_initial = 0;
 static u8 ah_gpio_intvar_isEnabled = 0;
 static u8 ah_gpio_intvar_isEnabled_initial = 0;
 
+#ifdef XPAR_XGPIO_NUM_INSTANCES
 static u8 ah_gpio_intvar_led_value[AH_GPIO_LED_NUM];
+#endif
 
 void (*ah_gpio_intfcn_intrBTN)(u32) = NULL;
 void (*ah_gpio_intfcn_intrSWS)(u32) = NULL;
