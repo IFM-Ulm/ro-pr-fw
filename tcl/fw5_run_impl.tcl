@@ -18,6 +18,8 @@ if { $fw_flow_execute != $fw_flow_current } {
 
 source -notrace [format "%s/help_refresh_synth.tcl" $project_sources_tcl]
 
+file copy -force [format "%s/%s.xpr" $project_path $project_name] [format "%s/%s.xpr.copy" $project_path $project_name]
+
 puts "checking run impl_1 for REFRESH"
 if { [get_property NEEDS_REFRESH [get_runs impl_1]] == 1 } {
 	puts "resetting run impl_1"
