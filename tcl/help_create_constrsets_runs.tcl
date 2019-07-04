@@ -81,7 +81,7 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 		
 		if { ! $fast_approach } {
 			open_run -name synth_1 -pr_config [current_pr_configuration] synth_1
-			current_instance "ro_top_inst/PR_module_inst1"
+			#current_instance "ro_top_inst/PR_module_inst1"
 		
 			set_property constrset $constrset_name [get_runs impl_1]
 			set_property constrset $constrset_name [get_runs impl_2]

@@ -117,7 +117,7 @@ if { $DEBUG < 2 } {
 	if { $fast_approach } {
 		current_run [get_runs impl_1]
 		open_run synth_1 -constrset constrs_synth -name synth_1 -pr_config [current_pr_configuration]
-		current_instance "ro_top_inst/PR_module_inst1"
+		#current_instance "ro_top_inst/PR_module_inst1"
 	}
 }
 
@@ -215,7 +215,7 @@ if { $DEBUG < 2 } {
 		
 		current_run [get_runs impl_2]
 		open_run synth_1 -constrset constrs_synth -name synth_1 -pr_config [current_pr_configuration]
-		current_instance "ro_top_inst/PR_module_inst1"
+		#current_instance "ro_top_inst/PR_module_inst1"
 	}
 }
 
