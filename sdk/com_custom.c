@@ -364,20 +364,23 @@ s32 com_custom_free(struct data_com* packet){
 
 s32 com_custom_push(void* data, u32 len){
 	
-	u16 rem = len;
+	u16 rem;
 	u16 send_len;
-	u32 total_len = len;
+	u32 total_len;
 	u32 total_len_max = 65070; // was 65535
-	
 	u16 transmit_len = 1446;
-	void* temp = data;
-	u8 received;
+	
+	void* temp;
 
 	u8 checkbuffer;
 
 	if(!ah_tcpip_checkConnection()){
 		return XST_FAILURE;
 	}
+
+	rem = len;
+	temp = data;
+	total_len = len;
 
 	if(len > 12800){
 		ah_tcip_setflag_copy(0);
@@ -436,6 +439,7 @@ s32 com_custom_push(void* data, u32 len){
 				return XST_FAILURE;
 			}
 
+			rem = 0;
 			temp += rem;
 		}
 
