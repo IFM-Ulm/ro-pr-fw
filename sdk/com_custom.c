@@ -63,6 +63,11 @@ s32 com_custom_enable(void){
 
 }
 
+s32 com_custom_disable(void){
+	// ToDo: implement uart disabling?
+	return XST_SUCCESS;
+}
+
 s32 com_custom_isConnected(u8* returnVal){
 
 	*returnVal = 1;
