@@ -72,9 +72,11 @@ if { ! [file exists [format "%s/settings_impl.tcl" $project_generated_sources_tc
 	puts $extractfile "global impl_ro"
 	puts $extractfile "global ro_number"
 	puts $extractfile ""
-	puts $extractfile "set impl_ro "ro4""
+	puts $extractfile "set impl_ro \"ro4\""
 	puts $extractfile "set ro_number 32"
 	puts $extractfile "set ref_number 1"
+	puts $extractfile ""
+	puts $extractfile "set impl_com \"tcp\""
 	puts $extractfile ""
 
 	close $extractfile

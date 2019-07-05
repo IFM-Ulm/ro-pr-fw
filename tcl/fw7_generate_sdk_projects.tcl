@@ -1,5 +1,6 @@
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_impl.tcl" $project_generated_sources_tcl]
 
 set fw_flow_current 7
 global call_by_script
@@ -17,6 +18,24 @@ if { $fw_flow_execute != $fw_flow_current } {
 
 file mkdir "$project_path/$project_name.sdk"
 file copy -force "$project_path/$project_name.runs/impl_1/toplevel.sysdef" "$project_path/$project_name.sdk/toplevel.hdf"
+
+set comheaderId [open [format "%s/fw_com_generated.h" $project_generated_sources_sdk] "w+"]
+puts $comheaderId "#ifndef SRC_FW_COM_GENERATED_H_"
+puts $comheaderId "#define SRC_FW_COM_GENERATED_H_"
+puts $comheaderId ""
+puts $comheaderId "#define IMPL_COM_TCP 1"
+puts $comheaderId "#define IMPL_COM_UART 2"
+puts $comheaderId ""
+if { $impl_com == "tcp" } {
+puts $comheaderId "#define IMPL_COM IMPL_COM_TCP"
+}
+if { $impl_com == "uart" } {
+puts $comheaderId "#define IMPL_COM IMPL_COM_UART"
+}
+puts $comheaderId ""
+puts $comheaderId "#endif"
+puts $comheaderId ""
+close $comheaderId
 
 set bifId [open [format "%s/%s.bif" $project_generated_sources_sdk $project_sdk_name_project] "w+"]
 puts $bifId "//arch = zynq; split = false; format = BIN"
