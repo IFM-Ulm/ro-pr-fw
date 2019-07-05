@@ -16,6 +16,9 @@ if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is $fw_flow_current, expected call index is $fw_flow_execute"
 }
 
+
+file delete -force "$project_path/$project_name.sdk"
+after 1000
 file mkdir "$project_path/$project_name.sdk"
 file copy -force "$project_path/$project_name.runs/impl_1/toplevel.sysdef" "$project_path/$project_name.sdk/toplevel.hdf"
 
@@ -53,7 +56,6 @@ puts $helperId ""
 puts $helperId [format "setws %s/%s.sdk" $project_path $project_name]
 puts $helperId [format "createhw -name %s -hwspec toplevel.hdf" $project_sdk_name_hw]
 puts $helperId ""
-
 
 puts $helperId [format "repo -set %s" $project_sources_sw_repo]
 puts $helperId "repo -scan"
