@@ -18,12 +18,10 @@ if { $fw_flow_execute != $fw_flow_current } {
 
 # set variables impl_ro and ro_number by script
 source -notrace [format "%s/settings_impl.tcl" $project_generated_sources_tcl]
-
-source -notrace [format "%s/settings_extract.tcl" $project_sources_tcl]
-
+source -notrace [format "%s/settings_extract.tcl" $project_generated_sources_tcl]
 source -notrace [format "%s/%s" $project_sources_tcl $pr_extract_file]
 
-source -notrace [format "%s/misc_extract_continue.tcl" $project_sources_tcl]
+source -notrace [format "%s/misc/misc_extract_continue.tcl" $project_sources_tcl]
 
 if { $EXTRACT_DELAY > 0 } {
 
@@ -32,16 +30,15 @@ if { $EXTRACT_DELAY > 0 } {
 
 	open_run "impl_1"
 	
-	set instance_name [format "ro_top_inst/RO_ref_inst/%s" [pr_set_ref_name 0 $impl_ro]]
+	set instance_name [format "%s" [pr_set_ref_name 0 $impl_ro]]
 	pr_extract_delay $instance_name [format "%s/netdelays_ref.csv" $project_bitstreams] "ref_t1" 0
 	
 	close_design
 
 
 	open_run "impl_2"
-	
-	set instance_name "ro_top_inst/RO_ref_inst/puf_ref"
-	set instance_name [format "ro_top_inst/RO_ref_inst/%s" [pr_set_ref_name 0 $impl_ro]]
+
+	set instance_name [format "%s" [pr_set_ref_name 0 $impl_ro]]
 	pr_extract_delay $instance_name [format "%s/netdelays_ref.csv" $project_bitstreams] "ref_t2" 0
 	
 	close_design
@@ -90,7 +87,7 @@ if { $EXTRACT_DELAY == 2 } {
 		
 			puts [format "extracting index %d" $index]
 			
-			set instance_name [format "ro_top_inst/PR_module_inst1/%s" [pr_set_instance_name $index $impl_ro]]
+			set instance_name [format "%s" [pr_set_instance_name $index $impl_ro]]
 			puts [format "instance_name: %s" $instance_name]
 			pr_extract_delay $instance_name [format "%s/netdelays.csv" $project_bitstreams] $run_name $index
 		}
@@ -102,7 +99,6 @@ if { $EXTRACT_DELAY == 2 } {
 		close_design
 		
 	}
-
 }
 
 puts "netdelay extraction done"

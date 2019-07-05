@@ -33,7 +33,7 @@ proc pr_set_instance_name { index impl_ro } {
 
 proc pr_set_ref_name { index impl_ro } {
 	if { $impl_ro == "ro4" } {
-		set instance_name "puf_ref"
+		set instance_name "ro_top_inst/RO_ref_inst/puf_ref"
 	} else {
 		error [format "unknown impl_ro = %s" $impl_ro]
 	}
