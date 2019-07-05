@@ -83,7 +83,6 @@ set_property target_constrs_file "$project_sources_constr_static_1/vivado.xdc" [
 close_design
 
 
-
 set coord_ref_X $coord_ref2_X
 set coord_ref_Y $coord_ref2_Y
 

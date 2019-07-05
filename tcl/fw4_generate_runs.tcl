@@ -164,8 +164,6 @@ foreach partial_areas_x $lst_partial_areas_X_start {
 		}
 		
 	}
-
-
 }
 
 incr ro_counter $pr_counter
@@ -205,8 +203,6 @@ set_property constrset constrs_synth [get_runs synth_1]
 set_property constrset constrs_static_1 [get_runs impl_1]
 set_property constrset constrs_static_2 [get_runs impl_2]
 
-
-
 if { $DEBUG < 2 } {
 	
 	if { $fast_approach } {
@@ -217,7 +213,6 @@ if { $DEBUG < 2 } {
 		#current_instance "ro_top_inst/PR_module_inst1"
 	}
 }
-
 
 set lst_partial_areas_X_start $lst_partial2_areas_X_start
 set lst_partial_areas_X_end $lst_partial2_areas_X_end
@@ -265,9 +260,7 @@ foreach partial_areas_x $lst_partial_areas_X_start {
 				set pr_stop 1 
 			}
 		}
-
 	}
-
 }
 
 incr ro_counter $pr_counter
