@@ -12,7 +12,8 @@
 
 #include "fw_settings.h"
 
-#define MAX_BUFFER_BYTES 469762048
+// maximum number of readouts per bin: 1572863
+#define MAX_BUFFER_BYTES 402653184
 
 #define INTERRUPT_MEASUREMENT_DONE (0)
 #define INTERRUPT_TRANSFER_DONE (1)
