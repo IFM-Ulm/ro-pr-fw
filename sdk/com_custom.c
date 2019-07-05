@@ -24,7 +24,7 @@ struct tpcip_packet {
 };
 
 // forward declarations
-void tcpip_custom_receive(u16 connection_index, struct pbuf* buffer, void* data, u16 data_len)
+void tcpip_custom_receive(u16 connection_index, struct pbuf* buffer, void* data, u16 data_len);
 void tcpip_custom_sent(u16 connection_index, u16 len);
 void tcpip_custom_error(u16 connection_index, u8 status);
 s32 tcpip_custom_setThresholds(u32 refuse_data, u32 accept_data);
