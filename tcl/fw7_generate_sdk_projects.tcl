@@ -121,6 +121,21 @@ puts $helperId [format "exec bootgen -image %s/%s.bif -arch zynq -w -o %s/BOOT.b
 puts $helperId ""
 close $helperId
 
+if { $impl_com == "tcp" } {
+	set ipId [open [format "%s/ip.csv" $project_generated_sources_sdk] "w+"]
+	# generate MAC address, should be varied for different boards when used in parallel
+	puts $ipId "00,0A,35,00,01,06"
+	# generate IP address, should be varied for different boards when used in parallel
+	puts $ipId "192,168,0,1"
+	# generate sub-net mask
+	puts $ipId "255,255,255,0"
+	# generate IP address of standard gateway
+	puts $ipId "192,168,0,100"
+	# generate TCP communication port
+	puts $ipId "7"
+	close $ipId
+}
+
 exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "help_generate_sdk_projects.tcl"]
 
 set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
