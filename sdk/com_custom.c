@@ -397,7 +397,7 @@ s32 com_custom_push(void* data, u32 len){
 
 		rem = send_len;
 
-		while(rem > transmit_len){
+		while(rem >= transmit_len){
 
 			checkbuffer = ah_tcpip_checkBuffer(transmit_len);
 
@@ -413,8 +413,8 @@ s32 com_custom_push(void* data, u32 len){
 			}
 			
 			if(ah_tcpip_send(temp, transmit_len, 0) == XST_SUCCESS){
-				rem -= transmit_len;
 				temp += transmit_len;
+				rem -= transmit_len;				
 			}
 
 		}
@@ -439,8 +439,8 @@ s32 com_custom_push(void* data, u32 len){
 				return XST_FAILURE;
 			}
 
-			rem = 0;
 			temp += rem;
+			rem = 0;
 		}
 
 		total_len -= (u32)send_len;
