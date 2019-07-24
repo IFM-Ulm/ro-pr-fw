@@ -4,30 +4,10 @@ if { $call_by_script != 1 } {
 }
 
 proc pr_route_puf {instance_name x_slc y_slc } {
-# call like: pr_route_puf "ro_top_inst/ro4_inst_test" 41 71
-# source like: source -notrace E:/FPGA_PUFs/RO/RO_PR/RO_PR.srcs/tcl/pr_route_puf.tcl
 
 	set net_name "ro4_con"
 	set lut_name "ro4LUT6_"
-	
-	# debugging only
-	
-	# set instance_name "ro_top_inst/ro4_inst_test"
-	
-	# set net_name "pufTest_con"
-	
-	# set lut_name "pufTest_"
-	
-	# unplace_cell [get_cells [format "%s/%sD" $instance_name $lut_name]]
-	# unplace_cell [get_cells [format "%s/%sC" $instance_name $lut_name]]
-	# unplace_cell [get_cells [format "%s/%sB" $instance_name $lut_name]]
-	# unplace_cell [get_cells [format "%s/%sA" $instance_name $lut_name]]
-	
-	# route_design -unroute -nets [get_nets [format "%s/%s[3]" $instance_name $net_name]]
-	# route_design -unroute -nets [get_nets [format "%s/%s[2]" $instance_name $net_name]]
-	# route_design -unroute -nets [get_nets [format "%s/%s[1]" $instance_name $net_name]]
-	# route_design -unroute -nets [get_nets [format "%s/%s[0]" $instance_name $net_name]]
-	
+
 	place_cell [format "%s/%sD SLICE_X%dY%d/D6LUT" $instance_name $lut_name $x_slc $y_slc]
 	place_cell [format "%s/%sC SLICE_X%dY%d/C6LUT" $instance_name $lut_name $x_slc $y_slc]
 	place_cell [format "%s/%sB SLICE_X%dY%d/B6LUT" $instance_name $lut_name $x_slc $y_slc]

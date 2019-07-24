@@ -89,10 +89,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 		}
 	}
 
-	
-	# route PR_module_1	
-
-	
 	source -notrace [format "%s/%s" $project_sources_tcl $pr_undo_file]
 	
 	set placed_ROs 0
@@ -201,10 +197,6 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 	if { $DEBUG < 2 } {
 	
 		create_run $run_name -parent_run $impl_parent -constrset $constrset_name -flow {Vivado Implementation 2017} -pr_config PR_config
-		# set_property STRATEGY custom_no_opt [get_runs $run_name]
-		
-		# the following script contains a single, out-dated line: set_property SEVERITY {Warning} [get_drc_checks LUTLP-1]
-		# set_property STEPS.WRITE_BITSTREAM.TCL.PRE [format "%s/ignoreCombLoops.tcl" $project_sources_tcl] [get_runs $run_name]
 		set_property GEN_FULL_BITSTREAM 0 [get_runs $run_name]
 		set_property APPLY_CONSTRSET 1 [get_runs $run_name]
 	}

@@ -5,7 +5,6 @@ set project_part [get_property PART [current_project]]
 puts "found part is $project_part"
 
 
-# main.tcl
 if { $impl_ro == "ro4" } {
 	set pr_X_shift 2
 	set pr_Y_shift 2

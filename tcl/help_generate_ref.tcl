@@ -3,7 +3,6 @@ if { $call_by_script != 1 } {
 	error "this script file is not intended to be run independently"
 }
 
-# lists all synergies of implementations, which only differ in their placement, but not ro type
 
 set_property BEL D6LUT [get_cells ro_top_inst/RO_ref_inst/puf_ref/ro4LUT6_D]
 set_property LOC [format "SLICE_X%dY%d" $coord_ref_X $coord_ref_Y] [get_cells ro_top_inst/RO_ref_inst/puf_ref/ro4LUT6_D]

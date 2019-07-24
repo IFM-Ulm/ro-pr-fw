@@ -4,8 +4,6 @@ if { $call_by_script != 1 } {
 }
 
 proc pr_extract_delay { instance_name file_path run_name index} {
-# call like: delays_ro4 "ro_top_inst/ro4_inst_test" "E:/FPGA_PUFs/RO/RO_PR/bitstreams/netdelays.csv" "child_impl_1_constr_00_0000" 1
-# source like: source -notrace E:/FPGA_PUFs/RO/RO_PR/RO_PR.srcs/tcl/delays_ro4.tcl
 
 	puts [format "setting variables"]
 
