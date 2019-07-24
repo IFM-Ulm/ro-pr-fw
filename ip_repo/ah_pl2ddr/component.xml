@@ -3,7 +3,7 @@
   <spirit:vendor>uni-ulm.de</spirit:vendor>
   <spirit:library>aherkle</spirit:library>
   <spirit:name>AH_PL2DDR</spirit:name>
-  <spirit:version>2.9</spirit:version>
+  <spirit:version>2.9.1</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>M_AXI_OUT</spirit:name>
@@ -630,7 +630,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>19678ac1</spirit:value>
+            <spirit:value>2451a60d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -646,7 +646,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>19678ac1</spirit:value>
+            <spirit:value>2451a60d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2489,7 +2489,7 @@
       <spirit:file>
         <spirit:name>hdl/AH_PL2DDR_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_24e050d3</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_4273232d</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -2533,7 +2533,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/AH_PL2DDR_v2_9.tcl</spirit:name>
+        <spirit:name>xgui/AH_PL2DDR_v2_9_1.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_be78c6ea</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -2748,7 +2748,7 @@
         <xilinx:taxonomy>/AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>AH_PL2DDR</xilinx:displayName>
-      <xilinx:coreRevision>2</xilinx:coreRevision>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>uni-ulm.de:user:AH_PL2DDR:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.3</xilinx:canUpgradeFrom>
@@ -2757,8 +2757,9 @@
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.6</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.7</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.8</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>uni-ulm.de:aherkle:AH_PL2DDR:2.9</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2019-07-04T12:32:26Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2019-07-22T15:29:33Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="uni-ulm.de:user:AH_PL2DDR:1.0_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="uni-ulm.de:aherkle:AH_PL2DDR:2.2_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
@@ -2804,13 +2805,28 @@
         <xilinx:tag xilinx:name="ui.data.coregen.dd@3d3fe9ea_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@6339d30d_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@15869ebc_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7917d42d_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@731ae7fb_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a2ccec1_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f245b03_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@bbc63ae_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62227aec_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21d75bab_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@232d0296_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ae2ac8a_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1caa3cbd_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56c88231_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b2b9ea6_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8970345_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fb8e31b_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@28d30feb_ARCHIVE_LOCATION">d:/FPGA_PUFs/AXI4/ip_repo/AH_PL2DDR</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="e1bc9117"/>
       <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="07a68512"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="7f778af3"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="16281b51"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="10ac3e7e"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="ac0e7dc8"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="5494a718"/>

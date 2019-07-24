@@ -21,6 +21,7 @@ module ah_pl2ddr_data_control #(
 	output wire [31:0] data_index,
 	output wire [5:0] data_pending,
 	output wire [9:0] data_available,
+	output wire [31:0] data_read,
 	
 	output wire error
 
@@ -44,6 +45,7 @@ module ah_pl2ddr_data_control #(
 	
 	assign data_index = w_data_index;
 	assign w_data_bram = testmode ? w_data_index : w_data_collected;
+	assign data_read = rg_data_read;
 	
 	assign addr_read = rg_addr_out;
 	assign addr_write = rg_addr_in;

@@ -164,6 +164,7 @@
 	wire [9:0] w_bram_addr_read;
 	wire [9:0] w_bram_addr_write;
 	wire [9:0] w_data_available;
+	wire [31:0] w_data_read;
 	
 	wire w_m_axi_error;
 	wire w_data_error;
@@ -179,14 +180,65 @@
 	wire [31:0] w_ddr_high = ENABLE_ADDRESS_INPUT > 0 ? ddr_addr_high : DEFAULT_DDR_LOW;
 	wire [31:0] w_sampling_mode = ENABLE_MODE_INPUT > 0 ? sampling_mode : DEFAULT_SAMPLING_MODE;
 	wire w_enable = ENABLE_CMD_INPUT > 0 ? 0 : enable;
+
+	reg [31:0] rg_bytes_transmitted = 0;
 	
+	// ToDo: connect these wires -> needs calculation, from samples to bytes
+	assign bytes_transmitted = bytes_transmitted;
 	
-	// ToDo: connect these wires 
-	assign samples_transmitted = 0;
-	assign bytes_collected = 0;
-	assign bytes_transmitted = 0;
+	always @(samples_collected) begin
+		
+	end
 	
+	generate
+		case(DATA_WIDTH)
+			1 : begin
+					assign bytes_collected = samples_collected >> 3;
+				end
+			2 : begin
+					assign bytes_collected = samples_collected >> 2;
+				end
+			4 : begin
+					assign bytes_collected = samples_collected >> 1;
+				end
+			8 : begin
+					assign bytes_collected = samples_collected;
+				end
+			16 : begin
+					assign bytes_collected = samples_collected << 1;
+				end
+			32 : begin
+					assign bytes_collected = samples_collected << 2;
+				end
+		endcase
+	endgenerate
+
+	generate
+		case(DATA_WIDTH)
+			1 : begin
+					assign samples_transmitted = w_data_read << 5;
+				end
+			2 : begin
+					assign samples_transmitted = w_data_read << 4;
+				end
+			4 : begin
+					assign samples_transmitted = w_data_read << 3;
+				end
+			8 : begin
+					assign samples_transmitted = w_data_read << 2;
+				end
+			16 : begin
+					assign samples_transmitted = w_data_read << 1;
+				end
+			32 : begin
+					assign samples_transmitted = w_data_read;
+				end
+		endcase
+	endgenerate
+
 	assign samples_collected = w_data_index;
+	
+	assign bytes_transmitted = w_data_read << 2;
 		
 	assign pending_collect = w_data_pending;
 	assign pending_transmit = w_data_available;
@@ -290,6 +342,7 @@
 		.data_index(w_data_index),
 		.data_pending(w_data_pending),
 		.data_available(w_data_available),
+		.data_read(w_data_read),
 		
 		.error(w_data_error)
 		
