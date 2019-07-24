@@ -30,10 +30,12 @@ puts $comheaderId "#define IMPL_COM_TCP 1"
 puts $comheaderId "#define IMPL_COM_UART 2"
 puts $comheaderId ""
 if { $impl_com == "tcp" } {
-puts $comheaderId "#define IMPL_COM IMPL_COM_TCP"
+	puts $comheaderId "#define IMPL_COM IMPL_COM_TCP"
+	puts "generating implementation: tcp"
 }
 if { $impl_com == "uart" } {
-puts $comheaderId "#define IMPL_COM IMPL_COM_UART"
+	puts $comheaderId "#define IMPL_COM IMPL_COM_UART"
+	puts "generating implementation: uart"
 }
 puts $comheaderId ""
 puts $comheaderId "#endif"
@@ -122,18 +124,28 @@ puts $helperId ""
 close $helperId
 
 if { $impl_com == "tcp" } {
+
+	# generate the file ip.csv, which has to be placed on the SD-Card, when using the tcp communication software 
 	set ipId [open [format "%s/ip.csv" $project_generated_sources_sdk] "w+"]
+	
 	# generate MAC address, should be varied for different boards when used in parallel
 	puts $ipId "00,0A,35,00,01,06"
+	
 	# generate IP address, should be varied for different boards when used in parallel
 	puts $ipId "192,168,0,1"
+	
 	# generate sub-net mask
 	puts $ipId "255,255,255,0"
+	
 	# generate IP address of standard gateway
 	puts $ipId "192,168,0,100"
+	
 	# generate TCP communication port
 	puts $ipId "7"
+	
 	close $ipId
+
+	puts "generated tcp settings file ip.csv"
 }
 
 exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "help_generate_sdk_projects.tcl"]
@@ -141,5 +153,7 @@ exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "help_ge
 set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
 close $flowfile
+
+puts "compilation successful"
 
 set call_by_script 0
