@@ -511,39 +511,36 @@ u8 ah_tcpip_checkBuffer(u16 len){
 	cwnd_val = ah_tcpip_intvar_pcb_connection->cwnd;
 	snd_queuelen = ah_tcpip_intvar_pcb_connection->snd_queuelen;
 	
-	if((3 * len) < sndbuf_val){
-
-		// workaround: do not try to stuff packets in the send queue, if the receivers window is closing (sndwnd_val < 3 * IP MSS)
-		// workaround: do not try to stuff packets in the send queue, if the congestion window is closing (cwnd_val < 3 * IP MSS)
-		// mentioned in https://savannah.nongnu.org/bugs/?24212
-		if(sndwnd_val < 4338 || cwnd_val < 4338){
-			return 0;
-		}
-		else{
-			
-			// if the send queue starts to fill up, it can lead to congestions, try to avoid this by
-			// avoiding to fill up the whole send queue with new data (30 * IP MSSS = 43380)
-			if(snd_queuelen > 30){
-				return 0;
-			}
-			if(ah_tcpip_intvar_max_unacked > 0){
-				
-				if(((u32)len + ah_tcpip_intvar_data_unacked) <= ah_tcpip_intvar_max_unacked){
-					
-					return 1;
-				}
-				else{
-					return 0;
-				}
-			}
-			else{
-				return 1;
-			}
-		}
-	}
-	else{
+	// do not try to stuff packets in the send queue, if the send buffer is low
+	if((3 * len) > sndbuf_val){
 		return 0;
 	}
+
+	// do not try to stuff packets in the send queue, if the connection is in fast recovery mode
+	if(ah_tcpip_intvar_pcb_connection->flags & TF_INFR){
+		return 0;
+	}
+
+	// workaround: do not try to stuff packets in the send queue, if the receivers window is closing (sndwnd_val < 10 * IP MSS)
+	// workaround: do not try to stuff packets in the send queue, if the congestion window is closing (cwnd_val < 3 * IP MSS)
+	// mentioned in https://savannah.nongnu.org/bugs/?24212
+	if(sndwnd_val < 14460 || cwnd_val < 4338){
+		return 0;
+	}
+	
+	// if the send queue starts to fill up, it can lead to congestions, try to avoid this by
+	// avoiding to fill up the whole send queue with new data (30 * IP MSSS = 43380)
+	if(snd_queuelen > 30){
+		return 0;
+	}
+
+	if(ah_tcpip_intvar_max_unacked > 0){
+		if(((u32)len + ah_tcpip_intvar_data_unacked) > ah_tcpip_intvar_max_unacked){
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 u8 ah_tcpip_checkConnection(void){

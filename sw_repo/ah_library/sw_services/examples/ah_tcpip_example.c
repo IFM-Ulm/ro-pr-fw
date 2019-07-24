@@ -213,21 +213,32 @@ s32 tcpip_custom_free(struct data_com* packet){
 
 s32 tcpip_custom_push(void* data, u32 len){
 
-	u16 rem = len;
+	u16 rem;
 	u16 send_len;
-	u32 total_len = len;
-	void* temp = data;
+	u32 total_len;
+	u32 total_len_max = 65070;
+	u16 transmit_len = 1446;
 
+	void* temp;
+	
 	u8 checkbuffer;
 
 	if(!ah_tcpip_checkConnection()){
 		return XST_FAILURE;
 	}
-
+	
+	rem = len;
+	temp = data;
+	total_len = len;
+	
+	if(len > 12800){
+		ah_tcip_setflag_copy(0);
+	}
+	
 	while(total_len > 0){
 
-		if(total_len > 65535){
-			send_len = 65535;
+		if(total_len > total_len_max){
+			send_len = total_len_max;
 		}
 		else{
 			send_len = (u16)total_len;
@@ -235,9 +246,9 @@ s32 tcpip_custom_push(void* data, u32 len){
 
 		rem = send_len;
 
-		while(rem > 1446){
+		while(rem > transmit_len){
 
-			checkbuffer = ah_tcpip_checkBuffer(1446);
+			checkbuffer = ah_tcpip_checkBuffer(transmit_len);
 
 			while(!checkbuffer){
 
@@ -247,13 +258,13 @@ s32 tcpip_custom_push(void* data, u32 len){
 
 				ah_tcpip_send_output();
 
-				checkbuffer = ah_tcpip_checkBuffer(1446);
+				checkbuffer = ah_tcpip_checkBuffer(transmit_len);
 
 			}
 
-			if(ah_tcpip_send(temp, 1446, 1) == XST_SUCCESS){
-				rem -= 1446;
-				temp += 1446;
+			if(ah_tcpip_send(temp, transmit_len, 0) == XST_SUCCESS){
+				temp += transmit_len;
+				rem -= transmit_len;
 			}
 
 		}
@@ -278,13 +289,15 @@ s32 tcpip_custom_push(void* data, u32 len){
 				return XST_FAILURE;
 			}
 
-			rem -= rem;
 			temp += rem;
+			rem = 0;			
 		}
 
 		total_len -= (u32)send_len;
 	}
-
+	
+	ah_tcip_setflag_copy(1);
+	
 	return XST_SUCCESS;
 }
 
@@ -508,7 +521,6 @@ u8 tcpip_custom_insert_data(void){
 	next_packet = tcpip_custom_get_data_tcpip();
 
 	if(next_packet != NULL){
-	//while(next_packet != NULL){
 
 		if(tcpip_data_queue == NULL){
 			tcpip_data_queue = next_packet;
@@ -522,7 +534,6 @@ u8 tcpip_custom_insert_data(void){
 		}
 
 		retVal = 1;
-		//next_packet = tcpip_custom_get_data_tcpip();
 	}
 
 	return retVal;
