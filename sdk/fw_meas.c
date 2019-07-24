@@ -113,7 +113,18 @@ s32 measurement_check_finished(u8* returnVal){
 	return XST_SUCCESS;
 }
 
-s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown){
+s32 measurement_get_repetitions(u32* returnVal){
+	
+	if(meas_current == NULL){
+		return XST_FAILURE;
+	}
+	
+	*returnVal = meas_current->repetitions;
+	
+	return XST_SUCCESS;
+}
+
+s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown, u32 repetitions){
 
 	struct meas* meas_insert = (struct meas*)calloc(1,sizeof(struct meas));
 
@@ -128,6 +139,7 @@ s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 
 	meas_insert->time = time;
 	meas_insert->heatup = heatup;
 	meas_insert->cooldown = cooldown;
+	meas_insert->repetitions = repetitions;
 
 	if(meas_list == NULL){
 		meas_list = meas_insert;

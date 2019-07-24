@@ -11,6 +11,7 @@ struct meas {
 
 	u8 mode; // MEASURMENT_MODE_SEQ or MEASURMENT_MODE_PAR
 	u32 readouts; // number of measurement points
+	u32 repetitions; // number of repetitive measurements (introduced due to limited buffer size of DDR)
 	u32 time;
 	u32 heatup;
 	u32 cooldown;
@@ -26,8 +27,9 @@ s32 measurement_start(void);
 s32 measurement_check_data(u8* returnVal);
 s32 measurement_check_finished(u8* returnVal);
 s32 measurement_check_missing(u8* returnVal);
+s32 measurement_get_repetitions(u32* returnVal);
 
-s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown);
+s32 measurement_insert(u16 id, u8 mode, u32 readouts, u32 time, u32 heatup, u32 cooldown, u32 repetitions);
 s32 measurement_delete(u16 id);
 s32 measurement_delete_all(void);
 

@@ -90,6 +90,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 	u32 time;
 	u32 heatup;
 	u32 cooldown;
+	u32 repetitions;
 
 	u8 answer[3];
 
@@ -224,8 +225,9 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 						time = ((u32)datap[9]) | (((u32)datap[10]) << 8) | (((u32)datap[11]) << 16) | (((u32)datap[12]) << 24);
 						heatup = ((u32)datap[13]) | (((u32)datap[14]) << 8) | (((u32)datap[15]) << 16) | (((u32)datap[16]) << 24);
 						cooldown = ((u32)datap[17]) | (((u32)datap[18]) << 8) | (((u32)datap[19]) << 16) | (((u32)datap[20]) << 24);
+						repetitions = ((u32)datap[21]) | (((u32)datap[22]) << 8) | (((u32)datap[23]) << 16) | (((u32)datap[24]) << 24);
 
-						if(measurement_insert(id, mode, readouts, time, heatup, cooldown) != XST_SUCCESS){
+						if(measurement_insert(id, mode, readouts, time, heatup, cooldown, repetitions) != XST_SUCCESS){
 							returnValue = XST_FAILURE;
 						}
 
@@ -261,7 +263,32 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 			}
 
 			break;
+		
+		case 0x05:	// receive additional commands
 
+			switch(datap[1]){
+
+				case 0x00: break;
+					
+				case 0x01:	// send last stuck state
+
+						*nextState = st_send_stuck;
+
+					break;
+					
+				case 0x02:	// try to continue current state beginning at re-sending data
+
+						*nextState = st_cont_data;
+
+					break;
+
+				default:
+
+					break;
+			}
+
+			break;
+		
 		default:	// invalid command
 
 			break;
@@ -276,7 +303,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		answer[2] = 0x15; // NACK
 	}
 
-	if(com_custom_push(answer, 3) != XST_SUCCESS){
+	if(com_push(answer, 3) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 
@@ -286,7 +313,7 @@ s32 com_checkCommands(u8* returnVal, states* nextState){
 		filename = NULL;
 	}
 
-	if(com_custom_free(readCommand) != XST_SUCCESS){
+	if(com_free(readCommand) != XST_SUCCESS){
 		returnValue = XST_FAILURE;
 	}
 

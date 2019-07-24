@@ -87,6 +87,9 @@ int main(){
 
 	u16 readTemp_start = 0;
 	u16 readTemp_end = 0;
+	
+	u32 repetition_counter = 0;
+	u32 repetitions = 0;
 
 	XTime t_blink_last, t_blink_current, t_blink_diff;
 	XTime t_activity_last, t_activity_current, t_activity_diff;
@@ -136,6 +139,10 @@ int main(){
 		goto MAIN_EXIT;
 	}
 	
+	// dirty workaround for problems with the Pynq-Z1
+	// somehow needs a pause between com_init() and com_setup()
+	usleep(3000000);
+	
 	// setup library
 	if(ah_scugic_setup() != XST_SUCCESS){
 		goto MAIN_EXIT;
@@ -163,14 +170,15 @@ int main(){
 		goto MAIN_EXIT;
 	}
 	
-	//START:
-
 	if(com_enable() != XST_SUCCESS){
 		goto MAIN_EXIT;
 	}
 
-	states state = st_wait_connection;
+	states state = st_idle;
+	states stuck_state = st_wait_connection;
 	states next_state = st_idle;
+	u8 send_state = st_idle;
+	
 	ah_gpio_setLED_raw(0);
 
 	checkVal = 0;
@@ -220,6 +228,10 @@ int main(){
 				error_value = 4;
 				goto MAIN_EXIT;
 			}
+		}
+
+		if(stuck_state == st_idle){
+			stuck_state = state;
 		}
 
 		switch(state){
@@ -295,7 +307,7 @@ int main(){
 
 							}
 
-							next_state = st_check_commands;
+							state = st_check_commands;
 						}
 
 					}
@@ -324,7 +336,13 @@ int main(){
 						goto MAIN_EXIT;
 					}
 
+					if(measurement_get_repetitions(&repetitions) != XST_SUCCESS){
+						error_value = 302;
+						goto MAIN_EXIT;
+					}
+
 					state = st_bin_load;
+					stuck_state = st_idle;
 
 				break;
 
@@ -360,7 +378,10 @@ int main(){
 						goto MAIN_EXIT;
 					}
 
+					repetition_counter = 0;
+
 					state = st_setup_meas;
+					stuck_state = st_idle;
 					
 				break;
 				
@@ -372,6 +393,7 @@ int main(){
 					}
 
 					state = st_start_meas;
+					stuck_state = st_idle;
 					
 				break;
 			
@@ -387,6 +409,7 @@ int main(){
 					ah_gpio_setLED(AH_GPIO_LED2, AH_GPIO_ON);
 
 					state = st_check_meas;
+					stuck_state = st_idle;
 					
 				break;
 				
@@ -406,6 +429,7 @@ int main(){
 						if(checkVal){
 							ah_gpio_setLED(AH_GPIO_LED3, AH_GPIO_ON);
 							state = st_transfer_data;
+							stuck_state = st_idle;
 						}
 						else{
 							state = st_check_data;
@@ -419,7 +443,17 @@ int main(){
 						}
 
 						if(checkVal){
-							state = st_check_bin;
+							
+							if(repetition_counter < repetitions){
+								++repetition_counter;
+								state = st_setup_meas;
+							}
+							else{
+								repetition_counter = 0;
+								state = st_check_bin;
+							}
+							
+							stuck_state = st_idle;
 						}
 						else{
 							state = st_check_data;
@@ -427,6 +461,49 @@ int main(){
 					}
 
 
+				break;
+			
+			case st_send_stuck:
+				
+					switch(stuck_state){
+						case st_idle : 				send_state = 0; break;
+						case st_wait_connection : 	send_state = 1; break;
+						case st_check_commands : 	send_state = 2; break;
+						case st_run_init : 			send_state = 3; break;
+						case st_bin_load : 			send_state = 4; break;
+						case st_check_bin :			send_state = 5; break;
+						case st_setup_meas : 		send_state = 6; break;
+						case st_start_meas : 		send_state = 7; break;
+						case st_check_data : 		send_state = 8; break;
+						case st_transfer_data : 	send_state = 9; break;
+						case st_send_stuck : 		send_state = 10; break;
+						case st_cont_data : 		send_state = 11; break;
+						case st_check_meas : 		send_state = 11; break;
+						case st_check_run : 		send_state = 13; break;
+						case st_check_errors : 		send_state = 14; break;
+						default : 					send_state = 15; break;
+					}
+
+					if(com_push(&send_state, 1) != XST_SUCCESS){
+							error_value = 1100;
+							goto MAIN_EXIT;
+					}
+					
+					state = st_check_commands;
+					stuck_state = st_idle;
+					
+				break;
+			
+			case st_cont_data:
+					
+					if(data_reset_sent(1) != XST_SUCCESS){
+						error_value = 1101;
+						goto MAIN_EXIT;
+					}
+						
+					state = st_transfer_data;
+					stuck_state = st_idle;
+						
 				break;
 				
 			case st_transfer_data:
@@ -448,6 +525,7 @@ int main(){
 					}
 					else{
 						state = st_check_data;
+						stuck_state = st_idle;
 					}
 					
 					ah_gpio_setLED(AH_GPIO_LED3, AH_GPIO_OFF);
@@ -470,6 +548,7 @@ int main(){
 						ah_gpio_setLED(AH_GPIO_LED2, AH_GPIO_OFF);
 
 						state = st_check_data;
+						stuck_state = st_idle;
 					}
 					else{
 						state = st_check_meas;
@@ -483,6 +562,7 @@ int main(){
 						error_value = 900;
 						goto MAIN_EXIT;
 					}
+					
 					if(checkVal){
 						if(bin_set_next(0) != XST_SUCCESS){
 							error_value = 901;
@@ -493,6 +573,8 @@ int main(){
 					else{
 						state = st_check_run;
 					}
+					
+					stuck_state = st_idle;
 
 				break;
 				
@@ -519,12 +601,19 @@ int main(){
 							error_value = 1003;
 							goto MAIN_EXIT;
 						}
+						
+						if(measurement_get_repetitions(&repetitions) != XST_SUCCESS){
+							error_value = 1004;
+							goto MAIN_EXIT;
+						}
 
 						state = st_bin_load;
 					}
 					else{
 						state = st_check_commands;
 					}
+					
+					stuck_state = st_idle;
 										
 				break;
 
