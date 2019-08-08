@@ -421,91 +421,29 @@ int main(){
 					}
 
 					if(checkVal){
-
-						if(measurement_check_data(&checkVal) != XST_SUCCESS){
-							error_value = 802;
-							goto MAIN_EXIT;
-						}
-						if(checkVal){
-							ah_gpio_setLED(AH_GPIO_LED3, AH_GPIO_ON);
-							state = st_transfer_data;
-							stuck_state = st_idle;
-						}
-						else{
-							state = st_check_data;
-						}
+						state = st_check_data;
+						stuck_state = st_check_data;
 					}
 					else{
-
-						if(data_check_sent(&checkVal) != XST_SUCCESS){
-							error_value = 803;
-							goto MAIN_EXIT;
-						}
-
-						if(checkVal){
-							
-							if(repetition_counter < repetitions){
-								++repetition_counter;
-								state = st_setup_meas;
-							}
-							else{
-								repetition_counter = 0;
-								state = st_check_bin;
-							}
-							
-							stuck_state = st_idle;
-						}
-						else{
-							state = st_check_data;
-						}
+						ah_gpio_setLED(AH_GPIO_LED3, AH_GPIO_ON);
+						state = st_process_data;
+						stuck_state = st_idle;
 					}
-
 
 				break;
-			
-			case st_send_stuck:
-				
-					switch(stuck_state){
-						case st_idle : 				send_state = 0; break;
-						case st_wait_connection : 	send_state = 1; break;
-						case st_check_commands : 	send_state = 2; break;
-						case st_run_init : 			send_state = 3; break;
-						case st_bin_load : 			send_state = 4; break;
-						case st_check_bin :			send_state = 5; break;
-						case st_setup_meas : 		send_state = 6; break;
-						case st_start_meas : 		send_state = 7; break;
-						case st_check_data : 		send_state = 8; break;
-						case st_transfer_data : 	send_state = 9; break;
-						case st_send_stuck : 		send_state = 10; break;
-						case st_cont_data : 		send_state = 11; break;
-						case st_check_meas : 		send_state = 11; break;
-						case st_check_run : 		send_state = 13; break;
-						case st_check_errors : 		send_state = 14; break;
-						default : 					send_state = 15; break;
-					}
 
-					if(com_push(&send_state, 1) != XST_SUCCESS){
-							error_value = 1100;
-							goto MAIN_EXIT;
-					}
-					
-					state = st_check_commands;
-					stuck_state = st_idle;
-					
-				break;
-			
-			case st_cont_data:
-					
-					if(data_reset_sent(1) != XST_SUCCESS){
-						error_value = 1101;
+			case st_process_data:
+
+					if(data_process_measurements(&checkVal) != XST_SUCCESS){
+						error_value = 1200;
 						goto MAIN_EXIT;
 					}
-						
+
 					state = st_transfer_data;
-					stuck_state = st_idle;
-						
+					stuck_state = st_process_data;
+
 				break;
-				
+
 			case st_transfer_data:
 					
 					if(data_send_measurements() != XST_SUCCESS){
@@ -524,11 +462,38 @@ int main(){
 						}
 					}
 					else{
-						state = st_check_data;
+						state = st_wait_transferred;
 						stuck_state = st_idle;
 					}
 					
 					ah_gpio_setLED(AH_GPIO_LED3, AH_GPIO_OFF);
+
+				break;
+			
+			case st_wait_transferred:
+
+				if(data_check_sent(&checkVal) != XST_SUCCESS){
+					error_value = 803;
+					goto MAIN_EXIT;
+				}
+
+				if(checkVal){
+
+					if(repetition_counter < repetitions){
+						++repetition_counter;
+						state = st_setup_meas;
+					}
+					else{
+						repetition_counter = 0;
+						state = st_check_bin;
+					}
+
+					stuck_state = st_idle;
+				}
+				else{
+					state = st_wait_transferred;
+					stuck_state = st_wait_transferred;
+				}
 
 				break;
 			
@@ -616,7 +581,43 @@ int main(){
 					stuck_state = st_idle;
 										
 				break;
+				
+			case st_send_stuck:
 
+					switch(stuck_state){
+						case st_idle : 				send_state = 0; break;
+						case st_wait_connection : 	send_state = 1; break;
+						case st_check_commands : 	send_state = 2; break;
+						case st_check_data : 		send_state = 3; break;
+						case st_process_data : 		send_state = 4; break;
+						case st_transfer_data : 	send_state = 5; break;
+						case st_cont_data : 		send_state = 6; break;
+						case st_check_errors : 		send_state = 7; break;
+						default : 					send_state = 15; break;
+					}
+
+					if(com_push(&send_state, 1) != XST_SUCCESS){
+							error_value = 1100;
+							goto MAIN_EXIT;
+					}
+
+					state = st_check_commands;
+					stuck_state = st_idle;
+
+				break;
+			
+			case st_cont_data:
+					
+					if(data_reset_sent(1) != XST_SUCCESS){
+						error_value = 1101;
+						goto MAIN_EXIT;
+					}
+						
+					state = st_transfer_data;
+					stuck_state = st_idle;
+						
+				break;
+				
 			case st_check_errors:
 
 					//ERROR_HANDLING:

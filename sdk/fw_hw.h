@@ -28,7 +28,6 @@ s32 hardware_check_finished(u8* returnVal);
 	
 s32 hardware_check_data(u8* returnVal);
 s32 hardware_get_data(u32* addr, u32* len);
-s32 hardware_get_received(u32* returnVal);
 s32 hardware_insert_temperature_data(u16 temp_start, u16 temp_end);
 
 s32 bin_insert(u16 id, char* filename, u8* mem, u8 isPartial);

@@ -2,6 +2,7 @@
 
 #include "fw_hw.h"
 #include "fw_meas.h"
+#include "fw_data.h"
 
 #include "fw_settings.h"
 
@@ -83,7 +84,7 @@ s32 measurement_check_missing(u8* returnVal){
 	u32 hw_data_received = 0;
 	u32 expected_data = 0;
 
-	if(hardware_get_received(&hw_data_received) != XST_SUCCESS){
+	if(data_get_received(&hw_data_received) != XST_SUCCESS){
 		return XST_FAILURE;
 	}
 

@@ -44,8 +44,6 @@ u32 number_samples = 0;
 u32 buffer_start = 0;
 u32 buffer_end = 0;
 
-u32 data_received = 0;
-
 // array for storing the interrupts occured
 volatile u8 interrupts[INTERRUPT_CNT];
 
@@ -117,8 +115,6 @@ s32 hardware_reset(void){
 	
 	interrupts[INTERRUPT_MEASUREMENT_DONE] = FALSE;
 	interrupts[INTERRUPT_TRANSFER_DONE] = FALSE;
-
-	data_received = 0;
 
 	if(ah_cpu2pl_write(XPAR_AH_CPU2PL_0_DEVICE_ID, PORT_CPU2PL_CMD, CPU2PL_CMD_STOP) != XST_SUCCESS){
 		return XST_FAILURE;
@@ -250,19 +246,16 @@ s32 hardware_check_data(u8* returnVal){
 
 s32 hardware_get_data(u32* addr, u32* len){
 
-	*addr = (u32)data_buffer;
-	*len = number_samples * DATA_BYTES;
-	
-	data_received += *len;
+	if(interrupts[INTERRUPT_MEASUREMENT_DONE] == TRUE){
+		*addr = (u32)data_buffer;
+		*len = number_samples * DATA_BYTES;
+	}
+	else{
+		*addr = 0;
+		*len = 0;
+	}
 
 	return XST_SUCCESS;	
-}
-
-s32 hardware_get_received(u32* returnVal){
-
-	*returnVal = data_received;
-
-	return XST_SUCCESS;
 }
 
 s32 hardware_check_finished(u8* returnVal){
@@ -338,8 +331,6 @@ s32 bin_load_current(void){
 
 		binfile_current = binfile_current->next;
 	}
-
-	data_received = 0;
 
 	program_partial(binfile_current);
 
