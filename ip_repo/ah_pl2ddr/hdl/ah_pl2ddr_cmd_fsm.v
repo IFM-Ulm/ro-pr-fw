@@ -365,7 +365,7 @@ module ah_pl2ddr_cmd_fsm #(
 							rg_error <= 0;
 							rg_transfer_active <= 0;
 														
-							rg_wait_counter <= 2;
+							rg_wait_counter <= RESET_WAIT;
 							state <= WAIT;
 						end
 						
