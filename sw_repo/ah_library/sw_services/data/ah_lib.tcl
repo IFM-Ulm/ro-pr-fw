@@ -25,7 +25,7 @@ proc ah_drc {libhandle} {
 	set xadc_activated [get_property CONFIG.xadc $libhandle]
 	set pmod_activated [get_property CONFIG.pmod $libhandle]
 
-	if {$property_board == "digilentinc.com:zybo:part0:1.0" || $property_family == "zynq"} {
+	if { $property_family == "zynq" } {
 		if {!$scugic_activated && $timer_activated} {
 			error "ERROR: SCUGIC option needed for TIMER"
 		}
@@ -122,6 +122,15 @@ proc xgen_opts_file {libhandle} {
 		set sws_id2 "sws_2bits"
 		set btn_id1 "btns_4bits_tri_"
 		set btn_id2 "btns_4bits"
+	}  elseif {$property_board == "digilentinc.com:zybo-z7-20:part0:1.0"} {
+		# ZYBO Z7-20
+		puts $file_handle "#define AH_BOARD_ZYBO"
+		set led_id1 "leds_4bits_tri_"
+		set led_id2 "leds_4bits"
+		set sws_id1 "sws_4bits_tri_"
+		set sws_id2 "sws_4bits"
+		set btn_id1 "btns_4bits_tri_"
+		set btn_id2 "btns_4bits"
 	} else {
 		puts $file_handle [format "/* unknown board: %s */" $property_board]
 		set led_id1 "leds_unknown"
@@ -132,7 +141,7 @@ proc xgen_opts_file {libhandle} {
 		set btn_id2 "btns_unknown"
 	}
 	
-	if {$property_board == "digilentinc.com:zybo:part0:1.0" || $property_family == "zynq"} {
+	if { $property_family == "zynq" } {
 		
 		set scugic_activated [get_property CONFIG.scugic $libhandle]
 		if {$scugic_activated == true} {
@@ -178,6 +187,10 @@ proc xgen_opts_file {libhandle} {
 				# pynq
 				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_0_DEVICE_ID"
 				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_0_INTR"
+			} elseif {$property_board == "digilentinc.com:zybo-z7-20:part0:1.0"} {
+				# zybo
+				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID"
+				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_1_INTR"
 			} else {
 				error "can't create UART defines - board not supported"
 			}
