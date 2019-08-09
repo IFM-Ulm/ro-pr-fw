@@ -19,7 +19,7 @@ if { $fw_flow_execute != $fw_flow_current } {
 
 set property_board [get_property BOARD [current_project]]
 # if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "em.avnet.com:zed:part0:1.4" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0"} { 
-if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0"} { 
+if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0" && $property_board != "digilentinc.com:zybo-z7-20:part0:1.0"} {
 	error "unknown board detected, not supported"
 }
 
@@ -29,7 +29,7 @@ if { ! [file exists [format "%s/settings_debug.tcl" $project_generated_sources_t
 	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
 	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
 	puts $debugfile "# DEBUG = 2 : omit constraint creation"
-	puts $debugfile "# DEBUG = 3 : omit constraint creation, restrict to $DEBUG_RUNS child run"
+	puts $debugfile "# DEBUG = 3 : omit constraint creation, restrict to number of DEBUG_RUNS child run"
 	puts $debugfile ""
 	puts $debugfile "global DEBUG"
 	puts $debugfile "set DEBUG 1"
