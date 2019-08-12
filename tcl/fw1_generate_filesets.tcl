@@ -1,5 +1,6 @@
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+source -notrace [format "%s/settings_compability.tcl" $project_sources_tcl]
 
 set fw_flow_current 1
 global call_by_script
@@ -17,11 +18,7 @@ if { $fw_flow_execute != $fw_flow_current } {
 	error "wrong call order of files, current call index is 1, expected call index is $fw_flow_execute"
 }
 
-set property_board [get_property BOARD [current_project]]
-# if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "em.avnet.com:zed:part0:1.4" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0"} { 
-if {$property_board != "digilentinc.com:zybo:part0:1.0" && $property_board != "www.digilentinc.com:pynq-z1:part0:1.0" && $property_board != "digilentinc.com:zybo-z7-20:part0:1.0"} {
-	error "unknown board detected, not supported"
-}
+check_board_supported
 
 if { ! [file exists [format "%s/settings_debug.tcl" $project_generated_sources_tcl]] } {
 	set debugfile [open [format "%s/settings_debug.tcl" $project_generated_sources_tcl] "w+"]

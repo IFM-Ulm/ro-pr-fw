@@ -1,11 +1,21 @@
 # # create with the following command:
 # write_bd_tcl -force -no_project_wrapper -no_ip_version cr_bd_system.tcl
+# # append the following lines
+# # at the start of the function:
+# source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
+# source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
+# # after the call of the two lines"set processing_system7_0 ..." and "apply_bd_automation ..."
+# ps_apply_board_settings
+
 # # call like:
 # source -quiet D:/FPGA_PUFs/RO/pynq_fw/src/bd/cr_bd_system.tcl
 # cr_bd_system ""
 
 # Proc to create BD system
 proc cr_bd_system { parentCell } {
+
+	source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
+	source -notrace [format "%s/settings_compability.tcl" $project_sources_tcl]
 
   # CHANGE DESIGN NAME HERE
   set design_name system
@@ -227,25 +237,8 @@ proc cr_bd_system { parentCell } {
   set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7 processing_system7_0 ]
   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  $processing_system7_0
   
-  
-  
-  set property_board [get_property BOARD [current_project]]
-	if {$property_board == "digilentinc.com:zybo:part0:1.0"} {
-		# zybo
-		set_property -dict [list CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32} CONFIG.PCW_IRQ_F2P_INTR {1} CONFIG.PCW_QSPI_PERIPHERAL_ENABLE {0} CONFIG.PCW_ENET0_PERIPHERAL_ENABLE {1} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0} CONFIG.PCW_USB0_PERIPHERAL_ENABLE {0}] $processing_system7_0
-	} elseif {$property_board == "em.avnet.com:zed:part0:1.4"} {
-		# zedboard
-		set_property -dict [list CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32} CONFIG.PCW_IRQ_F2P_INTR CONFIG.PCW_QSPI_PERIPHERAL_ENABLE {0} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0} CONFIG.PCW_USB0_PERIPHERAL_ENABLE {0}] $processing_system7_0
-	} elseif {$property_board == "www.digilentinc.com:pynq-z1:part0:1.0"} {
-		# pynq
-		set_property -dict [list CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32} CONFIG.PCW_IRQ_F2P_INTR {1} CONFIG.PCW_QSPI_PERIPHERAL_ENABLE {0} CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_USB0_PERIPHERAL_ENABLE {0}] [get_bd_cells processing_system7_0]
-	} elseif {$property_board == "digilentinc.com:zybo-z7-20:part0:1.0"} {
-		# zybo-z7-20
-		set_property -dict [list CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32} CONFIG.PCW_IRQ_F2P_INTR {1} CONFIG.PCW_QSPI_PERIPHERAL_ENABLE {0} CONFIG.PCW_USB0_PERIPHERAL_ENABLE {0}] [get_bd_cells processing_system7_0]
-	} else {
-		error "can't create ZYNQ PS - board not supported"
-	}
-
+	# from settings_project.tcl
+	ps_apply_board_settings
 
 
   # Create instance: ps7_0_axi_periph, and set properties

@@ -1,5 +1,5 @@
 set project_part [get_property PART [current_project]]
-puts "found part is $project_part"
+puts "property part is $project_part"
 
 if { $project_part == "xc7z010clg400-1" } {
 		
