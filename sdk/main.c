@@ -98,11 +98,6 @@ int main(){
 
 	Xil_DCacheDisable();
 
-	// check validity of TIME_DIV = COUNTS_PER_SECOND / 1000000
-	if(((u64)(COUNTS_PER_SECOND/1000000)) != TIME_DIV){
-		error_value = 999;
-		goto MAIN_EXIT;
-	}
 	time_div = (u64)(COUNTS_PER_SECOND/1000000);
 
 	// init library 
