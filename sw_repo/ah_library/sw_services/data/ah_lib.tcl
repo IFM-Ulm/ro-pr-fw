@@ -179,7 +179,7 @@ proc xgen_opts_file {libhandle} {
 				# zybo
 				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID"
 				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_1_INTR"
-			} elseif {$property_board == "em.avnet.com:zed:part0:1.4"} {
+			} elseif {$property_board == "em.avnet.com:zed:part0:1.4" || $property_board == "digilentinc.com:zedboard:part0:1.0"} {
 				# zedboard
 				puts $file_handle "#define AH_UART_DEVICE_ID XPAR_PS7_UART_1_DEVICE_ID"
 				puts $file_handle "#define AH_UART_INTR XPAR_XUARTPS_1_INTR"
