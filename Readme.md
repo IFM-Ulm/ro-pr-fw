@@ -93,8 +93,10 @@ The following figure shows a schematic view of the counters, which are explained
 #### Ring-Oscillators
 The ring-oscillators are implemented in the verilog module ro4.v, a schematic is shown the following figures.
 
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_transparent.png "ring-oscillator schematic view")
 ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_bot_transparent.png "ring-oscillator in bottom SLICE")
 ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_top_transparent.png "ring-oscillator in top SLICE")
+
 
 Their only module ports are the input enable and the oscillation output.
 Four hard-macro instances of LUT6 elements are connected in series with an additional feedback from the last LUT6 to the first LUT6.
@@ -224,7 +226,7 @@ As the project itself is intended to be controlled by a user, an exemplary Pytho
 For installing the package dependencies, the python module checkPackages.py can be called.
 The python GUI for measuring and plotting can be started by calling the python module gui_controlPanel.py, its interface is shown in the following figures.
 
-![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/guimeas.png "Python GUI connected")
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/gui_connected.png "Python GUI connected")
 
 ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/gui_measuring.png "Python GUI measuring")
 
@@ -374,4 +376,4 @@ Place the file BOOT.bin on a SD-Card and connnect it to the repsective board, se
 
 
 ## License
-This project is licensed under the GNU General Public License v3.0 License - see the * ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
+This project is licensed under the GNU General Public License v3.0 License - see the ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
