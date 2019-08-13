@@ -26,7 +26,7 @@ The application is controlled by the user over UART by writing defined commands 
 After setting specific measurement parameters, like number of readouts, evaluation time and mode of measurement, the application autonomously starts the measurements.
 The results are sent back to the user over UART for further use and analysis.
 
-## Description of the whole design
+## Description of the whole Design
 
 This project is created in project-mode with a set of tcl-files provided as a framework.
 The whole setup flow is fully autonomous and only requires a pre-setup project with a defined board.
@@ -38,7 +38,7 @@ In these steps, different task are fulfilled, like creating the static parts and
 
 The hardware is organized in a toplevel verilog module, which instantiates the block design wrapper and the measurement control module.
 
-#### Block design
+#### Block Design
 
 The block design *system*, shown in the following figure, functions as the interconnection between the software application and the measurement control module.
 Its main part consists of two custom IPs, which were designed for ease of usage in our institute by one of the authors.
@@ -123,7 +123,7 @@ A brief overview is given in the following list:
 * fw_datatypes.h - contains definition of communication data structs included in other files
 
 
-#### Measurement procedure
+#### Measurement Procedure
 
 In the main() function (main.c), the initialization of the PS and library functionality is executed first and the DCache is disabled for proper functionality of the IP AH_PL2DDR.
 
@@ -175,7 +175,7 @@ If the respective command requires more data, it then follows in an individual o
     * id: 2 bytes (u16)
     * mode parallel (0x01) / serial (0x00): 1 byte
     * number of readouts: 4 bytes (u32)
-    * evaluation time (macro selection from \emph{fw_impl_custom.h}): 4 bytes
+    * evaluation time (macro selection from fw_impl_custom.h): 4 bytes
     * number of heatup oscillations (omitting storage): 4 bytes (u32)
     * cooldown (in clock cycles after each measurement): 4 bytes (u32)
   * start all measurement stored in list: sub-command byte: 0x03
@@ -197,7 +197,7 @@ For each bitstream file in the list, the current measurement is executed and the
 * temperate read from XADC after the measurement: 2 bytes (u16)
 * measurement results packets, repetition defined by number of readouts:
   * mode parallel
-    * measured ring-oscillators: 32 (RO_PER_BIN \footnote{number of ring-oscillators per bitstream, static parameter defined in the verilog measurement module}) x 4 bytes (u32)
+    * measured ring-oscillators: 32 (RO_PER_BIN - number of ring-oscillators per bitstream, static parameter defined in the verilog measurement module) x 4 bytes (u32)
     * reference ring-oscillator: 4 bytes (u32)
   * mode serial
     * measured ring-oscillator \#1: 4 bytes (u32)
@@ -214,8 +214,8 @@ In the beginning, the command, sub-command and status are sent as an acknowledgm
 ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/example_bitstream_transparent.png "exemplary response")
 
 When measuring the Zybo, a total of 124 bitstream binaries are used.
-For parallel measurements with 10000 readouts, the expected data send from the board then sums up to: 124 binaries $\cdot$ (4 temperature bytes + 4 bytes $\cdot$ (32 ring-oscillators + 1 reference)) = 163680496 bytes.
-For serial measurements with 10000 readouts, the expected data send from the board then sums up to: 124 binaries $\cdot$ (4 temperature bytes + 4 bytes $\cdot$ (1 ring-oscillators + 1 reference) $\cdot$ 32)) = 317440496 bytes.
+For parallel measurements with 10000 readouts, the expected data send from the board then sums up to: 124 binaries x (4 temperature bytes + 4 bytes x (32 ring-oscillators + 1 reference)) = 163680496 bytes.
+For serial measurements with 10000 readouts, the expected data send from the board then sums up to: 124 binaries x (4 temperature bytes + 4 bytes x (1 ring-oscillators + 1 reference) x 32)) = 317440496 bytes.
 
 
 #### Python Test Module
@@ -243,5 +243,135 @@ When the measurement is executed, the program receives the byte-stream from the 
 An in-depth explanation of the data format can be found in [DATA].
 
 When the measurements are finished, a minimalistic visualizer can be started, which plots the results stored in the .csv output files.
-An example of the plot results is shown in Section\,\ref{results}.
+An example of the plot results is shown in the following pictures.
 
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/gui_plot.png "Plot of measurement results as transient")
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/gui_mean.png "Plot of measurement results as mean")
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/gui_std.png "Plot of measurement results as std")
+
+## Scientific Results
+
+With the help of this framework, we could measure and analyze many statistics of the XC7Z010-1CLG400C on the Zybo.
+The full results were published in [HOST2019](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
+
+E.g. we identified a few coordinates on the chip, for which the extracted netdelays predicted a strong bias, which was confirmed by the measurement results.
+We could also show that the ring-oscillators in the corners of the FPGA have a slightly higher frequency then ring-oscillators in the middle of the chip, as shown in the following figure.
+
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/mean_mean_norm_transparent.png "Heatmap view of the mean frequencies of the ring-oscillators placed on the Zynq-Z7010, averaged over multiple boards")
+
+In addition, ring-oscillators in the top of the chip tend to have a larger deviation from their mean value.
+We also showed that the strongest noise deviations of ring-oscillators come from board wide disturbances as the measured counter values of an individual ring-oscillator showed deviations similar to the ones of the reference ring-oscillator.
+The measurement data were published in our University Open Access Repository [OPARU](http://dx.doi.org/10.18725/OPARU-14107 "http://dx.doi.org/10.18725/OPARU-14107").
+
+## Getting Started
+
+Up to now, the project was used for the following boards:
+* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zybo/start "Zybo")
+* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zedboard/start "Zedboard")
+* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/pynq-z1/start "Pynq")
+* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zybo-z7/reference-manual "Zybo Z7 (20)")
+
+These restrictions result from the fact that for each individual board, the external peripherials differ, e.g. the connected memory controller, the assignment of the COM-Port to either UART0 or UART1 etc.
+For different Zynq chips, the placement parameters differ, e.g. the possible areas of placement, the indices of non-reprogrammable SLICES.
+
+### Prerequisites
+
+* Xilinx Vivado Design Suite
+* Project open in project flow created with a board file
+
+### Portability and Adaptions
+For adaptions to other boards and Zynq chips, a few files have to be adapted:
+
+* tcl/settings_compability.tcl - contains the functions check_board_supported and ps_apply_board_settings
+* tcl/settings_project.tcl - contains coordinates of specific Zynq chips, describing the possible partial areas to be used, prohibited areas and the maximum dimensions
+* sw_repo/ah_library/sw_services/data/ah_lib.tcl - checks for zynq family, makes gpio available for known boards
+
+### Framework Usage
+Apart from these files, creating the full project flow is generalized and the same for all boards and Zynq chips.
+First, the user has to create a project and only define the board in the last tab of the project creation wizard by selecting the intended board files (no other files included or created).
+Afterwards, the tcl files contained in the folder \emph{tcl} have to be called in numerical order as follows:
+
+* fw1_generate_filesets.tcl - imports all necessary files, creates the required filesets and creates the block design
+* fw2_generate_partialflow.tcl - enables the Partial Reconfiguration flow, creates the partition definition and modules and the toplevel runs
+* fw3_generate_statics.tcl - runs the synthesis and creates the static contraints 
+* fw4_generate_runs.tcl - creates the child implementation and its dedicated partial contraints
+* fw5_run_impl.tcl - runs all implementation runs and generates all bitstreams
+* fw6_convert_bin.tcl - converts the .bit files to .bin files for PCAP usage
+* fw7_generate_sdk_projects.tcl - creates and compiles the baremetal application, the FSBL and the BOOT.BIN file
+* fw8_extract_delays.tcl - extract all netdelays of the individual ring-oscillators from each implementation run
+
+
+#### Project Creation Flow
+In general, by calling all the tcl scripts in order, the following work flow is executed.
+First, two static filesets are generated with static constraints as a base for two static implementation runs.
+They contain the definition of partial areas, timing constraints and place+route constraints for a static reference oscillator.
+With these two runs and the partial areas, the chip area is divided by half, as illustrated in the following figure.
+The static area contains all measurement control logic and the IPs from the block design.
+The partial area contains no logic at all, but will be filled with ring-oscillators when the file fw4_generate_runs.tcl is called.
+For the second parent implementation, both areas are swapped.
+
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/chip_transparent.png "Chip area divided into a static and a partial area")
+
+
+#### Place and Route
+The algorithm in the file fw4_generate_runs.tcl loads pre-defined coordinate lists, which declare the chip area, areas which are capable of partial reconfiguration and areas which can not reconfigured.
+Two loops then iterate over each parent implementation and start to create their respective child implementation runs.
+This is done by opening the base synthesis run and placing ring-oscillators in a checkerboard like pattern as illustrated in the following figure.
+
+![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_bin_placement_transparent.png "Ring-oscillator placement pattern over multiple child implementations")
+
+In this example, one child implementation run uses the constraints, which places ring-oscillators in SLICEs marked with ''A'', another child implementation places them in SLICEs marked with ''B''.
+By running the placement algorithm until no further placement is possible, the whole chip area is successively covered.
+The placement algorithm itself can be found in the file\emph{help_create_constrsets_runs.tcl}, but it only calculates coordinates at which ring-oscillators can be placed.
+For the placement itself, a sub-function defined in \emph{impl_place_route_ro4.tcl} is then called with these coordinates propagated.
+With this hierarchical approach, it is easy to change the underlying ring-oscillator with a different implementation or even a different type of circuit.
+
+Two necessary files for data analysis are created when the implementation runs are created.
+
+The file config.csv contains a list of all ring-oscillators in the design as a comma-separated list.
+Each row identifies one ring-oscillator by its respective constraint set (e.g. constr_1_0032), a run identifier (e.g. t1i1r02), its index within the constraint set and its x- and y-coordinates.
+An additional 1/0 identifier at the end of each row provides information, if the placement was valid.
+The place+route algorithm always has to place the same amount of ring-oscillators.
+But when the boundaries of the chip are reached, some of them have to be ''misplaced'' and thus are marked invalid.
+
+The file params.csv contains some additional information (row-wise) about the design itself: an identifier, the number off ring-oscillators per bitstream, the number of partial bitstreams for parent implementation 1 and 2, the total number of partial bitstreams and the file sizes of the .bin files.
+
+A textual summary of the run creation is provided in the file \emph{placement_results.txt}.
+
+#### Creating the SD-Card image
+The framework flow following the creation of the partial constraint sets and runs is straight-forward.
+All runs are executed up to the step write_bitstream and the parent/child bitstreams are then converted to .bin files, which can be used to re-program the FPGA by loading them with the PCAP interface in the PS.
+Afterwards, xsct is used to create the SDK projects, generate the FSBL and compile the measurement .elf file.
+Finally, the initial toplevel bitstream, the FSBL and the application ELF are bind together as a bootable BOOT.bin file.
+
+
+#### Net Delay Extraction
+An optional file for extracting the net delays is provided as fw8_extract_delays.tcl.
+It re-opens each implementation run and extract the calculated net delays between the LUTs of the ring-oscillators and stores them in the files netdelays.csv and netdelays_ref.csv (for the reference ring-oscillators).
+
+
+#### Framework Output
+Apart from the Vivado project, the framework also creates a folder in the project folder with many additional files, listed as follows:
+
+* bitstreams - folder containing all the converted .bin files and the file BOOT.BIN, to be placed on the SD-Card
+* bitstreams/config.csv - file containing information about each ring-oscillator, e.g. coordinates and validity
+* bitstreams/netdelays.csv - file containing netdelays of each net of each ring-oscillator
+* bitstreams/netdelays_ref.csv - file containing netdelays of each net of both reference ring-oscillator (one per parent implementation)
+* bitstreams/params.csv - file containing implementation parameter, e.g. number of ring-oscillators per binary and binaries per parent implementation
+* bitstreams/placement_results.txt - file with additional information about the placements
+* constr - folder containing all generated constraints per child implementation run
+* sdk - folder containing generated files to be used in the baremetal application, e.g. fw_impl_generated.h and the .bif file
+* tcl - folder containing additional .tcl files with variable content
+* tcl/settings_jobs.tcl - file providing settings for running the implementations with multiple jobs
+
+### Deployment
+
+Place the file BOOT.bin on a SD-Card and connnect it to the repsective board, set the jumpers correctly for SD-Card boot.
+
+### Measuring
+
+
+
+
+## License
+This project is licensed under the GNU General Public License v3.0 License - see the * ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
