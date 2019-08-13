@@ -27,7 +27,7 @@ After setting specific measurement parameters, like number of readouts, evaluati
 The results are sent back to the user over UART for further use and analysis.
 
 Results and analysis of a data set extracted from 20 boards were presented and published on the [2019 IEEE International Symposium on Hardware Oriented Security and Trust (HOST)](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
-The framework (project name: Partial Reconfiguration for chip characterization) was submitted to the Xilinx Open Hardware Design Contest 2019 competition and ranked as finalist in the PhD category [OpenHW 2019](http://www.openhw.eu/2019-finalists.html "http://www.openhw.eu/2019-finalists.html").
+The framework (project name: Partial Reconfiguration for chip characterization) was submitted to the [Xilinx Open Hardware Design Contest 2019](http://www.openhw.eu/2019-finalists.html "http://www.openhw.eu/2019-finalists.html") and ranked as finalist in the PhD category.
 
 ## Description of the whole Design
 
