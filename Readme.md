@@ -88,15 +88,15 @@ The timers used in this verilog module are custom instances of the DSP48 modules
 The counters are also DSP48 modules with a custom parameter set, which routes the up-counting signals only internally, enabling the DSP48 counter for larger frequencies compared to the hard macros with external routing.
 The following figure shows a schematic view of the counters, which are explained in-depth in [HOST2019](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
 
-<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/dsp48_transparent.png" width="400">
+<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/dsp48_transparent.png" width="600">
 
 
 #### Ring-Oscillators
 The ring-oscillators are implemented in the verilog module ro4.v, a schematic is shown the following figures.
 
-![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_transparent.png "ring-oscillator schematic view")
-![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_bot_transparent.png "ring-oscillator in bottom SLICE")
-![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_top_transparent.png "ring-oscillator in top SLICE")
+<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_transparent.png" width="400">
+<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_bot_transparent.png" width="400">
+<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/ro_schematic_top_transparent.png" width="400">
 
 
 Their only module ports are the input enable and the oscillation output.
