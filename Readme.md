@@ -86,7 +86,7 @@ When the full number of readouts is achieved, an interrupt register is set in CH
 
 The timers used in this verilog module are custom instances of the DSP48 modules, parameterized as counters, which stop after a specified number of clock cycles, according to their intended evaluation time.
 The counters are also DSP48 modules with a custom parameter set, which routes the up-counting signals only internally, enabling the DSP48 counter for larger frequencies compared to the hard macros with external routing.
-The following figure shows a schematic view of the counters, which are explained in-depth in [HOST2019].
+The following figure shows a schematic view of the counters, which are explained in-depth in [HOST2019](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
 
 ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/dsp48_transparent.png "DSP48 as fast incremental counter")
 
@@ -268,10 +268,10 @@ The measurement data were published in our University Open Access Repository [OP
 ## Getting Started
 
 Up to now, the project was used for the following boards:
-* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zybo/start "Zybo")
-* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zedboard/start "Zedboard")
-* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/pynq-z1/start "Pynq")
-* ![alt text](https://reference.digilentinc.com/reference/programmable-logic/zybo-z7/reference-manual "Zybo Z7 (20)")
+* ![Zybo](https://reference.digilentinc.com/reference/programmable-logic/zybo/start "Zybo")
+* ![Zedboard](https://reference.digilentinc.com/reference/programmable-logic/zedboard/start "Zedboard")
+* ![Pynq](https://reference.digilentinc.com/reference/programmable-logic/pynq-z1/start "Pynq")
+* ![Zybo Z7 (20)](https://reference.digilentinc.com/reference/programmable-logic/zybo-z7/reference-manual "Zybo Z7 (20)")
 
 These restrictions result from the fact that for each individual board, the external peripherials differ, e.g. the connected memory controller, the assignment of the COM-Port to either UART0 or UART1 etc.
 For different Zynq chips, the placement parameters differ, e.g. the possible areas of placement, the indices of non-reprogrammable SLICES.
@@ -376,4 +376,4 @@ Place the file BOOT.bin on a SD-Card and connnect it to the repsective board, se
 
 
 ## License
-This project is licensed under the GNU General Public License v3.0 License - see the ![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
+This project is licensed under the GNU General Public License v3.0 License - see the ![License.md](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
