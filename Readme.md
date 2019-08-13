@@ -6,7 +6,7 @@ By utilizing non-reproducible and unpredictable manufacturing deviations, these 
 Since 2016, Xilinx provides such a functionality as an integrated circuit, but limits its usage to Zynq UltraScale+ devices.
 On FPGAs, especially ring-oscillators are known to provide the most reliable readouts and, in combination with their easy implementation, provide an alternative for low-cost devices.
 
-In this project, we use ring-oscillators as a measurement tool for chip characterization.
+In this project, use ring-oscillators are used as a measurement tool for chip characterization.
 A ring-oscillator is build with all four Lookup-Tables in a single SLICE, interconnected with a fixed routing.
 By activating it for a specified time (evaluation time) and counting the number of oscillations as the number of rising edges at the ring-oscillators output, an individual frequency can be calculated.
 By successively placing ring-oscillators on the whole chip area, a frequency heatmap can be derived.
@@ -25,6 +25,9 @@ It loads the bitfiles from the SD-Card and programs them one after another to th
 The application is controlled by the user over UART by writing defined commands over the assigned COM-Port.
 After setting specific measurement parameters, like number of readouts, evaluation time and mode of measurement, the application autonomously starts the measurements.
 The results are sent back to the user over UART for further use and analysis.
+
+Results and analysis of a data set extracted from 20 boards were presented and published on the [2019 IEEE International Symposium on Hardware Oriented Security and Trust (HOST)](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
+The framework (project name: Partial Reconfiguration for chip characterization) was submitted to the Xilinx Open Hardware Design Contest 2019 competition and ranked as finalist in the PhD category [OpenHW 2019](http://www.openhw.eu/2019-finalists.html "http://www.openhw.eu/2019-finalists.html").
 
 ## Description of the whole Design
 
