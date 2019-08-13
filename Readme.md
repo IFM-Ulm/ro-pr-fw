@@ -295,7 +295,7 @@ For adaptions to other boards and Zynq chips, a few files have to be adapted:
 ### Framework Usage
 Apart from these files, creating the full project flow is generalized and the same for all boards and Zynq chips.
 First, the user has to create a project and only define the board in the last tab of the project creation wizard by selecting the intended board files (no other files included or created).
-Afterwards, the tcl files contained in the folder \emph{tcl} have to be called in numerical order as follows:
+Afterwards, the tcl files contained in the folder tcl have to be called in numerical order as follows:
 
 * fw1_generate_filesets.tcl - imports all necessary files, creates the required filesets and creates the block design
 * fw2_generate_partialflow.tcl - enables the Partial Reconfiguration flow, creates the partition definition and modules and the toplevel runs
@@ -328,8 +328,8 @@ This is done by opening the base synthesis run and placing ring-oscillators in a
 
 In this example, one child implementation run uses the constraints, which places ring-oscillators in SLICEs marked with ''A'', another child implementation places them in SLICEs marked with ''B''.
 By running the placement algorithm until no further placement is possible, the whole chip area is successively covered.
-The placement algorithm itself can be found in the file\emph{help_create_constrsets_runs.tcl}, but it only calculates coordinates at which ring-oscillators can be placed.
-For the placement itself, a sub-function defined in \emph{impl_place_route_ro4.tcl} is then called with these coordinates propagated.
+The placement algorithm itself can be found in the file help_create_constrsets_runs.tcl, but it only calculates coordinates at which ring-oscillators can be placed.
+For the placement itself, a sub-function defined in impl_place_route_ro4.tcl is then called with these coordinates propagated.
 With this hierarchical approach, it is easy to change the underlying ring-oscillator with a different implementation or even a different type of circuit.
 
 Two necessary files for data analysis are created when the implementation runs are created.
@@ -342,7 +342,7 @@ But when the boundaries of the chip are reached, some of them have to be ''mispl
 
 The file params.csv contains some additional information (row-wise) about the design itself: an identifier, the number off ring-oscillators per bitstream, the number of partial bitstreams for parent implementation 1 and 2, the total number of partial bitstreams and the file sizes of the .bin files.
 
-A textual summary of the run creation is provided in the file \emph{placement_results.txt}.
+A textual summary of the run creation is provided in the file placement_results.txt.
 
 #### Creating the SD-Card image
 The framework flow following the creation of the partial constraint sets and runs is straight-forward.
