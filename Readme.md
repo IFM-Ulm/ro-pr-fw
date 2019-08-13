@@ -88,7 +88,8 @@ The timers used in this verilog module are custom instances of the DSP48 modules
 The counters are also DSP48 modules with a custom parameter set, which routes the up-counting signals only internally, enabling the DSP48 counter for larger frequencies compared to the hard macros with external routing.
 The following figure shows a schematic view of the counters, which are explained in-depth in [HOST2019](https://ieeexplore.ieee.org/document/8740832 "https://ieeexplore.ieee.org/document/8740832").
 
-![alt text](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/dsp48_transparent.png "DSP48 as fast incremental counter")
+<img src="https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/doc/figures/dsp48_transparent.png" width="400">
+
 
 #### Ring-Oscillators
 The ring-oscillators are implemented in the verilog module ro4.v, a schematic is shown the following figures.
