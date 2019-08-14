@@ -376,8 +376,17 @@ Place the file BOOT.bin on a SD-Card and connnect it to the repsective board, se
 
 ### Measuring
 
+An exemplary matlab framework for measuring is provided in the sub-folder "matlab", with the most important files listed as follows:
 
+* fw_custom_settings.m - contains all settings required for the measurements setup, e.g. number of readouts, mode of measurement but also setup specfic settings such as communication protocol and board type
+* fw_meas_control.m - exemplary measurement loop for multiple boards and possibly temperature control 
 
+### Post-processing
+
+Exemplary matlab files for post-processing measurement data files are provided in the sub-folder "matlab", with the most important files listed as follows:
+
+* import_csv.m - converts the .csv output files into matlab files required in the data extraction
+* read_data.m - read the measurements, extract the data from binary files created in fw_meas_control and stored them as matlab files
 
 ## License
 This project is licensed under the GNU General Public License v3.0 License - see the ![License.md](https://raw.githubusercontent.com/IFM-Ulm/ro-pr-fw/master/License.md "License.md") file for details
