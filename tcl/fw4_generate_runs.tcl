@@ -266,7 +266,7 @@ incr ro_counter $pr_counter
 
 set resultId [open [format "%s/placement_results.txt" $project_bitstreams] "a+"]
 puts $resultId ""
-puts $resultId [format "ro_counter (impl_2): %d" [expr { $ro_counter - $pr_counter }]]
+puts $resultId [format "ro_counter (impl_2): %d" $pr_counter]
 puts $resultId [format "bin_counter (impl_2): %d" [expr { $bin_counter - $bin_counter_prev }]]
 puts $resultId ""
 close $resultId

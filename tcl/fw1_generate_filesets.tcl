@@ -24,13 +24,12 @@ if { ! [file exists [format "%s/settings_debug.tcl" $project_generated_sources_t
 	set debugfile [open [format "%s/settings_debug.tcl" $project_generated_sources_tcl] "w+"]
 	
 	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
-	puts $debugfile "# DEBUG = 1 : restrict to DEBUG_RUNS child runs"
 	puts $debugfile "# DEBUG = 2 : omit constraint creation"
 	puts $debugfile "# DEBUG = 3 : omit constraint creation, restrict to number of DEBUG_RUNS child run"
 	puts $debugfile ""
 	puts $debugfile "global DEBUG"
-	puts $debugfile "set DEBUG 1"
-	puts $debugfile "set DEBUG_RUNS 1"
+	puts $debugfile "set DEBUG 0"
+	puts $debugfile "set DEBUG_RUNS 9999"
 	puts $debugfile ""
 	puts $debugfile "global fast_approach"
 	puts $debugfile "set fast_approach true"
