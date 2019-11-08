@@ -111,12 +111,20 @@ puts $helperId [format "createapp -name %s -app {Empty Application} -proc ps7_co
 puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_project]
 puts $helperId [format "configapp -app %s -add compiler-misc {-std=c11}" $project_sdk_name_project]
 puts $helperId ""
-puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
+# puts $helperId [format "importsources -name %s -path \"%s\" -linker-script" $project_sdk_name_project $project_sources_sdk]
+puts $helperId [format "importsources -name %s -path \"%s\"" $project_sdk_name_project $project_sources_sdk]
 puts $helperId [format "importsources -name %s -path \"%s\"" $project_sdk_name_project $project_generated_sources_sdk]
 puts $helperId ""
 puts $helperId [format "createapp -name %s -app {Zynq FSBL} -proc ps7_cortexa9_0 -hwproject %s -os standalone" $project_sdk_name_fsbl $project_sdk_name_hw]
 puts $helperId [format "configapp -app %s build-config release" $project_sdk_name_fsbl]
+puts $helperId ""
+close $helperId
 
+set helperId [open [format "%s/%s" $project_generated_sources_tcl "build_sdk_projects.tcl"] "w+"]
+puts $helperId [format "cd %s/%s.sdk" $project_path $project_name]
+puts $helperId ""
+puts $helperId [format "setws %s/%s.sdk" $project_path $project_name]
+puts $helperId ""
 puts $helperId "projects -build"
 puts $helperId ""
 puts $helperId [format "exec bootgen -image %s/%s.bif -arch zynq -w -o %s/BOOT.bin" $project_generated_sources_sdk $project_sdk_name_project $project_bitstreams]
@@ -149,6 +157,33 @@ if { $impl_com == "tcp" } {
 }
 
 exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "help_generate_sdk_projects.tcl"]
+
+set lscript_path [format "%s/%s.sdk/%s/src/lscript.ld" $project_path $project_name $project_sdk_name_project]
+set lscript_path_temp [format "%s/%s.sdk/%s/src/lscript.ld.tmp" $project_path $project_name $project_sdk_name_project]
+
+set stack_size_search "_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE"
+set stack_size_replace "_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x02000000;"
+set heap_size_search "_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE"
+set heap_size_replace "_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x02000000;"
+
+set fd [open $lscript_path r]
+set newfd [open $lscript_path_temp w]
+
+while {[gets $fd line] >= 0} {
+	if {[string first $stack_size_search ] != -1} {
+		puts $newfd $stack_size_replace
+	} elseif {[string first $heap_size_search $line] != -1} {
+		puts $newfd $heap_size_replace
+	} else {
+		puts $newfd $line
+	}
+}
+
+close $fd
+close $newfd
+file rename -force $lscript_path_temp $lscript_path
+
+exec xsdk -batch -source [format "%s/%s" $project_generated_sources_tcl "build_generate_sdk_projects.tcl"]
 
 set flowfile [open [format "%s/misc_fw_flow.tcl" $project_generated_sources_tcl] "w+"]
 puts $flowfile [format "set fw_flow_execute %d" [expr { $fw_flow_current + 1 } ]]
