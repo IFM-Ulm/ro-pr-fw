@@ -23,7 +23,7 @@ function [success, uart_obj] = uart_connect(uart_obj, ~, port, input_buffer_size
 					delete(uart_obj);
 				catch e
 					if(print_status) 
-						fprintf('closing valid and open tcpip failed with message:');
+						fprintf('closing valid and open uart object failed with message:');
 						fprintf('%s\n', e.identifier);
 						fprintf('%s\n', e.message)
 					end
