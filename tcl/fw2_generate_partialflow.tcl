@@ -1,3 +1,12 @@
+if { ! [info exists script_sourced_as_notrace] } {
+	set script_sourced_as_notrace 1
+	source -notrace [info script]
+	return
+}
+if { [info exists script_sourced_as_notrace] } {
+	unset script_sourced_as_notrace
+}
+
 source -notrace [format "%s/settings_paths.tcl" [file dirname [file normalize [info script]]]]
 source -notrace [format "%s/settings_project.tcl" $project_sources_tcl]
 
