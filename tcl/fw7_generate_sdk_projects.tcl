@@ -111,6 +111,7 @@ if { $v_vivado < 2019.1 } {
 puts $helperId ""
 
 puts $helperId [format "repo -set %s" $project_sources_sw_repo]
+puts $helperId [format "repo -add-platforms %s_pf" $project_name]
 puts $helperId "repo -scan"
 puts $helperId ""
 
@@ -132,7 +133,6 @@ if { $v_vivado < 2019.1 } {
 	if { $impl_com == "tcp" } {
 		puts $helperId [format "configbsp -bsp %s tcpip true" $project_sdk_name_bsp]
 		puts $helperId [format "configbsp -bsp %s timer true" $project_sdk_name_bsp]
-		puts $helperId [format "configbsp -bsp %s uart false" $project_sdk_name_bsp]
 		puts $helperId ""
 		puts $helperId [format "configbsp -bsp %s mem_size 4194304" $project_sdk_name_bsp]
 		puts $helperId [format "configbsp -bsp %s memp_n_pbuf 2048" $project_sdk_name_bsp]
@@ -146,8 +146,6 @@ if { $v_vivado < 2019.1 } {
 		puts $helperId [format "configbsp -bsp %s lwip_udp false" $project_sdk_name_bsp]
 	}
 	if { $impl_com == "uart" } {
-		puts $helperId [format "configbsp -bsp %s tcpip false" $project_sdk_name_bsp]
-		puts $helperId [format "configbsp -bsp %s timer true" $project_sdk_name_bsp]
 		puts $helperId [format "configbsp -bsp %s uart true" $project_sdk_name_bsp]
 	}
 	puts $helperId ""
@@ -203,10 +201,15 @@ if { $v_vivado < 2019.1 } {
 		puts $helperId "bsp config timer true"
 		puts $helperId "bsp config uart true"
 	}
+	
+	puts $helperId ""
+	puts $helperId "bsp regenerate"
+	puts $helperId "platform generate"
+	puts $helperId ""
 		
 	puts $helperId [format "app create -name %s -template {Empty Application} -platform %s_pf -domain standalone_domain" $project_sdk_name_project $project_name]
-	puts $helperId [format "app config -name %s build-config release" $project_sdk_name_project]
-	puts $helperId [format "app config -name %s -set compiler-misc \{-std=c11\}" $project_sdk_name_project]
+	# puts $helperId [format "app config -name %s build-config release" $project_sdk_name_project]
+	puts $helperId [format "app config -name %s -add compiler-misc \{-std=c11\}" $project_sdk_name_project]
 	puts $helperId ""
 	puts $helperId [format "importsources -name %s -path \"%s\"" $project_sdk_name_project $project_sources_sdk]
 	puts $helperId [format "importsources -name %s -path \"%s\"" $project_sdk_name_project $project_generated_sources_sdk]
