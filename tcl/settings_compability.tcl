@@ -3,7 +3,7 @@ proc check_board_supported {} {
 	
 	set property_board [get_property BOARD_PART [current_project]]
 	
-	if {$property_board == "digilentinc.com:zybo:part0:1.0"} {
+	if {$property_board == "digilentinc.com:zybo:part0:1.0" || $property_board == "digilentinc.com:zybo:part0:2.0"} {
 		puts "supported board found: zybo"
 	} elseif {$property_board == "em.avnet.com:zed:part0:1.4" || $property_board == "digilentinc.com:zedboard:part0:1.0"} {
 		puts "supported board found: zedboard"
