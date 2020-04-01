@@ -38,7 +38,7 @@ set_property constrset constrs_static_1 [get_runs impl_1]
 set_property constrset constrs_static_2 [get_runs impl_2]
 
 set csvId [open [format "%s/config.csv" $project_bitstreams] "w+"]
-puts $csvId [format "constrset,inst,index,x,y,valid"]
+puts $csvId [format "constrset,inst,index,x,y,valid,clbtype,slctype"]
 close $csvId
 
 set resultId [open [format "%s/placement_results.txt" $project_bitstreams] "w+"]

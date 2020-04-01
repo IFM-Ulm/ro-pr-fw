@@ -13,7 +13,11 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 	place_cell [format "%s/%sB SLICE_X%dY%d/B6LUT" $instance_name $lut_name $x_slc $y_slc]
 	place_cell [format "%s/%sA SLICE_X%dY%d/A6LUT" $instance_name $lut_name $x_slc $y_slc]
 	
-	set ind_tile [get_property TILE_TYPE [get_tiles -of_objects [get_sites -of_objects [get_cell [format "%s/%sD" $instance_name $lut_name]]]]]
+	set cell_name [format "%s/%sD" $instance_name $lut_name]
+	
+	set ind_tile [get_property TILE_TYPE [get_tiles -of_objects [get_sites -of_objects [get_cell $cell_name]]]]
+
+	set slc_type [get_property SITE_TYPE [get_sites -of_objects [get_cell $cell_name]]]
 
 	set net_3 [format "%s/%s[3]" $instance_name $net_name]
 	set net_2 [format "%s/%s[2]" $instance_name $net_name]
@@ -22,9 +26,20 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 
 	# upper slice is in routing view, in non-routing it is the right one of the CLB
 	
+	set result_clb 0
+	set result_slc 0
+	
+	if { $slc_type == "SLICEL"} {
+		set result_slc 1
+	} elseif { $slc_type == "SLICEM"} {
+		set result_slc 2
+	}	
+	
 	# logic CLB on left side of switchbox
 	if { $ind_tile == "CLBLL_L" } {
-	
+		
+		set result_clb 1
+		
 		if { $x_slc%2 } {
 			# upper slice with odd index
 			set_property fixed_route { { CLBLL_L_D CLBLL_LOGIC_OUTS11 IMUX_L30 CLBLL_L_C5 } } [get_nets $net_3]
@@ -49,7 +64,9 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 	
 	# logic CLB on right side of switchbox
 	if { $ind_tile == "CLBLL_R"} {
-	
+		
+		set result_clb 2
+		
 		if { $x_slc%2 } {
 			# upper slice with odd index
 			set_property fixed_route { { CLBLL_L_D CLBLL_LOGIC_OUTS11 IMUX30 CLBLL_L_C5 } } [get_nets $net_3]
@@ -74,7 +91,9 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 
 	# memory CLB on left side of switchbox
 	if { $ind_tile == "CLBLM_L"} {
-	
+		
+		set result_clb 3
+		
 		if { $x_slc%2 } {
 			# upper slice with odd index
 			set_property fixed_route { { CLBLM_L_D CLBLM_LOGIC_OUTS11 IMUX_L30 CLBLM_L_C5 } } [get_nets $net_3]
@@ -99,6 +118,8 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 	
 	# memory CLB on right side of switchbox
 	if {$ind_tile == "CLBLM_R" } {
+		
+		set result_clb 4
 	
 		if { $x_slc%2 } {
 			# upper slice with odd index
@@ -127,5 +148,6 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 	set_property LOCK_PINS {I0:A1 I1:A2 I2:A3 I3:A4 I4:A5 I5:A6} [get_cells [format "%s/%sB" $instance_name $lut_name]]
 	set_property LOCK_PINS {I0:A1 I1:A2 I2:A3 I3:A4 I4:A5 I5:A6} [get_cells [format "%s/%sA" $instance_name $lut_name]]
 	set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets [format "%s/%s[3]" $instance_name $net_name]]
-		
+	
+	return {$result_clb $result_slc}
 }

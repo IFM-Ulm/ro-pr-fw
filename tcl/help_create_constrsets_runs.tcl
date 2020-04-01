@@ -106,12 +106,13 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 				if { $DEBUG < 2 } {
 					set instance_name [pr_set_instance_name $index $impl_ro]
 					puts "placing instance $pr_counter ($index, $instance_name) of $impl_parent at X/Y: $pr_X / $pr_Y"
-					pr_route_puf $instance_name $pr_X $pr_Y
+					set return_types [pr_route_puf $instance_name $pr_X $pr_Y]
+					lassign $return_types clb_type slc_type
 				}
 				
 				incr pr_counter 1
 				set placed_ROs [expr {$placed_ROs + 1}]
-				puts $csvId [format "%s,%s,%d,%d,%d,1" $constrset_name $file_ident $index $pr_X $pr_Y]
+				puts $csvId [format "%s,%s,%d,%d,%d,1,%d,%d" $constrset_name $file_ident $index $pr_X $pr_Y $clb_type $slc_type]
 			} else {
 				puts "skipping instance $index $instance_name at X/Y: $pr_X / $pr_Y"
 				set pr_Y $pr_Y_max
@@ -167,10 +168,11 @@ proc pr_create_constrset {pr_X_start pr_Y_start pr_X_max pr_Y_max} {
 			if { $DEBUG < 2 } {
 				set instance_name [pr_set_instance_name $index $impl_ro]
 				puts "(mis)placing instance $index ($instance_name) of $impl_parent at X/Y: $misplace_X / $misplace_Y"
-				pr_route_puf $instance_name $misplace_X $misplace_Y
+				set return_types [pr_route_puf $instance_name $misplace_X $misplace_Y]
+				lassign $return_types clb_type slc_type				
 			}
 			
-			puts $csvId [format "%s,%s,%d,%d,%d,0" $constrset_name $file_ident $index $misplace_X $misplace_Y]
+			puts $csvId [format "%s,%s,%d,%d,%d,0,%d,%d" $constrset_name $file_ident $index $misplace_X $misplace_Y $clb_type $slc_type]
 						
 			set misplace_Y [expr {$misplace_Y + 1}]
 		}
