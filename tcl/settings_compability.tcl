@@ -26,7 +26,7 @@ proc ps_apply_board_settings {} {
 	# individual settings	
 	set property_board [get_property BOARD_PART [current_project]]
 	
-	if {$property_board == "digilentinc.com:zybo:part0:1.0"} {
+	if {$property_board == "digilentinc.com:zybo:part0:1.0" || $property_board == "digilentinc.com:zybo:part0:2.0"} {
 		# zybo
 		set_property -dict [list CONFIG.PCW_ENET0_PERIPHERAL_ENABLE {1} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0}] [get_bd_cells processing_system7_0]
 	} elseif {$property_board == "em.avnet.com:zed:part0:1.4" || $property_board == "digilentinc.com:zedboard:part0:1.0"} {
