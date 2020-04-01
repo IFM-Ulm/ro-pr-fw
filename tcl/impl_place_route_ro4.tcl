@@ -149,5 +149,5 @@ proc pr_route_puf {instance_name x_slc y_slc } {
 	set_property LOCK_PINS {I0:A1 I1:A2 I2:A3 I3:A4 I4:A5 I5:A6} [get_cells [format "%s/%sA" $instance_name $lut_name]]
 	set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets [format "%s/%s[3]" $instance_name $net_name]]
 	
-	return {$result_clb $result_slc}
+	return [list $result_clb $result_slc]
 }
